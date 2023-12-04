@@ -8,17 +8,11 @@ resource "aws_security_group" "rds_sg" {
   name        = "${var.namespace}-${var.stage}-rds-security-group"
   description = "Security group for RDS instance"
   vpc_id      = var.vpc_id
-
-  tags = {
-    Name = "${var.namespace}-${var.stage}-rds-security-group"
-  }
 }
+
 resource "aws_db_parameter_group" "postgres_db" {
   name   = "${var.namespace}-${var.stage}-postgres-db"
   family = "postgres15"
-  tags = {
-    Name = "${var.namespace}-${var.stage}-postgres-db"
-  }
 }
 
 resource "aws_db_instance" "pg_db" {
@@ -34,7 +28,4 @@ resource "aws_db_instance" "pg_db" {
   skip_final_snapshot         = true
   db_subnet_group_name        = var.subnet_group_id
   vpc_security_group_ids      = [aws_security_group.rds_sg.id]
-  tags = {
-    Name = "${var.namespace}-${var.stage}-pg-db"
-  }
 }

@@ -52,7 +52,7 @@ module "cognito" {
   api_domain            = var.api_domain
   aws_region            = var.aws_region
   access_handler_domain = var.access_handler_domain
-  frontend_domain       = var.frontend_domain
+  web_domain            = var.web_domain
   auth_domain           = var.auth_domain
   auth_certificate_arn  = var.auth_certificate_arn
   saml_metadata_is_file = var.saml_metadata_is_file
@@ -71,7 +71,7 @@ module "control_plane" {
   database_security_group_id      = module.control_plane_db.security_group_id
   eventbus_arn                    = module.events.event_bus_arn
   sqs_queue_arn                   = module.events.sqs_queue_arn
-  frontend_domain                 = var.frontend_domain
+  web_domain                      = var.web_domain
   pager_duty_client_id            = var.pager_duty_client_id
   pager_duty_client_secret_ps_arn = var.pager_duty_client_secret_ps_arn
   release_tag                     = var.release_tag
@@ -85,7 +85,7 @@ module "control_plane" {
   auth_authority_url              = module.cognito.auth_authority_url
   database_host                   = module.control_plane_db.endpoint
   database_user                   = module.control_plane_db.username
-  alb_listerner_arn               = module.alb.listener_arn
+  alb_listener_arn                = module.alb.listener_arn
   authz_domain                    = var.authz_domain
   sqs_queue_name                  = module.events.sqs_queue_name
   auth_issuer                     = module.cognito.auth_issuer
@@ -101,7 +101,7 @@ module "web" {
   stage              = var.stage
   api_domain         = var.api_domain
   aws_region         = var.aws_region
-  frontend_domain    = var.frontend_domain
+  web_domain         = var.web_domain
   release_tag        = var.release_tag
   subnet_ids         = module.vpc.private_subnet_ids
   vpc_id             = module.vpc.vpc_id
@@ -114,7 +114,7 @@ module "web" {
   logo_url           = var.logo_url
   team_name          = var.team_name
   ecs_cluster_id     = module.ecs.cluster_id
-  alb_listerner_arn  = module.alb.listener_arn
+  alb_listener_arn   = module.alb.listener_arn
 }
 
 module "access_handler" {
@@ -130,20 +130,20 @@ module "access_handler" {
   authz_domain          = var.authz_domain
   ecs_cluster_id        = module.ecs.cluster_id
   access_handler_domain = var.access_handler_domain
-  alb_listerner_arn     = module.alb.listener_arn
+  alb_listener_arn      = module.alb.listener_arn
   auth_issuer           = module.cognito.auth_issuer
 }
 
 module "authz" {
-  source            = "./modules/authz"
-  namespace         = var.namespace
-  stage             = var.stage
-  aws_region        = var.aws_region
-  eventbus_arn      = module.events.event_bus_arn
-  release_tag       = var.release_tag
-  subnet_ids        = module.vpc.private_subnet_ids
-  vpc_id            = module.vpc.vpc_id
-  ecs_cluster_id    = module.ecs.cluster_id
-  alb_listerner_arn = module.alb.listener_arn
-  authz_domain      = var.authz_domain
+  source           = "./modules/authz"
+  namespace        = var.namespace
+  stage            = var.stage
+  aws_region       = var.aws_region
+  eventbus_arn     = module.events.event_bus_arn
+  release_tag      = var.release_tag
+  subnet_ids       = module.vpc.private_subnet_ids
+  vpc_id           = module.vpc.vpc_id
+  ecs_cluster_id   = module.ecs.cluster_id
+  alb_listener_arn = module.alb.listener_arn
+  authz_domain     = var.authz_domain
 }

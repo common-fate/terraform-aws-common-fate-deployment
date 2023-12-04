@@ -122,13 +122,13 @@ resource "aws_cognito_user_pool_client" "web-app-client" {
   ]
   allowed_oauth_flows          = ["code"]
   supported_identity_providers = [local.identity_provider_name]
-  default_redirect_uri         = "${var.frontend_domain}/auth/callback"
+  default_redirect_uri         = "${var.web_domain}/auth/callback"
 
   allowed_oauth_flows_user_pool_client = true
   generate_secret                      = false
   allowed_oauth_scopes                 = ["openid", "profile", "email"]
-  callback_urls                        = ["${var.frontend_domain}/auth/callback"]
-  logout_urls                          = ["${var.frontend_domain}/logout"]
+  callback_urls                        = ["${var.web_domain}/auth/callback"]
+  logout_urls                          = ["${var.web_domain}/logout"]
   depends_on                           = [aws_cognito_identity_provider.saml_idp]
 }
 

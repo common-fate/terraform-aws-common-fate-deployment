@@ -85,13 +85,13 @@ variable "authz_domain" {
   }
 }
 
-variable "frontend_domain" {
+variable "web_domain" {
   description = "The frontend domain (e.g., 'https://mydomain.com')."
   type        = string
 
   validation {
-    condition     = can(regex("^https://", var.frontend_domain))
-    error_message = "The frontend_domain must start with 'https://'."
+    condition     = can(regex("^https://", var.web_domain))
+    error_message = "The web_domain must start with 'https://'."
   }
 }
 

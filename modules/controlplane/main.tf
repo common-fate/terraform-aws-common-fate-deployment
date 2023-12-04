@@ -20,9 +20,6 @@ resource "aws_security_group" "ecs_control_plane_sg" {
     cidr_blocks = ["0.0.0.0/0"] # Allow incoming HTTP requests from anywhere
   }
 
-  tags = {
-    Name = "${var.namespace}-${var.stage}-ecs-control-plane-sg"
-  }
 }
 
 # Update the RDS security group to allow connections from the ECS control-plane service
@@ -36,14 +33,14 @@ resource "aws_security_group_rule" "rds_access_from_control_plane" {
 }
 
 resource "aws_cloudwatch_log_group" "control_plane_log_group" {
-  name              = "${var.namespace}-${var.stage}-control-plane-lg"
-  retention_in_days = 14
+  name              = "${var.namespace}-${var.stage}-control-plane"
+  retention_in_days = var.log_retention_in_days
 }
 
 
 # EXECUTION ROLE
 resource "aws_iam_role" "control_plane_ecs_execution_role" {
-  name = "${var.namespace}-${var.stage}-control-plane-ecs-execution-role"
+  name = "${var.namespace}-${var.stage}-control-plane-ecs-er"
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
     Statement = [
@@ -65,7 +62,7 @@ resource "aws_iam_role_policy_attachment" "control_plane_ecs_execution_role_poli
 
 
 resource "aws_iam_policy" "database_secrets_read_access" {
-  name        = "${var.namespace}-${var.stage}-database-secret-read-access"
+  name        = "${var.namespace}-${var.stage}-control-plane-sm"
   description = "Allows pull database secret from secrets manager"
 
   policy = jsonencode({
@@ -103,7 +100,7 @@ locals {
 }
 
 resource "aws_iam_policy" "parameter_store_secrets_read_access" {
-  name        = "${var.namespace}-${var.stage}-ps-secret-read-access"
+  name        = "${var.namespace}-${var.stage}-control-plane-ps"
   description = "Allows read secret from parameter store"
 
   policy = jsonencode({
@@ -129,7 +126,7 @@ resource "aws_iam_role_policy_attachment" "control_plane_ecs_task_parameter_stor
 
 # TASK ROLE
 resource "aws_iam_role" "control_plane_ecs_task_role" {
-  name = "${var.namespace}-${var.stage}-control-plane-ecs-task-role"
+  name = "${var.namespace}-${var.stage}-control-plane-ecs-tr"
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
     Statement = [
@@ -144,7 +141,7 @@ resource "aws_iam_role" "control_plane_ecs_task_role" {
   })
 }
 resource "aws_iam_policy" "eventbus_put_events" {
-  name        = "${var.namespace}-${var.stage}-cp-eventbus-put-events"
+  name        = "${var.namespace}-${var.stage}-control-plane-eb"
   description = "Allows ECS tasks to put events to the event bus"
 
   policy = jsonencode({
@@ -163,7 +160,7 @@ resource "aws_iam_role_policy_attachment" "control_plane_eventbus_put_events_att
   policy_arn = aws_iam_policy.eventbus_put_events.arn
 }
 resource "aws_iam_policy" "sqs_subscribe" {
-  name        = "${var.namespace}-${var.stage}-sqs-subscribe"
+  name        = "${var.namespace}-${var.stage}-control-plane-sqs"
   description = "Allows access to read sqs queue and delete messages"
 
   policy = jsonencode({
@@ -190,11 +187,11 @@ resource "aws_iam_role_policy_attachment" "control_plane_sqs_subscribe_attach" {
 }
 
 resource "aws_ecs_task_definition" "control_plane_task" {
-  family                   = "${var.namespace}-${var.stage}-control-plane-task-family"
+  family                   = "${var.namespace}-${var.stage}-control-plane"
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
-  cpu                      = "256"
-  memory                   = "512"
+  cpu                      = var.ecs_task_cpu
+  memory                   = var.ecs_task_memory
   execution_role_arn       = aws_iam_role.control_plane_ecs_execution_role.arn
   task_role_arn            = aws_iam_role.control_plane_ecs_task_role.arn
 
@@ -202,7 +199,7 @@ resource "aws_ecs_task_definition" "control_plane_task" {
     name  = "control-plane-container",
     image = "commonfate/common-fate-cloud-api:${var.release_tag}",
 
-    memory = 256,
+
     portMappings = [{
       containerPort = 8080,
     }],
@@ -227,7 +224,7 @@ resource "aws_ecs_task_definition" "control_plane_task" {
 
       {
         name  = "CF_FRONTEND_URL",
-        value = var.frontend_domain
+        value = var.web_domain
       },
       {
         name  = "CF_API_URL",
@@ -323,7 +320,7 @@ resource "aws_ecs_task_definition" "control_plane_task" {
 
 
 resource "aws_lb_target_group" "control_plane_tg" {
-  name        = "${var.namespace}-${var.stage}-cp-tg"
+  name        = "${var.namespace}-${var.stage}-control-plane"
   port        = 8080
   protocol    = "HTTP"
   vpc_id      = var.vpc_id
@@ -332,17 +329,15 @@ resource "aws_lb_target_group" "control_plane_tg" {
     enabled = true
     path    = "/health"
   }
-  tags = {
-    Name = "${var.namespace}-${var.stage}-control-plane-tg"
-  }
+
 }
 resource "aws_ecs_service" "control_plane_service" {
-  name            = "${var.namespace}-${var.stage}-control-plane-service"
+  name            = "${var.namespace}-${var.stage}-control-plane"
   cluster         = var.ecs_cluster_id
   task_definition = aws_ecs_task_definition.control_plane_task.arn
   launch_type     = "FARGATE"
 
-  desired_count = 1
+  desired_count = var.desired_task_count
 
   network_configuration {
     subnets          = var.subnet_ids
@@ -368,9 +363,5 @@ resource "aws_lb_listener_rule" "service_rule" {
     host_header {
       values = [replace(var.api_domain, "https://", "")]
     }
-  }
-
-  tags = {
-    Name = "${var.namespace}-${var.stage}-control-plane-rule"
   }
 }

@@ -25,13 +25,13 @@ variable "release_tag" {
   type        = string
 }
 
-variable "frontend_domain" {
+variable "web_domain" {
   description = "Specifies the frontend domain (e.g., 'https://mydomain.com')."
   type        = string
 
   validation {
-    condition     = can(regex("^https://", var.frontend_domain))
-    error_message = "The frontend_domain must start with 'https://'."
+    condition     = can(regex("^https://", var.web_domain))
+    error_message = "The web_domain must start with 'https://'."
   }
 }
 
@@ -108,4 +108,25 @@ variable "ecs_cluster_id" {
 variable "alb_listener_arn" {
   description = "Specifies the Amazon Load Balancer (ALB) listener ARN."
   type        = string
+}
+variable "log_retention_in_days" {
+  description = "Specifies the cloudwatch log retention period."
+  default     = 365
+  type        = number
+}
+variable "ecs_task_cpu" {
+  description = "The amount of CPU to allocate for the ECS task. Specified in CPU units (1024 units = 1 vCPU)."
+  type        = string
+  default     = "256" # Example default, adjust as needed
+}
+
+variable "ecs_task_memory" {
+  description = "The amount of memory to allocate for the ECS task. Specified in MiB."
+  type        = string
+  default     = "512" # Example default, adjust as needed
+}
+variable "desired_task_count" {
+  description = "The desired number of instances of the task to run."
+  type        = number
+  default     = 1
 }

@@ -1,3 +1,4 @@
+
 resource "aws_security_group" "ecs_access_handler_sg" {
   vpc_id = var.vpc_id
 
@@ -14,21 +15,19 @@ resource "aws_security_group" "ecs_access_handler_sg" {
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"] # Allow incoming HTTP requests from anywhere
   }
-
-  tags = {
-    Name = "${var.namespace}-${var.stage}-ecs-access-handler-sg"
-  }
 }
 
 resource "aws_cloudwatch_log_group" "access_handler_log_group" {
-  name              = "${var.namespace}-${var.stage}-access_handler-lg"
-  retention_in_days = 14 # You can adjust this based on your retention needs.
+  name              = "${var.namespace}-${var.stage}-access-handler"
+  retention_in_days = var.log_retention_in_days
+
 }
 
 
 
 resource "aws_iam_role" "access_handler_ecs_execution_role" {
-  name = "${var.namespace}-${var.stage}-access-handler-ecs-execution-role"
+  name        = "${var.namespace}-${var.stage}-access-handler-er"
+  description = "The execution role used by ECS to run the Access Handler task."
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
     Statement = [
@@ -41,6 +40,7 @@ resource "aws_iam_role" "access_handler_ecs_execution_role" {
       }
     ]
   })
+
 }
 resource "aws_iam_role_policy_attachment" "access_handler_ecs_execution_role_policy_attach" {
   role       = aws_iam_role.access_handler_ecs_execution_role.name
@@ -51,7 +51,8 @@ resource "aws_iam_role_policy_attachment" "access_handler_ecs_execution_role_pol
 
 # TASK ROLE
 resource "aws_iam_role" "access_handler_ecs_task_role" {
-  name = "${var.namespace}-${var.stage}-access-handler-ecs-task-role"
+  name        = "${var.namespace}-${var.stage}-access-handler-ecs-tr"
+  description = "The task role assumed by the Access Handler task."
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
     Statement = [
@@ -64,10 +65,11 @@ resource "aws_iam_role" "access_handler_ecs_task_role" {
       }
     ]
   })
+
 }
 
 resource "aws_iam_policy" "eventbus_put_events" {
-  name        = "${var.namespace}-${var.stage}-ah-eventbus-put-events"
+  name        = "${var.namespace}-${var.stage}-access-handler-eb"
   description = "Allows ECS tasks to put events to the event bus"
 
   policy = jsonencode({
@@ -80,25 +82,26 @@ resource "aws_iam_policy" "eventbus_put_events" {
       }
     ]
   })
+
 }
 resource "aws_iam_role_policy_attachment" "control_plane_eventbus_put_events_attach" {
   role       = aws_iam_role.access_handler_ecs_task_role.name
   policy_arn = aws_iam_policy.eventbus_put_events.arn
 }
 resource "aws_ecs_task_definition" "access_handler_task" {
-  family                   = "${var.namespace}-${var.stage}-access-handler-task-family"
+  family                   = "${var.namespace}-${var.stage}-access-handler"
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
-  cpu                      = "256"
-  memory                   = "512"
-  execution_role_arn       = aws_iam_role.access_handler_ecs_execution_role.arn
-  task_role_arn            = aws_iam_role.access_handler_ecs_task_role.arn
+  cpu                      = var.ecs_task_cpu
+  memory                   = var.ecs_task_memory
+
+  execution_role_arn = aws_iam_role.access_handler_ecs_execution_role.arn
+  task_role_arn      = aws_iam_role.access_handler_ecs_task_role.arn
 
   container_definitions = jsonencode([{
     name  = "access-handler-container",
     image = "commonfate/common-fate-cloud-access-handler:${var.release_tag}",
 
-    memory = 256,
     portMappings = [{
       containerPort = 9090,
     }],
@@ -138,10 +141,11 @@ resource "aws_ecs_task_definition" "access_handler_task" {
       securityGroupIds = [aws_security_group.ecs_access_handler_sg.id]
     }
   }])
+
 }
 
 resource "aws_lb_target_group" "access_handler_tg" {
-  name        = "${var.namespace}-${var.stage}-ah-tg"
+  name        = "${var.namespace}-${var.stage}-access-handler"
   port        = 9090
   protocol    = "HTTP"
   vpc_id      = var.vpc_id
@@ -150,18 +154,16 @@ resource "aws_lb_target_group" "access_handler_tg" {
     enabled = true
     path    = "/health"
   }
-  tags = {
-    Name = "${var.namespace}-${var.stage}-access-handler-tg"
-  }
+
 }
 
 resource "aws_ecs_service" "access_handler_service" {
-  name            = "${var.namespace}-${var.stage}-access_handler-service"
+  name            = "${var.namespace}-${var.stage}-access-handler"
   cluster         = var.ecs_cluster_id
   task_definition = aws_ecs_task_definition.access_handler_task.arn
   launch_type     = "FARGATE"
 
-  desired_count = 1
+  desired_count = var.desired_task_count
 
   network_configuration {
     subnets         = var.subnet_ids
@@ -186,9 +188,5 @@ resource "aws_lb_listener_rule" "service_rule" {
     host_header {
       values = [replace(var.access_handler_domain, "https://", "")]
     }
-  }
-
-  tags = {
-    Name = "${var.namespace}-${var.stage}-access-handler-rule"
   }
 }

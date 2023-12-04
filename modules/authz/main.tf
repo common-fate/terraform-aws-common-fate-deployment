@@ -29,20 +29,18 @@ resource "aws_security_group" "ecs_authz_sg" {
     cidr_blocks = ["0.0.0.0/0"] # Allow incoming HTTP requests from anywhere
   }
 
-  tags = {
-    Name = "${var.namespace}-${var.stage}-ecs-authz-sg"
-  }
+
 }
 
 resource "aws_cloudwatch_log_group" "authz_log_group" {
-  name              = "${var.namespace}-${var.stage}-authz-lg"
-  retention_in_days = 14
+  name              = "${var.namespace}-${var.stage}-authz"
+  retention_in_days = var.log_retention_in_days
 }
 
 
 
 resource "aws_iam_role" "authz_ecs_execution_role" {
-  name = "${var.namespace}-${var.stage}-authz-ecs-execution-role"
+  name = "${var.namespace}-${var.stage}-authz-er"
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
     Statement = [
@@ -64,11 +62,11 @@ resource "aws_iam_role_policy_attachment" "authz_ecs_execution_role_policy_attac
 
 
 resource "aws_ecs_task_definition" "authz_task" {
-  family                   = "${var.namespace}-${var.stage}-authz-task-family"
+  family                   = "${var.namespace}-${var.stage}-authz"
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
-  cpu                      = "256"
-  memory                   = "512"
+  cpu                      = var.ecs_task_cpu
+  memory                   = var.ecs_task_memory
   execution_role_arn       = aws_iam_role.authz_ecs_execution_role.arn
 
   container_definitions = jsonencode([{
@@ -76,7 +74,6 @@ resource "aws_ecs_task_definition" "authz_task" {
     name  = "authz-container",
     image = "commonfate/common-fate-cloud-authz:${var.release_tag}",
 
-    memory = 256,
     portMappings = [
       {
         containerPort = 9090,
@@ -105,7 +102,7 @@ resource "aws_ecs_task_definition" "authz_task" {
 }
 
 resource "aws_lb_target_group" "authz_tg" {
-  name             = "${var.namespace}-${var.stage}-authz-tg"
+  name             = "${var.namespace}-${var.stage}-authz"
   port             = 5050
   protocol         = "HTTP"
   protocol_version = "GRPC"
@@ -117,18 +114,16 @@ resource "aws_lb_target_group" "authz_tg" {
     path    = "/commonfate.authz.v1alpha1.HealthService/HealthCheck"
     matcher = "0-99"
   }
-  tags = {
-    Name = "${var.namespace}-${var.stage}-authz-tg"
-  }
+
 }
 
 resource "aws_ecs_service" "authz_service" {
-  name            = "${var.namespace}-${var.stage}-authz-service"
+  name            = "${var.namespace}-${var.stage}-authz"
   cluster         = var.ecs_cluster_id
   task_definition = aws_ecs_task_definition.authz_task.arn
   launch_type     = "FARGATE"
 
-  desired_count = 1
+  desired_count = var.desired_task_count
 
   network_configuration {
     subnets         = var.subnet_ids
@@ -152,9 +147,5 @@ resource "aws_lb_listener_rule" "service_rule" {
     host_header {
       values = [replace(var.authz_domain, "https://", "")]
     }
-  }
-
-  tags = {
-    Name = "${var.namespace}-${var.stage}-authz-rule"
   }
 }

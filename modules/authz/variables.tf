@@ -54,3 +54,24 @@ variable "authz_domain" {
     error_message = "The authz_domain must start with 'https://'."
   }
 }
+variable "log_retention_in_days" {
+  description = "Specifies the cloudwatch log retention period."
+  default     = 365
+  type        = number
+}
+variable "ecs_task_cpu" {
+  description = "The amount of CPU to allocate for the ECS task. Specified in CPU units (1024 units = 1 vCPU)."
+  type        = string
+  default     = "256" # Example default, adjust as needed
+}
+
+variable "ecs_task_memory" {
+  description = "The amount of memory to allocate for the ECS task. Specified in MiB."
+  type        = string
+  default     = "512" # Example default, adjust as needed
+}
+variable "desired_task_count" {
+  description = "The desired number of instances of the task to run."
+  type        = number
+  default     = 1
+}

@@ -1,7 +1,7 @@
 ######################################################
-# Frontend Task
+# Web Task
 ######################################################
-resource "aws_security_group" "ecs_frontend_sg" {
+resource "aws_security_group" "ecs_web_sg" {
   vpc_id = var.vpc_id
 
   egress {
@@ -18,13 +18,11 @@ resource "aws_security_group" "ecs_frontend_sg" {
     cidr_blocks = ["0.0.0.0/0"] # Allow incoming HTTP requests from anywhere
   }
 
-  tags = {
-    Name = "${var.namespace}-${var.stage}-ecs-frontend-sg"
-  }
+
 }
 
-resource "aws_iam_role" "frontend_ecs_execution_role" {
-  name = "${var.namespace}-${var.stage}-frontend-ecs-execution-role"
+resource "aws_iam_role" "web_ecs_execution_role" {
+  name = "${var.namespace}-${var.stage}-web-ecs-er"
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
     Statement = [
@@ -38,30 +36,29 @@ resource "aws_iam_role" "frontend_ecs_execution_role" {
     ]
   })
 }
-resource "aws_iam_role_policy_attachment" "frontend_ecs_execution_role_policy_attach" {
-  role       = aws_iam_role.frontend_ecs_execution_role.name
+resource "aws_iam_role_policy_attachment" "web_ecs_execution_role_policy_attach" {
+  role       = aws_iam_role.web_ecs_execution_role.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
 }
 
 
-resource "aws_cloudwatch_log_group" "frontend_log_group" {
-  name              = "${var.namespace}-${var.stage}-frontend-lg"
-  retention_in_days = 14
+resource "aws_cloudwatch_log_group" "web_log_group" {
+  name              = "${var.namespace}-${var.stage}-web"
+  retention_in_days = var.log_retention_in_days
 }
 
-resource "aws_ecs_task_definition" "frontend_task" {
-  family                   = "${var.namespace}-${var.stage}-frontend-task-family"
+resource "aws_ecs_task_definition" "web_task" {
+  family                   = "${var.namespace}-${var.stage}-web"
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
-  cpu                      = "256"
-  memory                   = "512"
-  execution_role_arn       = aws_iam_role.frontend_ecs_execution_role.arn
+  cpu                      = var.ecs_task_cpu
+  memory                   = var.ecs_task_memory
+  execution_role_arn       = aws_iam_role.web_ecs_execution_role.arn
 
   container_definitions = jsonencode([{
-    name  = "frontend_container",
+    name  = "web_container",
     image = "commonfate/common-fate-cloud-web:${var.release_tag}",
 
-    memory = 256,
     portMappings = [{
       containerPort = 80,
       hostPort      = 80
@@ -116,7 +113,7 @@ resource "aws_ecs_task_definition" "frontend_task" {
     logConfiguration = {
       logDriver = "awslogs",
       options = {
-        "awslogs-group"         = aws_cloudwatch_log_group.frontend_log_group.name,
+        "awslogs-group"         = aws_cloudwatch_log_group.web_log_group.name,
         "awslogs-region"        = var.aws_region,
         "awslogs-stream-prefix" = "frontend"
       }
@@ -124,38 +121,35 @@ resource "aws_ecs_task_definition" "frontend_task" {
 
     # Link to the security group
     linuxParameters = {
-      securityGroupIds = [aws_security_group.ecs_frontend_sg.id]
+      securityGroupIds = [aws_security_group.ecs_web_sg.id]
     }
   }])
 }
 
-resource "aws_lb_target_group" "frontend_tg" {
-  name        = "${var.namespace}-${var.stage}-frontend-tg"
+resource "aws_lb_target_group" "web_tg" {
+  name        = "${var.namespace}-${var.stage}-web"
   port        = 80
   protocol    = "HTTP"
   vpc_id      = var.vpc_id
   target_type = "ip"
-  tags = {
-    Name = "${var.namespace}-${var.stage}-frontend-tg"
-  }
 }
 
-resource "aws_ecs_service" "frontend_service" {
-  name            = "${var.namespace}-${var.stage}-frontend-service"
+resource "aws_ecs_service" "web_service" {
+  name            = "${var.namespace}-${var.stage}-web"
   cluster         = var.ecs_cluster_id
-  task_definition = aws_ecs_task_definition.frontend_task.arn
+  task_definition = aws_ecs_task_definition.web_task.arn
   launch_type     = "FARGATE"
 
-  desired_count = 1
+  desired_count = var.desired_task_count
 
   network_configuration {
     subnets         = var.subnet_ids
-    security_groups = [aws_security_group.ecs_frontend_sg.id]
+    security_groups = [aws_security_group.ecs_web_sg.id]
   }
 
   load_balancer {
-    target_group_arn = aws_lb_target_group.frontend_tg.arn
-    container_name   = "frontend_container"
+    target_group_arn = aws_lb_target_group.web_tg.arn
+    container_name   = "web_container"
     container_port   = 80
   }
 }
@@ -163,16 +157,13 @@ resource "aws_lb_listener_rule" "service_rule" {
   listener_arn = var.alb_listener_arn
   action {
     type             = "forward"
-    target_group_arn = aws_lb_target_group.frontend_tg.arn
+    target_group_arn = aws_lb_target_group.web_tg.arn
   }
 
   condition {
     host_header {
-      values = [replace(var.frontend_domain, "https://", "")]
+      values = [replace(var.web_domain, "https://", "")]
     }
   }
 
-  tags = {
-    Name = "${var.namespace}-${var.stage}-web-rule"
-  }
 }
