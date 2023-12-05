@@ -15,10 +15,6 @@ variable "vpc_id" {
   type        = string
 }
 
-variable "subnet_ids" {
-  description = "Lists the IDs of the subnets for deployment."
-  type        = list(string)
-}
 
 variable "subnet_group_id" {
   description = "Specifies the ID of the subnet group for deployment."
