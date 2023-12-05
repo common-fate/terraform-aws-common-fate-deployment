@@ -99,6 +99,7 @@ module "control_plane" {
   cleanup_service_client_id       = module.cognito.cleanup_service_client_id
   cleanup_service_client_secret   = module.cognito.cleanup_service_client_secret
   licence_key_ps_arn              = var.licence_key_ps_arn
+  access_handler_domain           = var.access_handler_domain
 }
 
 

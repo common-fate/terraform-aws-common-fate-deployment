@@ -159,7 +159,15 @@ variable "authz_domain" {
     error_message = "The authz_domain must start with 'https://'."
   }
 }
+variable "access_handler_domain" {
+  description = "Defines the domain for access handler (e.g., 'https://access.mydomain.com')."
+  type        = string
 
+  validation {
+    condition     = can(regex("^https://", var.access_handler_domain))
+    error_message = "The access_handler_domain must start with 'https://'."
+  }
+}
 variable "licence_key_ps_arn" {
   description = "The AWS Parameter Store ARN for the license key."
   type        = string

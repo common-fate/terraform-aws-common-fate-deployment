@@ -239,6 +239,10 @@ resource "aws_ecs_task_definition" "control_plane_task" {
         value = var.authz_domain
       },
       {
+        name  = "CF_ACCESS_URL",
+        value = var.access_handler_domain
+      },
+      {
         name  = "CF_SLACK_CLIENT_ID",
         value = var.slack_client_id
       },

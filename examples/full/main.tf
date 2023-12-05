@@ -5,7 +5,7 @@ provider "aws" {
 
 module "vpc" {
   source     = "common-fate/common-fate/commonfate//modules/vpc"
-  version    = "0.1.6"
+  version    = "0.1.9"
   namespace  = var.namespace
   stage      = var.stage
   aws_region = var.aws_region
@@ -14,7 +14,7 @@ module "vpc" {
 
 module "alb" {
   source            = "common-fate/common-fate/commonfate//modules/alb"
-  version           = "0.1.6"
+  version           = "0.1.9"
   namespace         = var.namespace
   stage             = var.stage
   certificate_arn   = var.app_certificate_arn
@@ -24,7 +24,7 @@ module "alb" {
 
 module "control_plane_db" {
   source          = "common-fate/common-fate/commonfate//modules/database"
-  version         = "0.1.6"
+  version         = "0.1.9"
   namespace       = var.namespace
   stage           = var.stage
   vpc_id          = module.vpc.vpc_id
@@ -32,13 +32,13 @@ module "control_plane_db" {
 }
 module "authz_db" {
   source    = "common-fate/common-fate/commonfate//modules/authz-database"
-  version   = "0.1.6"
+  version   = "0.1.9"
   namespace = var.namespace
   stage     = var.stage
 }
 module "events" {
   source    = "common-fate/common-fate/commonfate//modules/events"
-  version   = "0.1.6"
+  version   = "0.1.9"
   namespace = var.namespace
   stage     = var.stage
 }
@@ -53,7 +53,7 @@ module "ecs" {
 
 module "cognito" {
   source                = "common-fate/common-fate/commonfate//modules/cognito"
-  version               = "0.1.6"
+  version               = "0.1.9"
   namespace             = var.namespace
   stage                 = var.stage
   api_domain            = var.api_domain
@@ -70,7 +70,7 @@ module "cognito" {
 
 module "control_plane" {
   source                          = "common-fate/common-fate/commonfate//modules/controlplane"
-  version                         = "0.1.6"
+  version                         = "0.1.9"
   namespace                       = var.namespace
   stage                           = var.stage
   api_domain                      = var.api_domain
@@ -100,12 +100,13 @@ module "control_plane" {
   cleanup_service_client_id       = module.cognito.cleanup_service_client_id
   cleanup_service_client_secret   = module.cognito.cleanup_service_client_secret
   licence_key_ps_arn              = var.licence_key_ps_arn
+  access_handler_domain           = var.access_handler_domain
 }
 
 
 module "web" {
   source             = "common-fate/common-fate/commonfate//modules/web"
-  version            = "0.1.6"
+  version            = "0.1.9"
   namespace          = var.namespace
   stage              = var.stage
   api_domain         = var.api_domain
@@ -128,7 +129,7 @@ module "web" {
 
 module "access_handler" {
   source                = "common-fate/common-fate/commonfate//modules/access"
-  version               = "0.1.6"
+  version               = "0.1.9"
   namespace             = var.namespace
   stage                 = var.stage
   aws_region            = var.aws_region
@@ -146,7 +147,7 @@ module "access_handler" {
 
 module "authz" {
   source              = "common-fate/common-fate/commonfate//modules/authz"
-  version             = "0.1.6"
+  version             = "0.1.9"
   namespace           = var.namespace
   stage               = var.stage
   aws_region          = var.aws_region
