@@ -169,37 +169,17 @@ resource "aws_cognito_user_pool_client" "cli_client" {
 }
 
 
-resource "aws_cognito_resource_server" "control_plane_resource_server" {
-  identifier   = var.api_domain
-  name         = "${var.namespace}-${var.stage}-control-plane"
+resource "aws_cognito_resource_server" "resource_server" {
+  identifier   = "cf.client"
+  name         = "${var.namespace}-${var.stage}-resource-server"
   user_pool_id = aws_cognito_user_pool.cognito_user_pool.id
 
   scope {
-    scope_name        = "read"
-    scope_description = "read from control plane"
-  }
-
-  scope {
-    scope_name        = "write"
-    scope_description = "write to control plane"
+    scope_name        = "machine"
+    scope_description = "machine to machine read write access"
   }
 }
 
-resource "aws_cognito_resource_server" "access_handler_resource_server" {
-  identifier   = var.access_handler_domain
-  name         = "${var.namespace}-${var.stage}-access-handler"
-  user_pool_id = aws_cognito_user_pool.cognito_user_pool.id
-
-  scope {
-    scope_name        = "read"
-    scope_description = "read from access handler"
-  }
-
-  scope {
-    scope_name        = "write"
-    scope_description = "write to access handler"
-  }
-}
 
 resource "aws_cognito_user_pool_client" "terraform_client" {
   name         = "${var.namespace}-${var.stage}-terraform-client"
@@ -212,7 +192,7 @@ resource "aws_cognito_user_pool_client" "terraform_client" {
 
   access_token_validity                = 8
   allowed_oauth_flows                  = ["client_credentials"]
-  allowed_oauth_scopes                 = aws_cognito_resource_server.control_plane_resource_server.scope_identifiers
+  allowed_oauth_scopes                 = aws_cognito_resource_server.resource_server.scope_identifiers
   allowed_oauth_flows_user_pool_client = true
   generate_secret                      = true
 }
@@ -228,7 +208,7 @@ resource "aws_cognito_user_pool_client" "cleanup_service_client" {
 
   access_token_validity                = 8
   allowed_oauth_flows                  = ["client_credentials"]
-  allowed_oauth_scopes                 = aws_cognito_resource_server.access_handler_resource_server.scope_identifiers
+  allowed_oauth_scopes                 = aws_cognito_resource_server.resource_server.scope_identifiers
   allowed_oauth_flows_user_pool_client = true
   generate_secret                      = true
 }
