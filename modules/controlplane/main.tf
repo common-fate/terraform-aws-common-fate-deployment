@@ -94,7 +94,7 @@ locals {
       var.slack_client_secret_ps_arn,
       var.slack_signing_secret_ps_arn,
       var.scim_token_ps_arn,
-      var.var.licence_key_ps_arn
+      var.licence_key_ps_arn
     ] : arn => arn
     if arn != ""
   }
@@ -125,7 +125,7 @@ resource "aws_iam_policy" "parameter_store_secrets_read_access" {
 resource "aws_iam_role_policy_attachment" "control_plane_ecs_task_parameter_store_secrets_read_access_attach" {
   count      = length(local.secret_arns) > 0 ? 1 : 0
   role       = aws_iam_role.control_plane_ecs_execution_role.name
-  policy_arn = aws_iam_policy.parameter_store_secrets_read_access.arn
+  policy_arn = aws_iam_policy.parameter_store_secrets_read_access[0].arn
 }
 
 # TASK ROLE

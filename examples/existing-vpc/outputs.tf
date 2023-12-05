@@ -5,12 +5,12 @@
 
 output "cognito_saml_entity_id" {
   description = "The cognito entity ID required for SAML configuration"
-  value       = "urn:amazon:cognito:sp:${module.cognito.saml_entity_id}"
+  value       = module.cognito.saml_entity_id
 }
 
 output "cognito_saml_acs_url" {
   description = "The cognito ACS URL required for SAML configuration"
-  value       = "${var.auth_domain}/saml2/idpresponse"
+  value       = module.cognito.saml_acs_url
 }
 
 output "load_balancer_domain" {
