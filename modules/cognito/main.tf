@@ -12,9 +12,22 @@ resource "aws_cognito_user_pool" "cognito_user_pool" {
 
 
 data "archive_file" "lambda" {
-  type        = "zip"
-  source_file = "preTokenGenerationLambda.js"
-  output_path = "pre_token_generation_function.zip"
+  type                    = "zip"
+  source_content_filename = "preTokenGenerationLambda.js"
+  source_content          = <<EOT
+exports.handler = async (event) => {
+  event.response = {
+    claimsOverrideDetails: {
+      claimsToAddOrOverride: {
+        apiUrl: process.env.API_URL,
+        apiUrl: process.env.ACCESS_HANDLER_URL,
+      },
+    },
+  };
+  return event;
+};
+EOT
+  output_path             = "pre_token_generation_function.zip"
 }
 resource "aws_cloudwatch_log_group" "pre_token_gen_lambda_lg" {
   name              = "/aws/lambda/${var.namespace}-${var.stage}-pre-token-generation"
