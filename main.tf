@@ -4,13 +4,14 @@
 provider "aws" {
   region = var.aws_region
 }
-
+locals {
+  a = "ss"
+}
 module "vpc" {
   source     = "./modules/vpc"
   namespace  = var.namespace
   stage      = var.stage
   aws_region = var.aws_region
-
 }
 
 module "alb" {
