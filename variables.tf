@@ -15,11 +15,6 @@ variable "aws_region" {
   type        = string
 }
 
-variable "availability_zones" {
-  description = "Lists the AWS Availability Zones for deploying subnets (e.g., ['us-west-2a', 'us-west-2b', 'us-west-2c'])."
-  type        = list(string)
-}
-
 variable "release_tag" {
   description = "Specifies the tag for frontend and backend images, typically the git commit hash."
   type        = string
@@ -117,21 +112,24 @@ variable "access_handler_domain" {
 
 variable "team_name" {
   description = "Specifies the team name used for branding on the frontend."
+  default     = "Common Fate"
   type        = string
 }
 
 variable "favicon_url" {
   description = "Specifies a public favicon URL for frontend branding (e.g., 'https://commonfate.io/favicon.ico')."
+  default     = "https://commonfate.io/favicon.ico"
   type        = string
 }
 
 variable "logo_url" {
   description = "Specifies a public logo URL for frontend branding."
+  default     = "https://commonfate.io/logo.png"
   type        = string
 }
 
 variable "saml_provider_name" {
-  description = "The name of the identity provider (e.g., 'Azure') displayed on the login screen."
+  description = "The name of the identity provider (e.g., 'Entra') displayed on the login screen."
   default     = ""
   type        = string
 }
