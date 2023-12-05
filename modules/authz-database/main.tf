@@ -1,6 +1,9 @@
 resource "aws_dynamodb_table" "global_table" {
   name         = "${var.namespace}-${var.stage}-dynamodb-table"
   billing_mode = "PAY_PER_REQUEST"
+  point_in_time_recovery {
+    enabled = true
+  }
 
   attribute {
     name = "PK"
