@@ -2,14 +2,10 @@ provider "aws" {
   region = var.aws_region
 }
 
-locals {
-  common_fate_modules_version = "0.1.1"
-}
-
 
 module "alb" {
   source            = "common-fate/common-fate/commonfate//modules/alb"
-  version           = local.common_fate_modules_version
+  version           = "0.1.4"
   namespace         = var.namespace
   stage             = var.stage
   certificate_arn   = var.app_certificate_arn
@@ -19,7 +15,7 @@ module "alb" {
 
 module "control_plane_db" {
   source          = "common-fate/common-fate/commonfate//modules/database"
-  version         = local.common_fate_modules_version
+  version         = "0.1.4"
   namespace       = var.namespace
   stage           = var.stage
   vpc_id          = var.vpc_id
@@ -28,7 +24,7 @@ module "control_plane_db" {
 
 module "events" {
   source    = "common-fate/common-fate/commonfate//modules/events"
-  version   = local.common_fate_modules_version
+  version   = "0.1.4"
   namespace = var.namespace
   stage     = var.stage
 }
@@ -43,7 +39,7 @@ module "ecs" {
 
 module "cognito" {
   source                = "common-fate/common-fate/commonfate//modules/cognito"
-  version               = local.common_fate_modules_version
+  version               = "0.1.4"
   namespace             = var.namespace
   stage                 = var.stage
   api_domain            = var.api_domain
@@ -60,7 +56,7 @@ module "cognito" {
 
 module "control_plane" {
   source                          = "common-fate/common-fate/commonfate//modules/controlplane"
-  version                         = local.common_fate_modules_version
+  version                         = "0.1.4"
   namespace                       = var.namespace
   stage                           = var.stage
   api_domain                      = var.api_domain
@@ -95,7 +91,7 @@ module "control_plane" {
 
 module "web" {
   source             = "common-fate/common-fate/commonfate//modules/web"
-  version            = local.common_fate_modules_version
+  version            = "0.1.4"
   namespace          = var.namespace
   stage              = var.stage
   api_domain         = var.api_domain
@@ -118,7 +114,7 @@ module "web" {
 
 module "access_handler" {
   source                = "common-fate/common-fate/commonfate//modules/access"
-  version               = local.common_fate_modules_version
+  version               = "0.1.4"
   namespace             = var.namespace
   stage                 = var.stage
   aws_region            = var.aws_region
@@ -136,7 +132,7 @@ module "access_handler" {
 
 module "authz" {
   source           = "common-fate/common-fate/commonfate//modules/authz"
-  version          = local.common_fate_modules_version
+  version          = "0.1.4"
   namespace        = var.namespace
   stage            = var.stage
   aws_region       = var.aws_region
