@@ -31,6 +31,13 @@ module "control_plane_db" {
   subnet_group_id = module.vpc.database_subnet_group_id
 }
 
+module "authz_db" {
+  source    = "./modules/authz-database"
+  namespace = var.namespace
+  stage     = var.stage
+}
+
+
 module "events" {
   source    = "./modules/events"
   namespace = var.namespace
@@ -135,15 +142,16 @@ module "access_handler" {
 }
 
 module "authz" {
-  source           = "./modules/authz"
-  namespace        = var.namespace
-  stage            = var.stage
-  aws_region       = var.aws_region
-  eventbus_arn     = module.events.event_bus_arn
-  release_tag      = var.release_tag
-  subnet_ids       = module.vpc.private_subnet_ids
-  vpc_id           = module.vpc.vpc_id
-  ecs_cluster_id   = module.ecs.cluster_id
-  alb_listener_arn = module.alb.listener_arn
-  authz_domain     = var.authz_domain
+  source              = "./modules/authz"
+  namespace           = var.namespace
+  stage               = var.stage
+  aws_region          = var.aws_region
+  eventbus_arn        = module.events.event_bus_arn
+  release_tag         = var.release_tag
+  subnet_ids          = module.vpc.private_subnet_ids
+  vpc_id              = module.vpc.vpc_id
+  ecs_cluster_id      = module.ecs.cluster_id
+  alb_listener_arn    = module.alb.listener_arn
+  authz_domain        = var.authz_domain
+  dynamodb_table_name = module.authz_db.dynamodb_table_name
 }

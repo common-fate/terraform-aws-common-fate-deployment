@@ -5,7 +5,7 @@ provider "aws" {
 
 module "alb" {
   source            = "common-fate/common-fate/commonfate//modules/alb"
-  version           = "0.1.4"
+  version           = "0.1.6"
   namespace         = var.namespace
   stage             = var.stage
   certificate_arn   = var.app_certificate_arn
@@ -15,16 +15,21 @@ module "alb" {
 
 module "control_plane_db" {
   source          = "common-fate/common-fate/commonfate//modules/database"
-  version         = "0.1.4"
+  version         = "0.1.6"
   namespace       = var.namespace
   stage           = var.stage
   vpc_id          = var.vpc_id
   subnet_group_id = var.database_subnet_group_id
 }
-
+module "authz_db" {
+  source    = "common-fate/common-fate/commonfate//modules/authz-database"
+  version   = "0.1.6"
+  namespace = var.namespace
+  stage     = var.stage
+}
 module "events" {
   source    = "common-fate/common-fate/commonfate//modules/events"
-  version   = "0.1.4"
+  version   = "0.1.6"
   namespace = var.namespace
   stage     = var.stage
 }
@@ -39,7 +44,7 @@ module "ecs" {
 
 module "cognito" {
   source                = "common-fate/common-fate/commonfate//modules/cognito"
-  version               = "0.1.4"
+  version               = "0.1.6"
   namespace             = var.namespace
   stage                 = var.stage
   api_domain            = var.api_domain
@@ -56,7 +61,7 @@ module "cognito" {
 
 module "control_plane" {
   source                          = "common-fate/common-fate/commonfate//modules/controlplane"
-  version                         = "0.1.4"
+  version                         = "0.1.6"
   namespace                       = var.namespace
   stage                           = var.stage
   api_domain                      = var.api_domain
@@ -91,7 +96,7 @@ module "control_plane" {
 
 module "web" {
   source             = "common-fate/common-fate/commonfate//modules/web"
-  version            = "0.1.4"
+  version            = "0.1.6"
   namespace          = var.namespace
   stage              = var.stage
   api_domain         = var.api_domain
@@ -114,7 +119,7 @@ module "web" {
 
 module "access_handler" {
   source                = "common-fate/common-fate/commonfate//modules/access"
-  version               = "0.1.4"
+  version               = "0.1.6"
   namespace             = var.namespace
   stage                 = var.stage
   aws_region            = var.aws_region
@@ -131,16 +136,17 @@ module "access_handler" {
 }
 
 module "authz" {
-  source           = "common-fate/common-fate/commonfate//modules/authz"
-  version          = "0.1.4"
-  namespace        = var.namespace
-  stage            = var.stage
-  aws_region       = var.aws_region
-  eventbus_arn     = module.events.event_bus_arn
-  release_tag      = var.release_tag
-  subnet_ids       = var.private_subnet_ids
-  vpc_id           = var.vpc_id
-  ecs_cluster_id   = module.ecs.cluster_id
-  alb_listener_arn = module.alb.listener_arn
-  authz_domain     = var.authz_domain
+  source              = "common-fate/common-fate/commonfate//modules/authz"
+  version             = "0.1.6"
+  namespace           = var.namespace
+  stage               = var.stage
+  aws_region          = var.aws_region
+  eventbus_arn        = module.events.event_bus_arn
+  release_tag         = var.release_tag
+  subnet_ids          = var.private_subnet_ids
+  vpc_id              = var.vpc_id
+  ecs_cluster_id      = module.ecs.cluster_id
+  alb_listener_arn    = module.alb.listener_arn
+  authz_domain        = var.authz_domain
+  dynamodb_table_name = module.authz_db.dynamodb_table_name
 }

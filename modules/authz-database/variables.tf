@@ -5,7 +5,7 @@ variable "namespace" {
 }
 
 variable "stage" {
-  description = "Determines the deployment stage (e.g., 'dev', 'staging', 'prod')."
+  description = "Defines the stage of the deployment (e.g., 'dev', 'staging', 'prod')."
   default     = "prod"
   type        = string
 }

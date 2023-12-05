@@ -82,8 +82,11 @@ resource "aws_ecs_task_definition" "authz_task" {
         containerPort = 5050,
       },
     ],
-    environment = [],
-    secrets     = []
+    environment = [{
+      name  = "AUTHZ_DYNAMODB_TABLE"
+      value = var.dynamodb_table_name
+    }],
+    secrets = []
 
     logConfiguration = {
       logDriver = "awslogs",

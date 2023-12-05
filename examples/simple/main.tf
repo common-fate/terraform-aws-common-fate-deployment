@@ -1,6 +1,6 @@
 module "common-fate" {
   source                          = "common-fate/common-fate/commonfate"
-  version                         = "0.1.4"
+  version                         = "0.1.6"
   namespace                       = var.namespace
   access_handler_domain           = var.access_handler_domain
   api_domain                      = var.api_domain

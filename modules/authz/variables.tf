@@ -75,3 +75,7 @@ variable "desired_task_count" {
   type        = number
   default     = 1
 }
+variable "dynamodb_table_name" {
+  description = "The Dynamo DB table name"
+  type        = string
+}
