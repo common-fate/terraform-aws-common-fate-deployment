@@ -66,7 +66,7 @@ module "cognito" {
 
 module "control_plane" {
   source                          = "common-fate/common-fate/commonfate//modules/controlplane"
-  version                         = "0.1.12"
+  version                         = "0.1.13"
   namespace                       = var.namespace
   stage                           = var.stage
   control_plane_domain            = var.control_plane_domain
@@ -90,7 +90,7 @@ module "control_plane" {
   database_host                   = module.control_plane_db.endpoint
   database_user                   = module.control_plane_db.username
   alb_listener_arn                = module.alb.listener_arn
-  authz_domain                    = var.authz_domain
+  authz_url                       = module.authz.grpc_api_url
   sqs_queue_name                  = module.events.sqs_queue_name
   auth_issuer                     = module.cognito.auth_issuer
   cleanup_service_client_id       = module.cognito.cleanup_service_client_id
@@ -101,32 +101,33 @@ module "control_plane" {
 
 
 module "web" {
-  source               = "common-fate/common-fate/commonfate//modules/web"
-  version              = "0.1.12"
-  namespace            = var.namespace
-  stage                = var.stage
-  control_plane_domain = var.control_plane_domain
-  aws_region           = var.aws_region
-  web_domain           = var.web_domain
-  release_tag          = var.release_tag
-  subnet_ids           = var.private_subnet_ids
-  vpc_id               = var.vpc_id
-  auth_authority_url   = module.cognito.auth_authority_url
-  auth_cli_client_id   = module.cognito.cli_client_id
-  auth_domain          = var.auth_domain
-  authz_domain         = var.authz_domain
-  auth_web_client_id   = module.cognito.web_client_id
-  favicon_url          = var.favicon_url
-  logo_url             = var.logo_url
-  team_name            = var.team_name
-  ecs_cluster_id       = module.ecs.cluster_id
-  alb_listener_arn     = module.alb.listener_arn
+  source                = "common-fate/common-fate/commonfate//modules/web"
+  version               = "0.1.13"
+  namespace             = var.namespace
+  stage                 = var.stage
+  control_plane_domain  = var.control_plane_domain
+  aws_region            = var.aws_region
+  web_domain            = var.web_domain
+  release_tag           = var.release_tag
+  subnet_ids            = var.private_subnet_ids
+  vpc_id                = var.vpc_id
+  auth_authority_url    = module.cognito.auth_authority_url
+  auth_cli_client_id    = module.cognito.cli_client_id
+  auth_domain           = var.auth_domain
+  authz_url             = module.authz.grpc_api_url
+  auth_web_client_id    = module.cognito.web_client_id
+  favicon_url           = var.favicon_url
+  logo_url              = var.logo_url
+  team_name             = var.team_name
+  ecs_cluster_id        = module.ecs.cluster_id
+  alb_listener_arn      = module.alb.listener_arn
+  authz_graph_url       = module.authz.graphql_api_url
+  access_handler_domain = var.access_handler_domain
 }
-
 
 module "access_handler" {
   source                = "common-fate/common-fate/commonfate//modules/access"
-  version               = "0.1.12"
+  version               = "0.1.13"
   namespace             = var.namespace
   stage                 = var.stage
   aws_region            = var.aws_region
@@ -135,7 +136,7 @@ module "access_handler" {
   subnet_ids            = var.private_subnet_ids
   vpc_id                = var.vpc_id
   auth_authority_url    = module.cognito.auth_authority_url
-  authz_domain          = var.authz_domain
+  authz_url             = module.authz.grpc_api_url
   ecs_cluster_id        = module.ecs.cluster_id
   access_handler_domain = var.access_handler_domain
   alb_listener_arn      = module.alb.listener_arn
@@ -145,7 +146,7 @@ module "access_handler" {
 
 module "authz" {
   source              = "common-fate/common-fate/commonfate//modules/authz"
-  version             = "0.1.12"
+  version             = "0.1.13"
   namespace           = var.namespace
   stage               = var.stage
   aws_region          = var.aws_region
