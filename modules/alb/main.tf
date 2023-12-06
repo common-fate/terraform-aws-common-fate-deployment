@@ -29,13 +29,18 @@ resource "aws_lb" "main_alb" {
 
 }
 
-resource "aws_lb_listener" "web_listener" {
-  count             = var.web_certificate_arn == "" ? 0 : 1
+locals {
+  distinct_certificates = distinct(var.certificate_arns)
+}
+// The listener is configured to use SNI for multiple certificates if provided
+// else it will just use a single cert if all provided arns are the same
+resource "aws_lb_listener" "https_listener" {
   load_balancer_arn = aws_lb.main_alb.arn
   port              = 443
   protocol          = "HTTPS"
   ssl_policy        = "ELBSecurityPolicy-TLS-1-2-2017-01"
-  certificate_arn   = var.web_certificate_arn
+
+  certificate_arn = element(local.distinct_certificates, 0)
 
   default_action {
     type = "fixed-response"
@@ -47,52 +52,9 @@ resource "aws_lb_listener" "web_listener" {
   }
 }
 
-resource "aws_lb_listener" "control_plane_listener" {
-  count             = var.control_plane_certificate_arn == "" ? 0 : 1
-  load_balancer_arn = aws_lb.main_alb.arn
-  port              = 443
-  protocol          = "HTTPS"
-  ssl_policy        = "ELBSecurityPolicy-TLS-1-2-2017-01"
-  certificate_arn   = var.control_plane_certificate_arn
-  default_action {
-    type = "fixed-response"
-    fixed_response {
-      content_type = "text/plain"
-      message_body = "Not Found (Common Fate)"
-      status_code  = "404"
-    }
-  }
-}
-
-resource "aws_lb_listener" "authz_listener" {
-  count             = var.authz_certificate_arn == "" ? 0 : 1
-  load_balancer_arn = aws_lb.main_alb.arn
-  port              = 443
-  protocol          = "HTTPS"
-  ssl_policy        = "ELBSecurityPolicy-TLS-1-2-2017-01"
-  certificate_arn   = var.authz_certificate_arn
-  default_action {
-    type = "fixed-response"
-    fixed_response {
-      content_type = "text/plain"
-      message_body = "Not Found (Common Fate)"
-      status_code  = "404"
-    }
-  }
-}
-resource "aws_lb_listener" "access_handler_listener" {
-  count             = var.access_handler_certificate_arn == "" ? 0 : 1
-  load_balancer_arn = aws_lb.main_alb.arn
-  port              = 443
-  protocol          = "HTTPS"
-  ssl_policy        = "ELBSecurityPolicy-TLS-1-2-2017-01"
-  certificate_arn   = var.access_handler_certificate_arn
-  default_action {
-    type = "fixed-response"
-    fixed_response {
-      content_type = "text/plain"
-      message_body = "Not Found (Common Fate)"
-      status_code  = "404"
-    }
-  }
+// if there are any other distict certificates, add them to the listener
+resource "aws_lb_listener_certificate" "additional_certs" {
+  for_each        = { for idx, cert_arn in local.distinct_certificates : idx => cert_arn if idx > 0 }
+  listener_arn    = aws_lb_listener.https_listener.arn
+  certificate_arn = each.value
 }

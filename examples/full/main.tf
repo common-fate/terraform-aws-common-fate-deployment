@@ -13,16 +13,18 @@ module "vpc" {
 }
 
 module "alb" {
-  source                         = "common-fate/common-fate/commonfate//modules/alb"
-  version                        = "0.1.12"
-  namespace                      = var.namespace
-  stage                          = var.stage
-  access_handler_certificate_arn = var.access_handler_certificate_arn
-  authz_certificate_arn          = var.auth_certificate_arn
-  control_plane_certificate_arn  = var.control_plane_certificate_arn
-  web_certificate_arn            = var.web_certificate_arn
-  public_subnet_ids              = module.vpc.public_subnet_ids
-  vpc_id                         = module.vpc.vpc_id
+  source    = "common-fate/common-fate/commonfate//modules/alb"
+  version   = "0.1.12"
+  namespace = var.namespace
+  stage     = var.stage
+  certificate_arns = [
+    var.access_handler_certificate_arn,
+    var.authz_certificate_arn,
+    var.control_plane_certificate_arn,
+    var.web_certificate_arn
+  ]
+  public_subnet_ids = module.vpc.public_subnet_ids
+  vpc_id            = module.vpc.vpc_id
 }
 
 module "control_plane_db" {
@@ -96,7 +98,7 @@ module "control_plane" {
   auth_authority_url              = module.cognito.auth_authority_url
   database_host                   = module.control_plane_db.endpoint
   database_user                   = module.control_plane_db.username
-  alb_listener_arn                = module.alb.control_plane_listener_arn
+  alb_listener_arn                = module.alb.listener_arn
   authz_domain                    = var.authz_domain
   sqs_queue_name                  = module.events.sqs_queue_name
   auth_issuer                     = module.cognito.auth_issuer
@@ -127,7 +129,7 @@ module "web" {
   logo_url             = var.logo_url
   team_name            = var.team_name
   ecs_cluster_id       = module.ecs.cluster_id
-  alb_listener_arn     = module.alb.web_listener_arn
+  alb_listener_arn     = module.alb.listener_arn
 }
 
 
@@ -145,7 +147,7 @@ module "access_handler" {
   authz_domain          = var.authz_domain
   ecs_cluster_id        = module.ecs.cluster_id
   access_handler_domain = var.access_handler_domain
-  alb_listener_arn      = module.alb.access_handler_listener_arn
+  alb_listener_arn      = module.alb.listener_arn
   auth_issuer           = module.cognito.auth_issuer
   web_domain            = var.web_domain
 }
@@ -161,7 +163,7 @@ module "authz" {
   subnet_ids          = module.vpc.private_subnet_ids
   vpc_id              = module.vpc.vpc_id
   ecs_cluster_id      = module.ecs.cluster_id
-  alb_listener_arn    = module.alb.authz_listener_arn
+  alb_listener_arn    = module.alb.listener_arn
   authz_domain        = var.authz_domain
   dynamodb_table_name = module.authz_db.dynamodb_table_name
   web_domain          = var.web_domain

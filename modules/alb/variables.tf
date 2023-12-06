@@ -16,29 +16,16 @@ variable "vpc_id" {
 }
 
 
-variable "control_plane_certificate_arn" {
-  description = "The Amazon Certificate Manager (ACM) certificate ARN for the control_plane_domain."
-  type        = string
-  default     = ""
+variable "certificate_arns" {
+  description = "The Amazon Certificate Manager (ACM) certificate ARN for the domains served by this load balancer"
+  type        = list(string)
+
+  validation {
+    condition     = length(var.certificate_arns) > 0
+    error_message = "The certificate_arns list must contain at least one certificate ARN."
+  }
 }
 
-variable "authz_certificate_arn" {
-  description = "The Amazon Certificate Manager (ACM) certificate ARN for the authz_domain."
-  type        = string
-  default     = ""
-}
-
-variable "web_certificate_arn" {
-  description = "The Amazon Certificate Manager (ACM) certificate ARN for the web_domain."
-  type        = string
-  default     = ""
-}
-
-variable "access_handler_certificate_arn" {
-  description = "The Amazon Certificate Manager (ACM) certificate ARN for the access_handler_domain."
-  type        = string
-  default     = ""
-}
 
 variable "public_subnet_ids" {
   description = "Lists the subnet IDs for public subnets."
