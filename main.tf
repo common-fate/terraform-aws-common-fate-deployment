@@ -105,6 +105,7 @@ module "control_plane" {
   cleanup_service_client_secret   = module.cognito.cleanup_service_client_secret
   licence_key_ps_arn              = var.licence_key_ps_arn
   access_handler_domain           = var.access_handler_domain
+  enable_verbose_logging          = var.enable_verbose_logging
 }
 
 
@@ -133,35 +134,38 @@ module "web" {
 }
 
 module "access_handler" {
-  source                = "./modules/access"
-  namespace             = var.namespace
-  stage                 = var.stage
-  aws_region            = var.aws_region
-  eventbus_arn          = module.events.event_bus_arn
-  release_tag           = var.release_tag
-  subnet_ids            = module.vpc.private_subnet_ids
-  vpc_id                = module.vpc.vpc_id
-  auth_authority_url    = module.cognito.auth_authority_url
-  authz_url             = module.authz.grpc_api_url
-  ecs_cluster_id        = module.ecs.cluster_id
-  access_handler_domain = var.access_handler_domain
-  alb_listener_arn      = module.alb.listener_arn
-  auth_issuer           = module.cognito.auth_issuer
-  web_domain            = var.web_domain
+  source                 = "./modules/access"
+  namespace              = var.namespace
+  stage                  = var.stage
+  aws_region             = var.aws_region
+  eventbus_arn           = module.events.event_bus_arn
+  release_tag            = var.release_tag
+  subnet_ids             = module.vpc.private_subnet_ids
+  vpc_id                 = module.vpc.vpc_id
+  auth_authority_url     = module.cognito.auth_authority_url
+  authz_url              = module.authz.grpc_api_url
+  ecs_cluster_id         = module.ecs.cluster_id
+  access_handler_domain  = var.access_handler_domain
+  alb_listener_arn       = module.alb.listener_arn
+  auth_issuer            = module.cognito.auth_issuer
+  web_domain             = var.web_domain
+  enable_verbose_logging = var.enable_verbose_logging
 }
 
 module "authz" {
-  source              = "./modules/authz"
-  namespace           = var.namespace
-  stage               = var.stage
-  aws_region          = var.aws_region
-  eventbus_arn        = module.events.event_bus_arn
-  release_tag         = var.release_tag
-  subnet_ids          = module.vpc.private_subnet_ids
-  vpc_id              = module.vpc.vpc_id
-  ecs_cluster_id      = module.ecs.cluster_id
-  alb_listener_arn    = module.alb.listener_arn
-  authz_domain        = var.authz_domain
-  dynamodb_table_name = module.authz_db.dynamodb_table_name
-  web_domain          = var.web_domain
+  source                 = "./modules/authz"
+  namespace              = var.namespace
+  stage                  = var.stage
+  aws_region             = var.aws_region
+  eventbus_arn           = module.events.event_bus_arn
+  release_tag            = var.release_tag
+  subnet_ids             = module.vpc.private_subnet_ids
+  vpc_id                 = module.vpc.vpc_id
+  ecs_cluster_id         = module.ecs.cluster_id
+  alb_listener_arn       = module.alb.listener_arn
+  authz_domain           = var.authz_domain
+  dynamodb_table_name    = module.authz_db.dynamodb_table_name
+  web_domain             = var.web_domain
+  enable_verbose_logging = var.enable_verbose_logging
+  dynamodb_table_arn     = module.authz_db.dynamodb_table_arn
 }

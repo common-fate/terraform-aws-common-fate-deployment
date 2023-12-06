@@ -66,7 +66,56 @@ resource "aws_iam_role_policy_attachment" "authz_ecs_execution_role_policy_attac
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
 }
 
+# TASK ROLE
+resource "aws_iam_role" "authz_ecs_task_role" {
+  name        = "${var.namespace}-${var.stage}-authz-ecs-tr"
+  description = "The task role assumed by the Authz task."
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Action = "sts:AssumeRole",
+        Effect = "Allow",
+        Principal = {
+          Service = "ecs-tasks.amazonaws.com"
+        }
+      }
+    ]
+  })
+}
 
+resource "aws_iam_policy" "dynamodb_write" {
+  name        = "${var.namespace}-${var.stage}-authz-ddb"
+  description = "Allows ECS tasks to write to dynamodb"
+
+  policy = jsonencode({
+    "Version" : "2012-10-17",
+    "Statement" : [
+      {
+        "Effect" : "Allow",
+        "Action" : [
+          "*",
+          # "dynamodb:BatchGetItem",
+          # "dynamodb:BatchWriteItem",
+          # "dynamodb:ConditionCheckItem",
+          # "dynamodb:PutItem",
+          # "dynamodb:DescribeTable",
+          # "dynamodb:DeleteItem",
+          # "dynamodb:GetItem",
+          # "dynamodb:Scan",
+          # "dynamodb:Query",
+          # "dynamodb:UpdateItem"
+        ],
+        "Resource" : "*", #var.dynamodb_table_arn
+      }
+    ]
+  })
+
+}
+resource "aws_iam_role_policy_attachment" "authz_dynamodb_write_attach" {
+  role       = aws_iam_role.authz_ecs_task_role.name
+  policy_arn = aws_iam_policy.dynamodb_write.arn
+}
 
 resource "aws_ecs_task_definition" "authz_task" {
   family                   = "${var.namespace}-${var.stage}-authz"
@@ -75,7 +124,7 @@ resource "aws_ecs_task_definition" "authz_task" {
   cpu                      = var.ecs_task_cpu
   memory                   = var.ecs_task_memory
   execution_role_arn       = aws_iam_role.authz_ecs_execution_role.arn
-
+  task_role_arn            = aws_iam_role.authz_ecs_task_role.arn
   container_definitions = jsonencode([{
 
     name  = "authz-container",
@@ -99,7 +148,13 @@ resource "aws_ecs_task_definition" "authz_task" {
       },
       { name  = "CF_CORS_ALLOWED_ORIGINS"
         value = join(",", [var.web_domain])
+      },
+      {
+        name  = "LOG_LEVEL"
+        value = var.enable_verbose_logging ? "DEBUG" : "INFO"
+
       }
+
     ],
     secrets = []
 
@@ -166,6 +221,11 @@ resource "aws_ecs_service" "authz_service" {
     target_group_arn = aws_lb_target_group.grpc_tg.arn
     container_name   = "authz-container"
     container_port   = 5050
+  }
+  load_balancer {
+    target_group_arn = aws_lb_target_group.graphql_tg.arn
+    container_name   = "authz-container"
+    container_port   = 5051
   }
 }
 

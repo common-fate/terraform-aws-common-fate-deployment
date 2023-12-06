@@ -105,3 +105,8 @@ variable "desired_task_count" {
   type        = number
   default     = 1
 }
+variable "enable_verbose_logging" {
+  description = "Enables debug level verbose logging on ecs tasks"
+  type        = bool
+  default     = false
+}

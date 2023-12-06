@@ -171,3 +171,8 @@ variable "licence_key_ps_arn" {
   description = "The AWS Parameter Store ARN for the license key."
   type        = string
 }
+variable "enable_verbose_logging" {
+  description = "Enables debug level verbose logging on ecs tasks"
+  type        = bool
+  default     = false
+}

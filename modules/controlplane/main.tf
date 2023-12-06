@@ -277,6 +277,11 @@ resource "aws_ecs_task_definition" "control_plane_task" {
       },
       { name  = "CF_CORS_ALLOWED_ORIGINS"
         value = join(",", [var.web_domain])
+      },
+      {
+        name  = "LOG_LEVEL"
+        value = var.enable_verbose_logging ? "DEBUG" : "INFO"
+
       }
 
     ],

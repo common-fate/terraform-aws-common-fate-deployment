@@ -79,6 +79,11 @@ variable "dynamodb_table_name" {
   description = "The Dynamo DB table name"
   type        = string
 }
+
+variable "dynamodb_table_arn" {
+  description = "The Dynamo DB table ARN"
+  type        = string
+}
 variable "web_domain" {
   description = "Specifies the frontend domain (e.g., 'https://mydomain.com')."
   type        = string
@@ -87,4 +92,11 @@ variable "web_domain" {
     condition     = can(regex("^https://", var.web_domain))
     error_message = "The web_domain must start with 'https://'."
   }
+}
+
+
+variable "enable_verbose_logging" {
+  description = "Enables debug level verbose logging on ecs tasks"
+  type        = bool
+  default     = false
 }

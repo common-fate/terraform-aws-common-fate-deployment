@@ -84,7 +84,7 @@ resource "aws_iam_policy" "eventbus_put_events" {
   })
 
 }
-resource "aws_iam_role_policy_attachment" "control_plane_eventbus_put_events_attach" {
+resource "aws_iam_role_policy_attachment" "access_handler_eventbus_put_events_attach" {
   role       = aws_iam_role.access_handler_ecs_task_role.name
   policy_arn = aws_iam_policy.eventbus_put_events.arn
 }
@@ -124,6 +124,11 @@ resource "aws_ecs_task_definition" "access_handler_task" {
       },
       { name  = "CF_CORS_ALLOWED_ORIGINS"
         value = join(",", [var.web_domain])
+      },
+      {
+        name  = "LOG_LEVEL"
+        value = var.enable_verbose_logging ? "DEBUG" : "INFO"
+
       }
     ],
     secrets = [
