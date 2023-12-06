@@ -122,6 +122,9 @@ resource "aws_ecs_task_definition" "access_handler_task" {
         name  = "CF_OIDC_TRUSTED_ISSUER_COGNITO",
         value = var.auth_issuer
       },
+      { name  = "CF_CORS_ALLOWED_ORIGINS"
+        value = join(",", [var.web_domain])
+      }
     ],
     secrets = [
 

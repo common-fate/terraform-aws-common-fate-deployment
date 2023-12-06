@@ -15,9 +15,29 @@ variable "vpc_id" {
   type        = string
 }
 
-variable "certificate_arn" {
-  description = "Specifies the Amazon Certificate Manager (ACM) certificate ARN."
+
+variable "control_plane_certificate_arn" {
+  description = "The Amazon Certificate Manager (ACM) certificate ARN for the control_plane_domain."
   type        = string
+  default     = ""
+}
+
+variable "authz_certificate_arn" {
+  description = "The Amazon Certificate Manager (ACM) certificate ARN for the authz_domain."
+  type        = string
+  default     = ""
+}
+
+variable "web_certificate_arn" {
+  description = "The Amazon Certificate Manager (ACM) certificate ARN for the web_domain."
+  type        = string
+  default     = ""
+}
+
+variable "access_handler_certificate_arn" {
+  description = "The Amazon Certificate Manager (ACM) certificate ARN for the access_handler_domain."
+  type        = string
+  default     = ""
 }
 
 variable "public_subnet_ids" {

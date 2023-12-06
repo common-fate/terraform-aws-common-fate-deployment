@@ -50,13 +50,13 @@ variable "web_domain" {
     error_message = "The web_domain must start with 'https://'."
   }
 }
-variable "api_domain" {
+variable "control_plane_domain" {
   description = "The API domain (e.g., 'https://api.mydomain.com')."
   type        = string
 
   validation {
-    condition     = can(regex("^https://", var.api_domain))
-    error_message = "The api_domain must start with 'https://'."
+    condition     = can(regex("^https://", var.control_plane_domain))
+    error_message = "The control_plane_domain must start with 'https://'."
   }
 }
 

@@ -70,6 +70,15 @@ variable "access_handler_domain" {
   }
 }
 
+variable "web_domain" {
+  description = "Specifies the frontend domain (e.g., 'https://mydomain.com')."
+  type        = string
+
+  validation {
+    condition     = can(regex("^https://", var.web_domain))
+    error_message = "The web_domain must start with 'https://'."
+  }
+}
 variable "auth_issuer" {
   description = "Specifies the issuer for authentication."
   type        = string

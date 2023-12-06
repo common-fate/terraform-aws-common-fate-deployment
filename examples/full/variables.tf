@@ -20,8 +20,23 @@ variable "release_tag" {
   type        = string
 }
 
-variable "app_certificate_arn" {
-  description = "The Amazon Certificate Manager (ACM) certificate ARN for the API and frontend domains."
+variable "control_plane_certificate_arn" {
+  description = "The Amazon Certificate Manager (ACM) certificate ARN for the control_plane_domain."
+  type        = string
+}
+
+variable "authz_certificate_arn" {
+  description = "The Amazon Certificate Manager (ACM) certificate ARN for the authz_domain."
+  type        = string
+}
+
+variable "web_certificate_arn" {
+  description = "The Amazon Certificate Manager (ACM) certificate ARN for the web_domain."
+  type        = string
+}
+
+variable "access_handler_certificate_arn" {
+  description = "The Amazon Certificate Manager (ACM) certificate ARN for the access_handler_domain."
   type        = string
 }
 
@@ -90,13 +105,13 @@ variable "web_domain" {
   }
 }
 
-variable "api_domain" {
-  description = "The API domain (e.g., 'https://api.mydomain.com')."
+variable "control_plane_domain" {
+  description = "The Control Plane domain (e.g., 'https://api.mydomain.com')."
   type        = string
 
   validation {
-    condition     = can(regex("^https://", var.api_domain))
-    error_message = "The api_domain must start with 'https://'."
+    condition     = can(regex("^https://", var.control_plane_domain))
+    error_message = "The control_plane_domain must start with 'https://'."
   }
 }
 

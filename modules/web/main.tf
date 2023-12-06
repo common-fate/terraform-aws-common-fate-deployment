@@ -80,7 +80,7 @@ resource "aws_ecs_task_definition" "web_task" {
       },
       {
         name  = "CF_API_URL"
-        value = var.api_domain
+        value = var.control_plane_domain
       },
       {
         name  = "CF_AUTHZ_URL",

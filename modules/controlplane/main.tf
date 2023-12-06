@@ -232,7 +232,7 @@ resource "aws_ecs_task_definition" "control_plane_task" {
       },
       {
         name  = "CF_API_URL",
-        value = var.api_domain
+        value = var.control_plane_domain
       },
       {
         name  = "CF_AUTHZ_URL",
@@ -249,7 +249,7 @@ resource "aws_ecs_task_definition" "control_plane_task" {
 
       {
         name  = "CF_SLACK_REDIRECT_URL",
-        value = "${var.api_domain}/oauth2/callback/slack"
+        value = "${var.control_plane_domain}/oauth2/callback/slack"
       },
       {
         name  = "CF_PG_USER",
@@ -275,6 +275,9 @@ resource "aws_ecs_task_definition" "control_plane_task" {
         name  = "CF_CLEANUP_SERVICE_OIDC_CLIENT_SECRET",
         value = var.cleanup_service_client_secret
       },
+      { name  = "CF_CORS_ALLOWED_ORIGINS"
+        value = join(",", [var.web_domain])
+      }
 
     ],
 
@@ -369,7 +372,7 @@ resource "aws_lb_listener_rule" "service_rule" {
 
   condition {
     host_header {
-      values = [replace(var.api_domain, "https://", "")]
+      values = [replace(var.control_plane_domain, "https://", "")]
     }
   }
 }

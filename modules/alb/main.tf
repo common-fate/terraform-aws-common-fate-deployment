@@ -29,12 +29,14 @@ resource "aws_lb" "main_alb" {
 
 }
 
-resource "aws_lb_listener" "frontend_listener" {
+resource "aws_lb_listener" "web_listener" {
+  count             = var.web_certificate_arn == "" ? 0 : 1
   load_balancer_arn = aws_lb.main_alb.arn
   port              = 443
   protocol          = "HTTPS"
   ssl_policy        = "ELBSecurityPolicy-TLS-1-2-2017-01"
-  certificate_arn   = var.certificate_arn
+  certificate_arn   = var.web_certificate_arn
+
   default_action {
     type = "fixed-response"
     fixed_response {
@@ -43,6 +45,54 @@ resource "aws_lb_listener" "frontend_listener" {
       status_code  = "404"
     }
   }
-
 }
 
+resource "aws_lb_listener" "control_plane_listener" {
+  count             = var.control_plane_certificate_arn == "" ? 0 : 1
+  load_balancer_arn = aws_lb.main_alb.arn
+  port              = 443
+  protocol          = "HTTPS"
+  ssl_policy        = "ELBSecurityPolicy-TLS-1-2-2017-01"
+  certificate_arn   = var.control_plane_certificate_arn
+  default_action {
+    type = "fixed-response"
+    fixed_response {
+      content_type = "text/plain"
+      message_body = "Not Found (Common Fate)"
+      status_code  = "404"
+    }
+  }
+}
+
+resource "aws_lb_listener" "authz_listener" {
+  count             = var.authz_certificate_arn == "" ? 0 : 1
+  load_balancer_arn = aws_lb.main_alb.arn
+  port              = 443
+  protocol          = "HTTPS"
+  ssl_policy        = "ELBSecurityPolicy-TLS-1-2-2017-01"
+  certificate_arn   = var.authz_certificate_arn
+  default_action {
+    type = "fixed-response"
+    fixed_response {
+      content_type = "text/plain"
+      message_body = "Not Found (Common Fate)"
+      status_code  = "404"
+    }
+  }
+}
+resource "aws_lb_listener" "access_handler_listener" {
+  count             = var.access_handler_certificate_arn == "" ? 0 : 1
+  load_balancer_arn = aws_lb.main_alb.arn
+  port              = 443
+  protocol          = "HTTPS"
+  ssl_policy        = "ELBSecurityPolicy-TLS-1-2-2017-01"
+  certificate_arn   = var.access_handler_certificate_arn
+  default_action {
+    type = "fixed-response"
+    fixed_response {
+      content_type = "text/plain"
+      message_body = "Not Found (Common Fate)"
+      status_code  = "404"
+    }
+  }
+}

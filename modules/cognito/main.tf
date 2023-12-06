@@ -91,7 +91,7 @@ resource "aws_lambda_function" "pre_token_generation_lambda_function" {
   timeout          = 10
   environment {
     variables = {
-      API_URL            = var.api_domain
+      API_URL            = var.control_plane_domain
       ACCESS_HANDLER_URL = var.access_handler_domain
     }
   }

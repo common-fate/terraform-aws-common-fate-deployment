@@ -1,9 +1,9 @@
 module "common-fate" {
   source                          = "common-fate/common-fate/commonfate"
-  version                         = "0.1.9"
+  version                         = "0.1.12"
   namespace                       = var.namespace
   access_handler_domain           = var.access_handler_domain
-  api_domain                      = var.api_domain
+  control_plane_domain            = var.control_plane_domain
   auth_certificate_arn            = var.auth_certificate_arn
   auth_domain                     = var.auth_domain
   authz_domain                    = var.authz_domain
@@ -20,6 +20,10 @@ module "common-fate" {
   slack_client_secret_ps_arn      = var.slack_client_secret_ps_arn
   slack_signing_secret_ps_arn     = var.slack_signing_secret_ps_arn
   stage                           = var.stage
-  app_certificate_arn             = var.app_certificate_arn
+  access_handler_certificate_arn  = var.access_handler_certificate_arn
+  authz_certificate_arn           = var.auth_certificate_arn
+  control_plane_certificate_arn   = var.control_plane_certificate_arn
+  web_certificate_arn             = var.web_certificate_arn
   web_domain                      = var.web_domain
+
 }

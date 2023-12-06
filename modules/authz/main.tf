@@ -82,10 +82,15 @@ resource "aws_ecs_task_definition" "authz_task" {
         containerPort = 5050,
       },
     ],
-    environment = [{
-      name  = "AUTHZ_DYNAMODB_TABLE"
-      value = var.dynamodb_table_name
-    }],
+    environment = [
+      {
+        name  = "AUTHZ_DYNAMODB_TABLE"
+        value = var.dynamodb_table_name
+      },
+      { name  = "CF_CORS_ALLOWED_ORIGINS"
+        value = join(",", [var.web_domain])
+      }
+    ],
     secrets = []
 
     logConfiguration = {
