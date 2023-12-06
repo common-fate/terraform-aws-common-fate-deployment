@@ -5,7 +5,7 @@ provider "aws" {
 
 module "alb" {
   source    = "common-fate/common-fate/commonfate//modules/alb"
-  version   = "0.1.12"
+  version   = "0.1.13"
   namespace = var.namespace
   stage     = var.stage
   certificate_arns = [
@@ -20,7 +20,7 @@ module "alb" {
 
 module "control_plane_db" {
   source          = "common-fate/common-fate/commonfate//modules/database"
-  version         = "0.1.12"
+  version         = "0.1.13"
   namespace       = var.namespace
   stage           = var.stage
   vpc_id          = var.vpc_id
@@ -28,13 +28,13 @@ module "control_plane_db" {
 }
 module "authz_db" {
   source    = "common-fate/common-fate/commonfate//modules/authz-database"
-  version   = "0.1.12"
+  version   = "0.1.13"
   namespace = var.namespace
   stage     = var.stage
 }
 module "events" {
   source    = "common-fate/common-fate/commonfate//modules/events"
-  version   = "0.1.12"
+  version   = "0.1.13"
   namespace = var.namespace
   stage     = var.stage
 }
@@ -49,7 +49,7 @@ module "ecs" {
 
 module "cognito" {
   source                = "common-fate/common-fate/commonfate//modules/cognito"
-  version               = "0.1.12"
+  version               = "0.1.13"
   namespace             = var.namespace
   stage                 = var.stage
   control_plane_domain  = var.control_plane_domain
