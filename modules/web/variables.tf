@@ -44,7 +44,15 @@ variable "control_plane_domain" {
     error_message = "The control_plane_domain must start with 'https://'."
   }
 }
+variable "access_handler_domain" {
+  description = "Defines the domain for access handler (e.g., 'https://access.mydomain.com')."
+  type        = string
 
+  validation {
+    condition     = can(regex("^https://", var.access_handler_domain))
+    error_message = "The access_handler_domain must start with 'https://'."
+  }
+}
 variable "aws_region" {
   description = "Determines the AWS Region for deployment."
   type        = string
@@ -60,13 +68,23 @@ variable "auth_domain" {
   }
 }
 
-variable "authz_domain" {
-  description = "Specifies the authorization domain (e.g., 'https://authz.mydomain.com')."
+variable "authz_url" {
+  description = "Specifies the authz grpc api url (e.g., 'https://authz.mydomain.com/grpc')."
   type        = string
 
   validation {
-    condition     = can(regex("^https://", var.authz_domain))
-    error_message = "The authz_domain must start with 'https://'."
+    condition     = can(regex("^https://", var.authz_url))
+    error_message = "The authz_url must start with 'https://'."
+  }
+}
+
+variable "authz_graph_url" {
+  description = "Specifies the authz graphql api url (e.g., 'https://authz.mydomain.com/graph')."
+  type        = string
+
+  validation {
+    condition     = can(regex("^https://", var.authz_graph_url))
+    error_message = "The authz_graph_url must start with 'https://'."
   }
 }
 

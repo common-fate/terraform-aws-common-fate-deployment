@@ -13,10 +13,17 @@ resource "aws_security_group" "ecs_authz_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  // api
+  // authz api
   ingress {
     from_port   = 5050
     to_port     = 5050
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"] # Allow incoming HTTP requests from anywhere
+  }
+  // graphql
+  ingress {
+    from_port   = 5051
+    to_port     = 5051
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"] # Allow incoming HTTP requests from anywhere
   }
@@ -81,6 +88,9 @@ resource "aws_ecs_task_definition" "authz_task" {
       {
         containerPort = 5050,
       },
+      {
+        containerPort = 5051,
+      },
     ],
     environment = [
       {
@@ -109,8 +119,8 @@ resource "aws_ecs_task_definition" "authz_task" {
   }])
 }
 
-resource "aws_lb_target_group" "authz_tg" {
-  name             = "${var.namespace}-${var.stage}-authz"
+resource "aws_lb_target_group" "grpc_tg" {
+  name             = "${var.namespace}-${var.stage}-authz-grpc"
   port             = 5050
   protocol         = "HTTP"
   protocol_version = "GRPC"
@@ -123,6 +133,20 @@ resource "aws_lb_target_group" "authz_tg" {
     matcher = "0-99"
   }
 
+}
+
+resource "aws_lb_target_group" "graphql_tg" {
+  name        = "${var.namespace}-${var.stage}-authz-graphql"
+  port        = 5051
+  protocol    = "HTTP"
+  vpc_id      = var.vpc_id
+  target_type = "ip"
+
+  health_check {
+    enabled = true
+    path    = "/health" # Uses the monitoring API for healthcheck
+    port    = 9090
+  }
 }
 
 resource "aws_ecs_service" "authz_service" {
@@ -144,16 +168,40 @@ resource "aws_ecs_service" "authz_service" {
     container_port   = 5050
   }
 }
-resource "aws_lb_listener_rule" "service_rule" {
+resource "aws_lb_listener_rule" "grpc_service_rule" {
   listener_arn = var.alb_listener_arn
+  priority     = 100 # Ensure unique priority for each rule
+
   action {
     type             = "forward"
-    target_group_arn = aws_lb_target_group.authz_tg.arn
+    target_group_arn = aws_lb_target_group.grpc_tg.arn
   }
 
   condition {
     host_header {
       values = [replace(var.authz_domain, "https://", "")]
+    }
+    path_pattern {
+      values = ["/grpc*"]
+    }
+  }
+}
+
+resource "aws_lb_listener_rule" "graph_service_rule" {
+  listener_arn = var.alb_listener_arn
+  priority     = 101 # Ensure unique priority for each rule
+
+  action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.graphql_tg.arn
+  }
+
+  condition {
+    host_header {
+      values = [replace(var.authz_domain, "https://", "")]
+    }
+    path_pattern {
+      values = ["/graph*"]
     }
   }
 }

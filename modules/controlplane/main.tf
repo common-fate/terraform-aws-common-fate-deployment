@@ -236,7 +236,7 @@ resource "aws_ecs_task_definition" "control_plane_task" {
       },
       {
         name  = "CF_AUTHZ_URL",
-        value = var.authz_domain
+        value = var.authz_url
       },
       {
         name  = "CF_ACCESS_URL",

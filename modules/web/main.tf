@@ -83,8 +83,16 @@ resource "aws_ecs_task_definition" "web_task" {
         value = var.control_plane_domain
       },
       {
+        name  = "CF_ACCESS_API_URL"
+        value = var.access_handler_domain
+      },
+      {
         name  = "CF_AUTHZ_URL",
-        value = var.authz_domain
+        value = var.authz_url
+      },
+      {
+        name  = "CF_AUTHZ_GRAPH_URL",
+        value = var.authz_graph_url
       },
       {
         name  = "CF_TEAM_NAME"

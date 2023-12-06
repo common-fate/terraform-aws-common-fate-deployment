@@ -35,13 +35,13 @@ variable "release_tag" {
   type        = string
 }
 
-variable "authz_domain" {
-  description = "Specifies the authorization domain (e.g., 'https://authz.mydomain.com')."
+variable "authz_url" {
+  description = "Specifies the authz grpc api url (e.g., 'https://authz.mydomain.com/grpc')."
   type        = string
 
   validation {
-    condition     = can(regex("^https://", var.authz_domain))
-    error_message = "The authz_domain must start with 'https://'."
+    condition     = can(regex("^https://", var.authz_url))
+    error_message = "The authz_url must start with 'https://'."
   }
 }
 

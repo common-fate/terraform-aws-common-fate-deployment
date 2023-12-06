@@ -116,7 +116,7 @@ resource "aws_ecs_task_definition" "access_handler_task" {
       },
       {
         name  = "CF_AUTHZ_URL",
-        value = var.authz_domain
+        value = var.authz_url
       },
       {
         name  = "CF_OIDC_TRUSTED_ISSUER_COGNITO",
