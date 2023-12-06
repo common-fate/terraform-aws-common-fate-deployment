@@ -163,33 +163,15 @@ resource "aws_ecs_service" "authz_service" {
   }
 
   load_balancer {
-    target_group_arn = aws_lb_target_group.authz_tg.arn
+    target_group_arn = aws_lb_target_group.grpc_tg.arn
     container_name   = "authz-container"
     container_port   = 5050
-  }
-}
-resource "aws_lb_listener_rule" "grpc_service_rule" {
-  listener_arn = var.alb_listener_arn
-  priority     = 100 # Ensure unique priority for each rule
-
-  action {
-    type             = "forward"
-    target_group_arn = aws_lb_target_group.grpc_tg.arn
-  }
-
-  condition {
-    host_header {
-      values = [replace(var.authz_domain, "https://", "")]
-    }
-    path_pattern {
-      values = ["/grpc*"]
-    }
   }
 }
 
 resource "aws_lb_listener_rule" "graph_service_rule" {
   listener_arn = var.alb_listener_arn
-  priority     = 101 # Ensure unique priority for each rule
+  priority     = 100 # /graph rule is evaluated first to ensure that path matching works
 
   action {
     type             = "forward"
@@ -200,8 +182,25 @@ resource "aws_lb_listener_rule" "graph_service_rule" {
     host_header {
       values = [replace(var.authz_domain, "https://", "")]
     }
+  }
+  condition {
     path_pattern {
       values = ["/graph*"]
+    }
+  }
+}
+resource "aws_lb_listener_rule" "grpc_service_rule" {
+  listener_arn = var.alb_listener_arn
+  priority     = 1000
+
+  action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.grpc_tg.arn
+  }
+
+  condition {
+    host_header {
+      values = [replace(var.authz_domain, "https://", "")]
     }
   }
 }
