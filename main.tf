@@ -4,9 +4,7 @@
 provider "aws" {
   region = var.aws_region
 }
-locals {
-  a = "ss"
-}
+
 module "vpc" {
   source     = "./modules/vpc"
   namespace  = var.namespace

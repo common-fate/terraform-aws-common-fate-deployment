@@ -300,8 +300,23 @@ resource "aws_ecs_task_definition" "control_plane_task" {
       {
         name  = "LOG_LEVEL"
         value = var.enable_verbose_logging ? "DEBUG" : "INFO"
-
-      }
+      },
+      {
+        name  = "CF_SYNC_PAGERDUTY_ENABLED",
+        value = true
+      },
+      {
+        name  = "CF_SYNC_PAGERDUTY_CRON_SCHEDULE",
+        value = "*/30 * * * *"
+      },
+      {
+        name  = "CF_SYNC_GCP_ENABLED",
+        value = true
+      },
+      {
+        name  = "CF_SYNC_GCP_CRON_SCHEDULE",
+        value = "*/30 * * * *"
+      },
 
     ],
 
