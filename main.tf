@@ -72,6 +72,15 @@ module "cognito" {
   saml_provider_name    = var.saml_provider_name
 }
 
+module "gcp_workload_identity_roles" {
+  source                            = "./modules/roles/modules/general-purpose"
+  grant_principals_provision_access = [module.provisioner.task_role_arn]
+  grant_principals_read_access      = [module.control_plane.task_role_arn]
+  name                              = "gcp"
+  namespace                         = var.namespace
+  stage                             = var.stage
+}
+
 
 module "control_plane" {
   source                          = "./modules/controlplane"
@@ -106,6 +115,8 @@ module "control_plane" {
   licence_key_ps_arn              = var.licence_key_ps_arn
   access_handler_domain           = var.access_handler_domain
   enable_verbose_logging          = var.enable_verbose_logging
+  grant_assume_on_role_arns       = [module.gcp_workload_identity_roles.read_role_arn]
+
 }
 
 
@@ -168,4 +179,17 @@ module "authz" {
   web_domain             = var.web_domain
   enable_verbose_logging = var.enable_verbose_logging
   dynamodb_table_arn     = module.authz_db.dynamodb_table_arn
+
+
 }
+module "provisioner" {
+  source               = "./modules/provisioner"
+  access_handler_sg_id = module.access_handler.security_group_id
+  aws_region           = var.aws_region
+  release_tag          = var.release_tag
+  subnet_ids           = module.vpc.private_subnet_ids
+  vpc_id               = module.vpc.vpc_id
+  ecs_cluster_id       = module.ecs.cluster_id
+  provisioner_role_arn = module.gcp_workload_identity_roles.provision_role_arn
+}
+

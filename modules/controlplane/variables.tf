@@ -198,3 +198,8 @@ variable "enable_verbose_logging" {
   type        = bool
   default     = false
 }
+variable "grant_assume_on_role_arns" {
+  description = "The ARNs of the IAM roles which the controlplane should be able to assume."
+  type        = list(string)
+  default     = []
+}

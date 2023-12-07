@@ -45,3 +45,12 @@ output "terraform_client_secret" {
   sensitive   = true
 }
 
+output "provisioner_url" {
+  description = "The provisioner URL to be used when configuring webhook connectors in configuration"
+  value       = module.provisioner.provisioner_url
+}
+
+output "gcp_read_role_arn" {
+  description = "The gcp read role arn"
+  value       = module.gcp_workload_identity_roles.read_role_arn
+}
