@@ -131,15 +131,6 @@ variable "enable_verbose_logging" {
   type        = bool
   default     = false
 }
-# variable "provisioner_role_arn" {
-#   description = "The ARN of the IAM roles which grants the provisioner access to a cloud environment or service."
-#   type        = string
-# }
-
-variable "read_gcp_client_config_json" {
-  description = "The when deployed for GCP, this is the workload indentity federation configuration."
-  type        = string
-}
 
 variable "control_plane_grant_assume_on_role_arns" {
   description = "The ARNs of the IAM roles which the controlplane should be able to assume."
