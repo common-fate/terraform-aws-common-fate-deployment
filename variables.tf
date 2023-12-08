@@ -136,8 +136,13 @@ variable "enable_verbose_logging" {
 #   type        = string
 # }
 
-variable "provisioner_gcp_client_config_json" {
+variable "read_gcp_client_config_json" {
   description = "The when deployed for GCP, this is the workload indentity federation configuration."
   type        = string
 }
 
+variable "control_plane_grant_assume_on_role_arns" {
+  description = "The ARNs of the IAM roles which the controlplane should be able to assume."
+  type        = list(string)
+  default     = []
+}
