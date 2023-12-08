@@ -56,7 +56,7 @@ module "cognito" {
   aws_region            = var.aws_region
   access_handler_domain = var.access_handler_domain
   web_domain            = var.web_domain
-  auth_domain           = var.auth_domain
+  auth_url              = var.auth_url
   auth_certificate_arn  = var.auth_certificate_arn
   saml_metadata_is_file = var.saml_metadata_is_file
   saml_metadata_source  = var.saml_metadata_source
@@ -113,7 +113,7 @@ module "web" {
   vpc_id                = var.vpc_id
   auth_authority_url    = module.cognito.auth_authority_url
   auth_cli_client_id    = module.cognito.cli_client_id
-  auth_domain           = var.auth_domain
+  auth_url              = var.auth_url
   authz_url             = module.authz.grpc_api_url
   auth_web_client_id    = module.cognito.web_client_id
   favicon_url           = var.favicon_url

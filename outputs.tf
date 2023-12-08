@@ -54,3 +54,8 @@ output "gcp_read_role_arn" {
   description = "The gcp read role arn"
   value       = module.gcp_workload_identity_roles.read_role_arn
 }
+
+output "gcp_provision_role_arn" {
+  description = "The gcp provision role arn"
+  value       = module.gcp_workload_identity_roles.provision_role_arn
+}

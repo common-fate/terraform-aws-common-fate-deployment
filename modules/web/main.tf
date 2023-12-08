@@ -67,32 +67,36 @@ resource "aws_ecs_task_definition" "web_task" {
 
     environment = [
       {
-        name  = "CF_OAUTH_CLIENT_ID"
+        name  = "CF_OIDC_CLIENT_ID"
         value = var.auth_web_client_id
       },
       {
-        name  = "CF_CLI_OAUTH_CLIENT_ID"
+        name  = "CF_CLI_OIDC_CLIENT_ID"
         value = var.auth_cli_client_id
       },
       {
-        name  = "CF_OAUTH_AUTH_URL"
+        name  = "CF_OIDC_AUTHORITY_URL"
         value = var.auth_authority_url
       },
       {
+        name  = "CF_OIDC_ISSUER"
+        value = var.auth_issuer
+      },
+      {
         name  = "CF_API_URL"
-        value = var.control_plane_domain
+        value = var.app_url
       },
       {
         name  = "CF_ACCESS_API_URL"
-        value = var.access_handler_domain
+        value = var.app_url
       },
       {
         name  = "CF_AUTHZ_URL",
-        value = var.authz_url
+        value = var.app_url
       },
       {
         name  = "CF_AUTHZ_GRAPH_URL",
-        value = var.authz_graph_url
+        value = "${var.app_url}/graph"
       },
       {
         name  = "CF_TEAM_NAME"
@@ -108,14 +112,12 @@ resource "aws_ecs_task_definition" "web_task" {
       },
       {
         name  = "CF_COGNITO_USER_POOL_DOMAIN"
-        value = var.auth_domain
+        value = var.auth_url
       },
       {
         name  = "CF_COGNITO_REGION"
         value = var.aws_region
       }
-
-
     ]
 
     logConfiguration = {
@@ -163,6 +165,7 @@ resource "aws_ecs_service" "web_service" {
 }
 resource "aws_lb_listener_rule" "service_rule" {
   listener_arn = var.alb_listener_arn
+  priority     = 100
   action {
     type             = "forward"
     target_group_arn = aws_lb_target_group.web_tg.arn
@@ -170,7 +173,7 @@ resource "aws_lb_listener_rule" "service_rule" {
 
   condition {
     host_header {
-      values = [replace(var.web_domain, "https://", "")]
+      values = [replace(var.app_url, "https://", "")]
     }
   }
 

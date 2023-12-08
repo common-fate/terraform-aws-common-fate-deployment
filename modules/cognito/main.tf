@@ -19,8 +19,7 @@ exports.handler = async (event) => {
   event.response = {
     claimsOverrideDetails: {
       claimsToAddOrOverride: {
-        apiUrl: process.env.API_URL,
-        apiUrl: process.env.ACCESS_HANDLER_URL,
+        appUrl: process.env.APP_URL,
       },
     },
   };
@@ -91,14 +90,13 @@ resource "aws_lambda_function" "pre_token_generation_lambda_function" {
   timeout          = 10
   environment {
     variables = {
-      API_URL            = var.control_plane_domain
-      ACCESS_HANDLER_URL = var.access_handler_domain
+      APP_URL = var.app_url
     }
   }
 }
 
 resource "aws_cognito_user_pool_domain" "custom_domain" {
-  domain          = replace(var.auth_domain, "https://", "")
+  domain          = replace(var.auth_url, "https://", "")
   user_pool_id    = aws_cognito_user_pool.cognito_user_pool.id
   certificate_arn = var.auth_certificate_arn
 }
@@ -135,13 +133,13 @@ resource "aws_cognito_user_pool_client" "web-app-client" {
   ]
   allowed_oauth_flows          = ["code"]
   supported_identity_providers = [local.identity_provider_name]
-  default_redirect_uri         = "${var.web_domain}/auth/callback"
+  default_redirect_uri         = "${var.app_url}/auth/callback"
 
   allowed_oauth_flows_user_pool_client = true
   generate_secret                      = false
   allowed_oauth_scopes                 = ["openid", "profile", "email"]
-  callback_urls                        = ["${var.web_domain}/auth/callback"]
-  logout_urls                          = ["${var.web_domain}/logout"]
+  callback_urls                        = ["${var.app_url}/auth/callback"]
+  logout_urls                          = ["${var.app_url}/logout"]
   depends_on                           = [aws_cognito_identity_provider.saml_idp]
 }
 
@@ -197,8 +195,8 @@ resource "aws_cognito_user_pool_client" "terraform_client" {
   generate_secret                      = true
 }
 
-resource "aws_cognito_user_pool_client" "cleanup_service_client" {
-  name         = "${var.namespace}-${var.stage}-cleanup-client"
+resource "aws_cognito_user_pool_client" "control_plane_service_client" {
+  name         = "${var.namespace}-${var.stage}-control-plane-client"
   user_pool_id = aws_cognito_user_pool.cognito_user_pool.id
 
   explicit_auth_flows = [

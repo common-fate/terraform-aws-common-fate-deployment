@@ -88,25 +88,16 @@ variable "slack_signing_secret_ps_arn" {
   type        = string
 }
 
-variable "web_domain" {
-  description = "Specifies the frontend domain (e.g., 'https://mydomain.com')."
+variable "app_url" {
+  description = "The app url (e.g., 'https://common-fate.mydomain.com')."
   type        = string
 
   validation {
-    condition     = can(regex("^https://", var.web_domain))
-    error_message = "The web_domain must start with 'https://'."
+    condition     = can(regex("^https://", var.app_url))
+    error_message = "The app_url must start with 'https://'."
   }
 }
 
-variable "control_plane_domain" {
-  description = "Specifies the API domain (e.g., 'https://api.mydomain.com')."
-  type        = string
-
-  validation {
-    condition     = can(regex("^https://", var.control_plane_domain))
-    error_message = "The control_plane_domain must start with 'https://'."
-  }
-}
 
 variable "scim_token_ps_arn" {
   description = "The AWS Parameter Store ARN for the SCIM token."
@@ -134,13 +125,13 @@ variable "auth_issuer" {
   type        = string
 }
 
-variable "cleanup_service_client_id" {
-  description = "Specifies the client ID for the cleanup service."
+variable "control_plane_service_client_id" {
+  description = "Specifies the client ID for the control_plane service."
   type        = string
 }
 
-variable "cleanup_service_client_secret" {
-  description = "Specifies the client secret for the cleanup service."
+variable "control_plane_service_client_secret" {
+  description = "Specifies the client secret for the control_plane service."
   type        = string
   sensitive   = true
 }
@@ -148,25 +139,6 @@ variable "cleanup_service_client_secret" {
 variable "alb_listener_arn" {
   description = "Specifies the Amazon Load Balancer (ALB) listener ARN."
   type        = string
-}
-
-variable "authz_url" {
-  description = "Specifies the authz grpc api url (e.g., 'https://authz.mydomain.com/grpc')."
-  type        = string
-
-  validation {
-    condition     = can(regex("^https://", var.authz_url))
-    error_message = "The authz_url must start with 'https://'."
-  }
-}
-variable "access_handler_domain" {
-  description = "Defines the domain for access handler (e.g., 'https://access.mydomain.com')."
-  type        = string
-
-  validation {
-    condition     = can(regex("^https://", var.access_handler_domain))
-    error_message = "The access_handler_domain must start with 'https://'."
-  }
 }
 variable "licence_key_ps_arn" {
   description = "The AWS Parameter Store ARN for the license key."
@@ -202,4 +174,9 @@ variable "grant_assume_on_role_arns" {
   description = "The ARNs of the IAM roles which the controlplane should be able to assume."
   type        = list(string)
   default     = []
+}
+variable "saml_provider_name" {
+  description = "The name of the identity provider (e.g., 'Entra') displayed on the login screen."
+  default     = ""
+  type        = string
 }

@@ -116,14 +116,14 @@ resource "aws_ecs_task_definition" "access_handler_task" {
       },
       {
         name  = "CF_AUTHZ_URL",
-        value = var.authz_url
+        value = var.app_url
       },
       {
         name  = "CF_OIDC_TRUSTED_ISSUER_COGNITO",
         value = var.auth_issuer
       },
       { name  = "CF_CORS_ALLOWED_ORIGINS"
-        value = join(",", [var.web_domain])
+        value = join(",", [var.app_url])
       },
       {
         name  = "LOG_LEVEL"
@@ -187,6 +187,7 @@ resource "aws_ecs_service" "access_handler_service" {
 
 resource "aws_lb_listener_rule" "service_rule" {
   listener_arn = var.alb_listener_arn
+  priority     = 60
   action {
     type             = "forward"
     target_group_arn = aws_lb_target_group.access_handler_tg.arn
@@ -194,7 +195,12 @@ resource "aws_lb_listener_rule" "service_rule" {
 
   condition {
     host_header {
-      values = [replace(var.access_handler_domain, "https://", "")]
+      values = [replace(var.app_url, "https://", "")]
+    }
+  }
+  condition {
+    path_pattern {
+      values = ["/commonfate.access*"]
     }
   }
 }

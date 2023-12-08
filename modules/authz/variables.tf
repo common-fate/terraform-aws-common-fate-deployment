@@ -45,15 +45,6 @@ variable "alb_listener_arn" {
   type        = string
 }
 
-variable "authz_domain" {
-  description = "Specifies the authorization domain (e.g., 'https://authz.mydomain.com')."
-  type        = string
-
-  validation {
-    condition     = can(regex("^https://", var.authz_domain))
-    error_message = "The authz_domain must start with 'https://'."
-  }
-}
 variable "log_retention_in_days" {
   description = "Specifies the cloudwatch log retention period."
   default     = 365
@@ -84,13 +75,13 @@ variable "dynamodb_table_arn" {
   description = "The Dynamo DB table ARN"
   type        = string
 }
-variable "web_domain" {
-  description = "Specifies the frontend domain (e.g., 'https://mydomain.com')."
+variable "app_url" {
+  description = "The app url (e.g., 'https://common-fate.mydomain.com')."
   type        = string
 
   validation {
-    condition     = can(regex("^https://", var.web_domain))
-    error_message = "The web_domain must start with 'https://'."
+    condition     = can(regex("^https://", var.app_url))
+    error_message = "The app_url must start with 'https://'."
   }
 }
 

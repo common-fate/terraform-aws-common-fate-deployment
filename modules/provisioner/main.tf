@@ -112,8 +112,16 @@ resource "aws_ecs_task_definition" "provisioner_task" {
         value = var.enable_verbose_logging ? "DEBUG" : "INFO"
       },
       {
-        name  = "CF_PROVISIONER_ROLE_ARN"
+        name  = "CF_PROVISIONER_TYPE"
+        value = var.provisioner_type
+      },
+      {
+        name  = "CF_AWS_ROLE_ARN"
         value = var.provisioner_role_arn
+      },
+      {
+        name  = "CF_GCP_CLIENT_CONFIG_JSON"
+        value = var.provisioner_gcp_client_config_json
       }
     ],
     secrets = [

@@ -34,14 +34,13 @@ variable "release_tag" {
   description = "Defines the tag for frontend and backend images, typically a git commit hash."
   type        = string
 }
-
-variable "authz_url" {
-  description = "Specifies the authz grpc api url (e.g., 'https://authz.mydomain.com/grpc')."
+variable "app_url" {
+  description = "The app url (e.g., 'https://common-fate.mydomain.com')."
   type        = string
 
   validation {
-    condition     = can(regex("^https://", var.authz_url))
-    error_message = "The authz_url must start with 'https://'."
+    condition     = can(regex("^https://", var.app_url))
+    error_message = "The app_url must start with 'https://'."
   }
 }
 
@@ -60,25 +59,6 @@ variable "alb_listener_arn" {
   type        = string
 }
 
-variable "access_handler_domain" {
-  description = "Defines the domain for access handler (e.g., 'https://access.mydomain.com')."
-  type        = string
-
-  validation {
-    condition     = can(regex("^https://", var.access_handler_domain))
-    error_message = "The access_handler_domain must start with 'https://'."
-  }
-}
-
-variable "web_domain" {
-  description = "Specifies the frontend domain (e.g., 'https://mydomain.com')."
-  type        = string
-
-  validation {
-    condition     = can(regex("^https://", var.web_domain))
-    error_message = "The web_domain must start with 'https://'."
-  }
-}
 variable "auth_issuer" {
   description = "Specifies the issuer for authentication."
   type        = string
