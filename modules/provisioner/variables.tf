@@ -76,12 +76,14 @@ variable "provisioner_type" {
 }
 
 variable "provisioner_role_arn" {
-  description = "The ARN of the IAM roles which grants the provisioner access to a cloud environment or service."
+  description = "The Optional ARN of the IAM roles to assume which grants the provisioner access to a cloud environment or service."
+  default     = ""
   type        = string
 }
 
 variable "provisioner_gcp_client_config_json" {
   description = "The when deployed for GCP, this is the workload indentity federation configuration."
+  default     = ""
   type        = string
 }
 

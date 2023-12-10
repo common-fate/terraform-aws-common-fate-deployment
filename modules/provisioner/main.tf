@@ -73,20 +73,23 @@ resource "aws_iam_role" "provisioner_ecs_task_role" {
 
 
 data "aws_iam_policy_document" "assume_roles_policy" {
+  count = var.provisioner_role_arn == "" ? 0 : 1
   statement {
     actions   = ["sts:AssumeRole"]
     resources = [var.provisioner_role_arn]
   }
 }
 resource "aws_iam_policy" "assume_provisioner_role" {
+  count       = var.provisioner_role_arn == "" ? 0 : 1
   name        = "${var.namespace}-${var.stage}-access-handler-ar"
   description = "A policy allowing sts:AssumeRole on selected roles"
   policy      = data.aws_iam_policy_document.assume_roles_policy.json
 }
 
 resource "aws_iam_role_policy_attachment" "assume_roles_policy_attach" {
+  count      = var.provisioner_role_arn == "" ? 0 : 1
   role       = aws_iam_role.provisioner_ecs_task_role.name
-  policy_arn = aws_iam_policy.assume_provisioner_role.arn
+  policy_arn = aws_iam_policy.assume_provisioner_role[0].arn
 }
 
 resource "aws_ecs_task_definition" "provisioner_task" {
