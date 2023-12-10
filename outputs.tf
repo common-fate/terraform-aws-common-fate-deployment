@@ -2,6 +2,13 @@
 # Outputs
 ######################################################
 
+output "first_time_setup_config" {
+  description = "Values to use when finishing the initial Common Fate deployment process"
+  value = {
+    dns_cname_record_for_app_domain  = module.alb.domain
+    dns_cname_record_for_auth_domain = module.cognito.user_pool_cloudfront_distribution
+  }
+}
 
 output "cognito_saml_entity_id" {
   description = "The cognito entity ID required for SAML configuration"
