@@ -228,8 +228,22 @@ resource "aws_ecs_task_definition" "control_plane_task" {
     }],
     environment = [
       {
+        name  = " CF_SCIM_SOURCE",
+        value = var.saml_provider_name
+      },
+      {
         name  = "CF_OIDC_AUTHORITY_URL",
         value = var.auth_authority_url
+      },
+      // used for client credentials
+      {
+        name  = "CF_OIDC_ISSUER",
+        value = var.auth_issuer
+      },
+      // used for auth middleware
+      {
+        name  = "CF_OIDC_TRUSTED_ISSUER_COGNITO",
+        value = var.auth_issuer
       },
       {
         name  = "CF_EVENT_BRIDGE_ARN",
@@ -244,22 +258,25 @@ resource "aws_ecs_task_definition" "control_plane_task" {
         name  = "CF_PAGERDUTY_CLIENT_ID",
         value = var.pager_duty_client_id
       },
-
+      {
+        name  = "CF_PAGERDUTY_REDIRECT_URL",
+        value = "${var.app_url}/api/v1//oauth2/callback/pagerduty"
+      },
       {
         name  = "CF_FRONTEND_URL",
-        value = var.web_domain
+        value = var.app_url
       },
       {
         name  = "CF_API_URL",
-        value = var.control_plane_domain
+        value = var.app_url
       },
       {
         name  = "CF_AUTHZ_URL",
-        value = var.authz_url
+        value = var.app_url
       },
       {
         name  = "CF_ACCESS_URL",
-        value = var.access_handler_domain
+        value = var.app_url
       },
       {
         name  = "CF_SLACK_CLIENT_ID",
@@ -268,7 +285,7 @@ resource "aws_ecs_task_definition" "control_plane_task" {
 
       {
         name  = "CF_SLACK_REDIRECT_URL",
-        value = "${var.control_plane_domain}/oauth2/callback/slack"
+        value = "${var.app_url}/api/v1//oauth2/callback/slack"
       },
       {
         name  = "CF_PG_USER",
@@ -282,20 +299,17 @@ resource "aws_ecs_task_definition" "control_plane_task" {
         name  = "CF_PG_SSLMode",
         value = "require"
       },
+
       {
-        name  = "CF_OIDC_TRUSTED_ISSUER_COGNITO",
-        value = var.auth_issuer
+        name  = "CF_CONTROL_PLANE_SERVICE_OIDC_CLIENT_ID",
+        value = var.control_plane_service_client_id
       },
       {
-        name  = "CF_CLEANUP_SERVICE_OIDC_CLIENT_ID",
-        value = var.cleanup_service_client_id
-      },
-      {
-        name  = "CF_CLEANUP_SERVICE_OIDC_CLIENT_SECRET",
-        value = var.cleanup_service_client_secret
+        name  = "CF_CONTROL_PLANE_SERVICE_OIDC_CLIENT_SECRET",
+        value = var.control_plane_service_client_secret
       },
       { name  = "CF_CORS_ALLOWED_ORIGINS"
-        value = join(",", [var.web_domain])
+        value = join(",", [var.app_url])
       },
       {
         name  = "LOG_LEVEL"
@@ -303,19 +317,27 @@ resource "aws_ecs_task_definition" "control_plane_task" {
       },
       {
         name  = "CF_SYNC_PAGERDUTY_ENABLED",
-        value = true
+        value = "false"
       },
       {
         name  = "CF_SYNC_PAGERDUTY_CRON_SCHEDULE",
-        value = "*/30 * * * *"
+        value = "0 */30 * * * *"
       },
       {
         name  = "CF_SYNC_GCP_ENABLED",
-        value = true
+        value = "false"
       },
       {
         name  = "CF_SYNC_GCP_CRON_SCHEDULE",
-        value = "*/30 * * * *"
+        value = "0 */30 * * * *"
+      },
+      {
+        name  = "CF_PROPAGATE_ENABLED",
+        value = "true"
+      },
+      {
+        name  = "CF_PROPAGATE_CRON_SCHEDULE",
+        value = "*/30 * * * * *"
       },
 
     ],
@@ -404,6 +426,7 @@ resource "aws_ecs_service" "control_plane_service" {
 
 resource "aws_lb_listener_rule" "service_rule" {
   listener_arn = var.alb_listener_arn
+  priority     = 90
   action {
     type             = "forward"
     target_group_arn = aws_lb_target_group.control_plane_tg.arn
@@ -411,7 +434,12 @@ resource "aws_lb_listener_rule" "service_rule" {
 
   condition {
     host_header {
-      values = [replace(var.control_plane_domain, "https://", "")]
+      values = [replace(var.app_url, "https://", "")]
+    }
+  }
+  condition {
+    path_pattern {
+      values = ["/commonfate.control*", "/api/*"]
     }
   }
 }

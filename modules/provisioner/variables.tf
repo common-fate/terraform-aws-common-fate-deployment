@@ -69,8 +69,19 @@ variable "access_handler_sg_id" {
   description = "The Access Handler security group ID which will be allowed to make API calls to this provisioner."
   type        = string
 }
+variable "provisioner_type" {
+  description = "The mode to run the provisioner, GCP."
+  default     = "GCP"
+  type        = string
+}
 
 variable "provisioner_role_arn" {
   description = "The ARN of the IAM roles which grants the provisioner access to a cloud environment or service."
   type        = string
 }
+
+variable "provisioner_gcp_client_config_json" {
+  description = "The when deployed for GCP, this is the workload indentity federation configuration."
+  type        = string
+}
+

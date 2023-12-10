@@ -75,13 +75,13 @@ variable "slack_signing_secret_ps_arn" {
   type        = string
 }
 
-variable "auth_domain" {
+variable "auth_url" {
   description = "The authorization domain (e.g., 'https://auth.mydomain.com')."
   type        = string
 
   validation {
-    condition     = can(regex("^https://", var.auth_domain))
-    error_message = "The auth_domain must start with 'https://'."
+    condition     = can(regex("^https://", var.auth_url))
+    error_message = "The auth_url must start with 'https://'."
   }
 }
 

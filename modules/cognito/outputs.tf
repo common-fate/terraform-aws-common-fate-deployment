@@ -9,7 +9,7 @@ output "saml_entity_id" {
 
 output "saml_acs_url" {
   description = "The Cognito Assertion Consumer Service (ACS) URL required for SAML configuration."
-  value       = "${var.auth_domain}/saml2/idpresponse"
+  value       = "${var.auth_url}/saml2/idpresponse"
 }
 
 output "user_pool_cloudfront_distribution" {
@@ -52,12 +52,12 @@ output "terraform_client_secret" {
   value       = aws_cognito_user_pool_client.terraform_client.client_secret
 }
 
-output "cleanup_service_client_id" {
-  description = "The client ID for the cleanup service."
-  value       = aws_cognito_user_pool_client.cleanup_service_client.id
+output "control_plane_service_client_id" {
+  description = "The client ID for the control plane service."
+  value       = aws_cognito_user_pool_client.control_plane_service_client.id
 }
 
-output "cleanup_service_client_secret" {
-  description = "The client secret for the cleanup service."
-  value       = aws_cognito_user_pool_client.cleanup_service_client.client_secret
+output "control_plane_service_client_secret" {
+  description = "The client secret for the control plane service."
+  value       = aws_cognito_user_pool_client.control_plane_service_client.client_secret
 }

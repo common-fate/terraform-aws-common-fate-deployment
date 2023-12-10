@@ -25,32 +25,13 @@ variable "release_tag" {
   type        = string
 }
 
-variable "web_domain" {
-  description = "Specifies the frontend domain (e.g., 'https://mydomain.com')."
+variable "app_url" {
+  description = "The app url (e.g., 'https://common-fate.mydomain.com')."
   type        = string
 
   validation {
-    condition     = can(regex("^https://", var.web_domain))
-    error_message = "The web_domain must start with 'https://'."
-  }
-}
-
-variable "control_plane_domain" {
-  description = "Specifies the API domain (e.g., 'https://api.mydomain.com')."
-  type        = string
-
-  validation {
-    condition     = can(regex("^https://", var.control_plane_domain))
-    error_message = "The control_plane_domain must start with 'https://'."
-  }
-}
-variable "access_handler_domain" {
-  description = "Defines the domain for access handler (e.g., 'https://access.mydomain.com')."
-  type        = string
-
-  validation {
-    condition     = can(regex("^https://", var.access_handler_domain))
-    error_message = "The access_handler_domain must start with 'https://'."
+    condition     = can(regex("^https://", var.app_url))
+    error_message = "The app_url must start with 'https://'."
   }
 }
 variable "aws_region" {
@@ -58,33 +39,13 @@ variable "aws_region" {
   type        = string
 }
 
-variable "auth_domain" {
+variable "auth_url" {
   description = "Specifies the authentication domain (e.g., 'https://auth.mydomain.com')."
   type        = string
 
   validation {
-    condition     = can(regex("^https://", var.auth_domain))
-    error_message = "The auth_domain must start with 'https://'."
-  }
-}
-
-variable "authz_url" {
-  description = "Specifies the authz grpc api url (e.g., 'https://authz.mydomain.com/grpc')."
-  type        = string
-
-  validation {
-    condition     = can(regex("^https://", var.authz_url))
-    error_message = "The authz_url must start with 'https://'."
-  }
-}
-
-variable "authz_graph_url" {
-  description = "Specifies the authz graphql api url (e.g., 'https://authz.mydomain.com/graph')."
-  type        = string
-
-  validation {
-    condition     = can(regex("^https://", var.authz_graph_url))
-    error_message = "The authz_graph_url must start with 'https://'."
+    condition     = can(regex("^https://", var.auth_url))
+    error_message = "The auth_url must start with 'https://'."
   }
 }
 
@@ -108,6 +69,10 @@ variable "auth_authority_url" {
   type        = string
 }
 
+variable "auth_issuer" {
+  description = "Specifies the issuer for authentication."
+  type        = string
+}
 variable "auth_web_client_id" {
   description = "Specifies the client ID for web authentication."
   type        = string

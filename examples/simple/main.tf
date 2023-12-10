@@ -5,7 +5,7 @@ module "common-fate" {
   access_handler_domain           = var.access_handler_domain
   control_plane_domain            = var.control_plane_domain
   auth_certificate_arn            = var.auth_certificate_arn
-  auth_domain                     = var.auth_domain
+  auth_url                        = var.auth_url
   authz_domain                    = var.authz_domain
   aws_region                      = var.aws_region
   licence_key_ps_arn              = var.licence_key_ps_arn

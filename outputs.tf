@@ -45,12 +45,29 @@ output "terraform_client_secret" {
   sensitive   = true
 }
 
-output "provisioner_url" {
-  description = "The provisioner URL to be used when configuring webhook connectors in configuration"
-  value       = module.provisioner.provisioner_url
+output "control_plane_task_role_arn" {
+  description = "The control plane task role arn."
+  value       = module.control_plane.task_role_arn
 }
 
-output "gcp_read_role_arn" {
-  description = "The gcp read role arn"
-  value       = module.gcp_workload_identity_roles.read_role_arn
+output "access_handler_security_group_id" {
+  description = "The access handler security group id."
+  value       = module.access_handler.security_group_id
+}
+
+output "vpc_id" {
+  description = "The vpc id."
+  value       = module.vpc.vpc_id
+}
+
+
+output "private_subnet_ids" {
+  description = "The private subnet id."
+  value       = module.vpc.private_subnet_ids
+}
+
+
+output "ecs_cluster_id" {
+  description = "The ecs id."
+  value       = module.ecs.cluster_id
 }

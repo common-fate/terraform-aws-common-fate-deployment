@@ -88,6 +88,8 @@ resource "aws_iam_policy" "dynamodb_write" {
   name        = "${var.namespace}-${var.stage}-authz-ddb"
   description = "Allows ECS tasks to write to dynamodb"
 
+  // @TODO:SECURITY
+  // revert these permissions
   policy = jsonencode({
     "Version" : "2012-10-17",
     "Statement" : [
@@ -147,11 +149,11 @@ resource "aws_ecs_task_definition" "authz_task" {
         value = var.dynamodb_table_name
       },
       { name  = "CF_CORS_ALLOWED_ORIGINS"
-        value = join(",", [var.web_domain])
+        value = join(",", [var.app_url])
       },
       {
         name  = "LOG_LEVEL"
-        value = var.enable_verbose_logging ? "DEBUG" : "INFO"
+        value = "INFO"
 
       }
 
@@ -231,7 +233,7 @@ resource "aws_ecs_service" "authz_service" {
 
 resource "aws_lb_listener_rule" "graph_service_rule" {
   listener_arn = var.alb_listener_arn
-  priority     = 100 # /graph rule is evaluated first to ensure that path matching works
+  priority     = 70
 
   action {
     type             = "forward"
@@ -240,7 +242,7 @@ resource "aws_lb_listener_rule" "graph_service_rule" {
 
   condition {
     host_header {
-      values = [replace(var.authz_domain, "https://", "")]
+      values = [replace(var.app_url, "https://", "")]
     }
   }
   condition {
@@ -251,7 +253,7 @@ resource "aws_lb_listener_rule" "graph_service_rule" {
 }
 resource "aws_lb_listener_rule" "grpc_service_rule" {
   listener_arn = var.alb_listener_arn
-  priority     = 1000
+  priority     = 80
 
   action {
     type             = "forward"
@@ -260,7 +262,12 @@ resource "aws_lb_listener_rule" "grpc_service_rule" {
 
   condition {
     host_header {
-      values = [replace(var.authz_domain, "https://", "")]
+      values = [replace(var.app_url, "https://", "")]
+    }
+  }
+  condition {
+    path_pattern {
+      values = ["/commonfate.authz*", "/commonfate.entity*"]
     }
   }
 }

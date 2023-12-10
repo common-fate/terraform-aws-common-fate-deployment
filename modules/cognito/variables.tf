@@ -20,48 +20,28 @@ variable "aws_region" {
   type        = string
 }
 
-variable "auth_domain" {
-  description = "The authorization domain (e.g., 'https://auth.mydomain.com')."
+variable "auth_url" {
+  description = "The auth url (e.g., 'https://auth.mydomain.com')."
   type        = string
 
   validation {
-    condition     = can(regex("^https://", var.auth_domain))
-    error_message = "The auth_domain must start with 'https://'."
+    condition     = can(regex("^https://", var.auth_url))
+    error_message = "The auth_url must start with 'https://'."
   }
 }
 
-
-variable "access_handler_domain" {
-  description = "The access handler domain (e.g., 'https://access.mydomain.com')."
+variable "app_url" {
+  description = "The app url (e.g., 'https://common-fate.mydomain.com')."
   type        = string
 
   validation {
-    condition     = can(regex("^https://", var.access_handler_domain))
-    error_message = "The access_handler_domain must start with 'https://'."
-  }
-}
-
-variable "web_domain" {
-  description = "The frontend domain (e.g., 'https://mydomain.com')."
-  type        = string
-
-  validation {
-    condition     = can(regex("^https://", var.web_domain))
-    error_message = "The web_domain must start with 'https://'."
-  }
-}
-variable "control_plane_domain" {
-  description = "The API domain (e.g., 'https://api.mydomain.com')."
-  type        = string
-
-  validation {
-    condition     = can(regex("^https://", var.control_plane_domain))
-    error_message = "The control_plane_domain must start with 'https://'."
+    condition     = can(regex("^https://", var.app_url))
+    error_message = "The app_url must start with 'https://'."
   }
 }
 
 variable "saml_provider_name" {
-  description = "The name of the identity provider (e.g., 'Azure') displayed on the login screen."
+  description = "The name of the identity provider (e.g., 'Entra') displayed on the login screen."
   default     = ""
   type        = string
 }
