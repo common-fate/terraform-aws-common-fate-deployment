@@ -4,7 +4,10 @@
 ######################################################
 resource "aws_cognito_user_pool" "cognito_user_pool" {
   name = "${var.namespace}-${var.stage}-cognito-user-pool"
-
+  // disables self serve signup
+  admin_create_user_config {
+    allow_admin_create_user_only = true
+  }
   lambda_config {
     pre_token_generation = aws_lambda_function.pre_token_generation_lambda_function.arn
   }
