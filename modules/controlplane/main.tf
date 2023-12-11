@@ -260,7 +260,7 @@ resource "aws_ecs_task_definition" "control_plane_task" {
       },
       {
         name  = "CF_PAGERDUTY_REDIRECT_URL",
-        value = "${var.app_url}/api/v1//oauth2/callback/pagerduty"
+        value = "${var.app_url}/api/v1/oauth2/callback/pagerduty"
       },
       {
         name  = "CF_FRONTEND_URL",
@@ -285,7 +285,7 @@ resource "aws_ecs_task_definition" "control_plane_task" {
 
       {
         name  = "CF_SLACK_REDIRECT_URL",
-        value = "${var.app_url}/api/v1//oauth2/callback/slack"
+        value = "${var.app_url}/api/v1/oauth2/callback/slack"
       },
       {
         name  = "CF_PG_USER",
