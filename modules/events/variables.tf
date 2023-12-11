@@ -9,3 +9,8 @@ variable "stage" {
   default     = "prod"
   type        = string
 }
+variable "log_retention_in_days" {
+  description = "Specifies the cloudwatch log retention period for events."
+  default     = 365
+  type        = number
+}
