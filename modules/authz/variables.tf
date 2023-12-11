@@ -91,3 +91,14 @@ variable "enable_verbose_logging" {
   type        = bool
   default     = false
 }
+
+
+variable "oidc_trusted_issuer" {
+  description = "Trusted OIDC issuer to seed entities for"
+  type        = string
+}
+
+variable "oidc_terraform_client_id" {
+  description = "Terraform Service Account OIDC Client ID"
+  type        = string
+}

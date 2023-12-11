@@ -142,21 +142,21 @@ module "access_handler" {
 }
 
 module "authz" {
-  source                 = "./modules/authz"
-  namespace              = var.namespace
-  stage                  = var.stage
-  aws_region             = var.aws_region
-  eventbus_arn           = module.events.event_bus_arn
-  release_tag            = var.release_tag
-  subnet_ids             = module.vpc.private_subnet_ids
-  vpc_id                 = module.vpc.vpc_id
-  ecs_cluster_id         = module.ecs.cluster_id
-  alb_listener_arn       = module.alb.listener_arn
-  dynamodb_table_name    = module.authz_db.dynamodb_table_name
-  enable_verbose_logging = var.enable_verbose_logging
-  dynamodb_table_arn     = module.authz_db.dynamodb_table_arn
-  app_url                = var.app_url
-
-
+  source                   = "./modules/authz"
+  namespace                = var.namespace
+  stage                    = var.stage
+  aws_region               = var.aws_region
+  eventbus_arn             = module.events.event_bus_arn
+  release_tag              = var.release_tag
+  subnet_ids               = module.vpc.private_subnet_ids
+  vpc_id                   = module.vpc.vpc_id
+  ecs_cluster_id           = module.ecs.cluster_id
+  alb_listener_arn         = module.alb.listener_arn
+  dynamodb_table_name      = module.authz_db.dynamodb_table_name
+  enable_verbose_logging   = var.enable_verbose_logging
+  dynamodb_table_arn       = module.authz_db.dynamodb_table_arn
+  app_url                  = var.app_url
+  oidc_terraform_client_id = module.cognito.terraform_client_id
+  oidc_trusted_issuer      = module.cognito.auth_issuer
 }
 

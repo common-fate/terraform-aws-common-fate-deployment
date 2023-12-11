@@ -154,7 +154,14 @@ resource "aws_ecs_task_definition" "authz_task" {
       {
         name  = "LOG_LEVEL"
         value = "INFO"
-
+      },
+      {
+        name  = "CF_OIDC_TRUSTED_ISSUER_COGNITO",
+        value = var.oidc_trusted_issuer
+      },
+      {
+        name  = "CF_OIDC_TERRAFORM_CLIENT_ID",
+        value = var.oidc_terraform_client_id
       }
 
     ],
