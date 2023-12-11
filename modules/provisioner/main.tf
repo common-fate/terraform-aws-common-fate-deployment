@@ -123,6 +123,15 @@ resource "aws_ecs_task_definition" "provisioner_task" {
         value = var.provisioner_role_arn
       },
       {
+
+        name  = "CF_AWS_IDC_REGION"
+        value = var.provisioner_aws_idc_region
+      },
+      {
+        name  = "CF_AWS_IDC_INSTANCE_ARN"
+        value = var.provisioner_aws_idc_instance_arn
+      },
+      {
         name  = "CF_GCP_CLIENT_CONFIG_JSON"
         value = var.provisioner_gcp_client_config_json
       }

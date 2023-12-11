@@ -82,8 +82,20 @@ variable "provisioner_role_arn" {
 }
 
 variable "provisioner_gcp_client_config_json" {
-  description = "The when deployed for GCP, this is the workload indentity federation configuration."
+  description = "When deployed for GCP, this is the workload indentity federation configuration."
   default     = ""
   type        = string
 }
 
+
+variable "provisioner_aws_idc_region" {
+  description = "When deployed for AWS, this is the AWS IDC Region."
+  default     = ""
+  type        = string
+}
+
+variable "provisioner_aws_idc_instance_arn" {
+  description = "When deployed for AWS, this is the AWS Identity Center instance ARN."
+  default     = ""
+  type        = string
+}
