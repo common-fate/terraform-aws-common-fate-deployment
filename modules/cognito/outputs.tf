@@ -61,3 +61,13 @@ output "control_plane_service_client_secret" {
   description = "The client secret for the control plane service."
   value       = aws_cognito_user_pool_client.control_plane_service_client.client_secret
 }
+
+output "access_handler_service_client_id" {
+  description = "The client ID for the access handler service."
+  value       = aws_cognito_user_pool_client.access_handler_service_client.id
+}
+
+output "access_handler_service_client_secret" {
+  description = "The client secret for the access handler service."
+  value       = aws_cognito_user_pool_client.access_handler_service_client.client_secret
+}
