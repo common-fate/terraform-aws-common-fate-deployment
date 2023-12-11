@@ -229,7 +229,7 @@ resource "aws_ecs_task_definition" "control_plane_task" {
     environment = [
       {
         name  = " CF_SCIM_SOURCE",
-        value = var.saml_provider_name
+        value = var.scim_source
       },
       {
         name  = "CF_OIDC_AUTHORITY_URL",

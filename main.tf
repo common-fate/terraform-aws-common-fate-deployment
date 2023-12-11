@@ -81,6 +81,7 @@ module "control_plane" {
   pager_duty_client_id                = var.pager_duty_client_id
   pager_duty_client_secret_ps_arn     = var.pager_duty_client_secret_ps_arn
   release_tag                         = var.release_tag
+  scim_source                         = var.scim_source
   scim_token_ps_arn                   = var.scim_token_ps_arn
   slack_client_id                     = var.slack_client_id
   slack_client_secret_ps_arn          = var.slack_client_secret_ps_arn

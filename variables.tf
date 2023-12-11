@@ -104,6 +104,14 @@ variable "saml_provider_name" {
   type        = string
 }
 
+
+variable "scim_source" {
+  description = "The name of the SCIM identity provider (e.g., 'Entra')"
+  default     = ""
+  type        = string
+}
+
+
 variable "saml_metadata_is_file" {
   description = "Determines if the 'saml_metadata_source' is a file path or a URL. Set to true for a file, false for a URL."
   default     = false

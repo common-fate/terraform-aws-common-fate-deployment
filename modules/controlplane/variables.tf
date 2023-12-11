@@ -175,8 +175,8 @@ variable "grant_assume_on_role_arns" {
   type        = list(string)
   default     = []
 }
-variable "saml_provider_name" {
-  description = "The name of the identity provider (e.g., 'Entra') displayed on the login screen."
+variable "scim_source" {
+  description = "The name of the SCIM identity provider (e.g., 'Entra')"
   default     = ""
   type        = string
 }
