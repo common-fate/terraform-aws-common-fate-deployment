@@ -70,7 +70,39 @@ resource "aws_iam_role" "provisioner_ecs_task_role" {
     ]
   })
 }
+locals {
+  secret_arns = {
+    for arn in [var.provisioner_gcp_service_account_client_json_ps_arn]
+    : arn => arn if arn != ""
+  }
+}
 
+resource "aws_iam_policy" "parameter_store_secrets_read_access" {
+  count       = length(local.secret_arns) > 0 ? 1 : 0
+  name        = "${var.namespace}-${var.stage}-provisioner-ps"
+  description = "Allows read secret from parameter store"
+
+  policy = jsonencode({
+    Version = "2012-10-17",
+    // include only the secrets that are configured
+    Statement = [
+      for arn in local.secret_arns :
+      {
+        Effect = "Allow"
+        Action = [
+          "ssm:GetParameters",
+        ]
+        Resource = arn
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "provisioner_ecs_task_parameter_store_secrets_read_access_attach" {
+  count      = length(local.secret_arns) > 0 ? 1 : 0
+  role       = aws_iam_role.provisioner_ecs_execution_role.name
+  policy_arn = aws_iam_policy.parameter_store_secrets_read_access[0].arn
+}
 
 data "aws_iam_policy_document" "assume_roles_policy" {
   count = var.provisioner_role_arn == "" ? 0 : 1
@@ -83,7 +115,7 @@ resource "aws_iam_policy" "assume_provisioner_role" {
   count       = var.provisioner_role_arn == "" ? 0 : 1
   name        = "${var.namespace}-${var.stage}-access-handler-ar"
   description = "A policy allowing sts:AssumeRole on selected roles"
-  policy      = data.aws_iam_policy_document.assume_roles_policy.json
+  policy      = data.aws_iam_policy_document.assume_roles_policy[0].json
 }
 
 resource "aws_iam_role_policy_attachment" "assume_roles_policy_attach" {
@@ -131,14 +163,17 @@ resource "aws_ecs_task_definition" "provisioner_task" {
         name  = "CF_AWS_IDC_INSTANCE_ARN"
         value = var.provisioner_aws_idc_instance_arn
       },
-      {
-        name  = "CF_GCP_CLIENT_CONFIG_JSON"
-        value = var.provisioner_gcp_client_config_json
-      }
-    ],
-    secrets = [
 
-    ]
+    ],
+
+    // Only add these secrets if their values are provided
+    secrets = concat(
+      var.provisioner_gcp_service_account_client_json_ps_arn != "" ? [{
+        name      = "CF_GCP_SERVICE_ACCOUNT_CREDENTIALS_JSON",
+        valueFrom = var.provisioner_gcp_service_account_client_json_ps_arn
+      }] : [],
+    )
+
 
     logConfiguration = {
       logDriver = "awslogs",

@@ -89,17 +89,22 @@ resource "aws_iam_role_policy_attachment" "control_plane_ecs_task_database_secre
 
 locals {
   secret_arns = {
-    for arn in [
+    for arn in concat([
       var.pager_duty_client_secret_ps_arn,
       var.slack_client_secret_ps_arn,
       var.slack_signing_secret_ps_arn,
       var.scim_token_ps_arn,
       var.licence_key_ps_arn
-    ] : arn => arn
-    if arn != ""
+    ], var.parameter_store_secret_arns) : arn => arn if arn != ""
   }
-
 }
+
+locals {
+  task_secret_arns = {
+    for arn in var.parameter_store_secret_arns : arn => arn if arn != ""
+  }
+}
+
 
 resource "aws_iam_policy" "parameter_store_secrets_read_access" {
   count       = length(local.secret_arns) > 0 ? 1 : 0
@@ -122,11 +127,14 @@ resource "aws_iam_policy" "parameter_store_secrets_read_access" {
   })
 }
 
+
 resource "aws_iam_role_policy_attachment" "control_plane_ecs_task_parameter_store_secrets_read_access_attach" {
   count      = length(local.secret_arns) > 0 ? 1 : 0
   role       = aws_iam_role.control_plane_ecs_execution_role.name
   policy_arn = aws_iam_policy.parameter_store_secrets_read_access[0].arn
 }
+
+
 
 # TASK ROLE
 resource "aws_iam_role" "control_plane_ecs_task_role" {
@@ -143,6 +151,35 @@ resource "aws_iam_role" "control_plane_ecs_task_role" {
       }
     ]
   })
+}
+
+
+resource "aws_iam_policy" "task_role_parameter_store_secrets_read_access" {
+  count       = length(local.secret_arns) > 0 ? 1 : 0
+  name        = "${var.namespace}-${var.stage}-control-plane-ps-tr"
+  description = "Allows read secret from parameter store"
+
+  policy = jsonencode({
+    Version = "2012-10-17",
+    // include only the secrets that are configured
+    Statement = [
+      for arn in local.task_secret_arns :
+      {
+        Effect = "Allow"
+        // @TODO: Security revert this to the correct scoped permissions for only teh ssmn params read access
+        Action = [
+          "*",
+        ]
+        Resource = "*"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "control_plane_ecs_task_task_role_parameter_store_secrets_read_access_attach" {
+  count      = length(local.secret_arns) > 0 ? 1 : 0
+  role       = aws_iam_role.control_plane_ecs_task_role.name
+  policy_arn = aws_iam_policy.task_role_parameter_store_secrets_read_access[0].arn
 }
 resource "aws_iam_policy" "eventbus_put_events" {
   name        = "${var.namespace}-${var.stage}-control-plane-eb"
@@ -228,7 +265,7 @@ resource "aws_ecs_task_definition" "control_plane_task" {
     }],
     environment = [
       {
-        name  = " CF_SCIM_SOURCE",
+        name  = "CF_SCIM_SOURCE",
         value = var.scim_source
       },
       {
@@ -317,7 +354,7 @@ resource "aws_ecs_task_definition" "control_plane_task" {
       },
       {
         name  = "CF_SYNC_PAGERDUTY_ENABLED",
-        value = "true"
+        value = "false"
       },
       {
         name  = "CF_SYNC_PAGERDUTY_CRON_SCHEDULE",
@@ -329,11 +366,11 @@ resource "aws_ecs_task_definition" "control_plane_task" {
       },
       {
         name  = "CF_SYNC_GCP_CRON_SCHEDULE",
-        value = "0 */30 * * * *"
+        value = "0 */1 * * * *"
       },
       {
         name  = "CF_PROPAGATE_ENABLED",
-        value = "true"
+        value = "false"
       },
       {
         name  = "CF_PROPAGATE_CRON_SCHEDULE",
@@ -360,6 +397,7 @@ resource "aws_ecs_task_definition" "control_plane_task" {
         name      = "CF_SCIM_TOKEN",
         valueFrom = var.scim_token_ps_arn
       }] : [],
+
       [
         {
           name = "CF_PG_PASSWORD",

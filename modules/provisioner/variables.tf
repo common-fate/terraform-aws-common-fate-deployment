@@ -81,8 +81,8 @@ variable "provisioner_role_arn" {
   type        = string
 }
 
-variable "provisioner_gcp_client_config_json" {
-  description = "When deployed for GCP, this is the workload indentity federation configuration."
+variable "provisioner_gcp_service_account_client_json_ps_arn" {
+  description = "When deployed for GCP, this is arn of the secret credentials."
   default     = ""
   type        = string
 }

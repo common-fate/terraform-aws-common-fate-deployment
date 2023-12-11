@@ -80,3 +80,7 @@ output "ecs_cluster_id" {
   description = "The ecs id."
   value       = module.ecs.cluster_id
 }
+output "auth_issuer" {
+  description = "The auth issuer."
+  value       = module.cognito.auth_issuer
+}
