@@ -162,8 +162,15 @@ resource "aws_ecs_task_definition" "authz_task" {
       {
         name  = "CF_OIDC_TERRAFORM_CLIENT_ID",
         value = var.oidc_terraform_client_id
+      },
+      {
+        name  = "CF_OIDC_CONTROL_PLANE_SERVICE_CLIENT_ID",
+        value = var.oidc_control_plane_client_id
+      },
+      {
+        name  = "CF_OIDC_ACCESS_SERVICE_CLIENT_ID",
+        value = var.oidc_access_handler_service_client_id
       }
-
     ],
     secrets = []
 
