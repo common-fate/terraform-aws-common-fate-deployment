@@ -237,7 +237,7 @@ resource "aws_ecs_task_definition" "control_plane_task" {
       },
       // used for client credentials
       {
-        name  = "CF_OIDC_ISSUER",
+        name  = "CF_CONTROL_PLANE_SERVICE_OIDC_ISSUER",
         value = var.auth_issuer
       },
       // used for auth middleware
