@@ -186,10 +186,6 @@ variable "parameter_store_secret_arns" {
   type        = list(string)
 }
 
-variable "aws_region" {
-  description = "The AWS region the module is being deployed to"
-}
-
 variable "aws_partition" {
   description = "The AWS partition the module is being deployed to"
 }
