@@ -7,6 +7,8 @@ output "first_time_setup_config" {
   value = {
     dns_cname_record_for_app_domain  = module.alb.domain
     dns_cname_record_for_auth_domain = module.cognito.user_pool_cloudfront_distribution
+    saml_sso_entity_id               = module.cognito.saml_entity_id
+    saml_sso_acs_url                 = module.cognito.saml_acs_url
   }
 }
 
