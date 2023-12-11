@@ -107,9 +107,9 @@ locals {
 
 
 resource "aws_iam_policy" "parameter_store_secrets_read_access" {
-  count       = length(local.secret_arns) > 0 ? 1 : 0
+  count       = 1
   name        = "${var.namespace}-${var.stage}-control-plane-ps"
-  description = "Allows read secret from parameter store"
+  description = "Allows reading secrets from SSM Parameter Store"
 
   policy = jsonencode({
     Version = "2012-10-17",
@@ -119,9 +119,12 @@ resource "aws_iam_policy" "parameter_store_secrets_read_access" {
       {
         Effect = "Allow"
         Action = [
-          "ssm:GetParameters",
+          "ssm:GetParameter",
+          "ssm:GetParameters"
         ]
-        Resource = arn
+        Resource = [
+          "arn:${var.aws_partition}:ssm:${var.aws_region}:${var.aws_account_id}:parameter/${var.namespace}/${var.stage}/*",
+        ]
       }
     ]
   })

@@ -1,9 +1,10 @@
-
-
-
 provider "aws" {
   region = var.aws_region
 }
+
+data "aws_partition" "current" {}
+data "aws_caller_identity" "current" {}
+
 
 module "vpc" {
   source     = "./modules/vpc"
@@ -73,6 +74,8 @@ module "control_plane" {
   stage     = var.stage
 
   aws_region                          = var.aws_region
+  aws_account_id                      = data.aws_caller_identity.current.account_id
+  aws_partition                       = data.aws_partition.current.id
   database_secret_sm_arn              = module.control_plane_db.secret_arn
   database_security_group_id          = module.control_plane_db.security_group_id
   eventbus_arn                        = module.events.event_bus_arn
