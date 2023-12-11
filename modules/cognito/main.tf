@@ -215,7 +215,7 @@ resource "aws_cognito_user_pool_client" "control_plane_service_client" {
 }
 
 
-resource "aws_cognito_user_pool_client" "acces_handler_service_client" {
+resource "aws_cognito_user_pool_client" "access_handler_service_client" {
   name         = "${var.namespace}-${var.stage}-access-handler-client"
   user_pool_id = aws_cognito_user_pool.cognito_user_pool.id
 
