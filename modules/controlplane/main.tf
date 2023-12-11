@@ -317,7 +317,7 @@ resource "aws_ecs_task_definition" "control_plane_task" {
       },
       {
         name  = "CF_SYNC_PAGERDUTY_ENABLED",
-        value = "false"
+        value = "true"
       },
       {
         name  = "CF_SYNC_PAGERDUTY_CRON_SCHEDULE",
@@ -325,7 +325,7 @@ resource "aws_ecs_task_definition" "control_plane_task" {
       },
       {
         name  = "CF_SYNC_GCP_ENABLED",
-        value = "false"
+        value = "true"
       },
       {
         name  = "CF_SYNC_GCP_CRON_SCHEDULE",
