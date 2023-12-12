@@ -313,11 +313,11 @@ resource "aws_ecs_task_definition" "control_plane_task" {
       },
       {
         name  = "CF_SYNC_PAGERDUTY_ENABLED",
-        value = "false"
+        value = "true"
       },
       {
         name  = "CF_SYNC_PAGERDUTY_CRON_SCHEDULE",
-        value = "0 */30 * * * *"
+        value = "0 */5 * * * *"
       },
       {
         name  = "CF_SYNC_GCP_ENABLED",
@@ -325,11 +325,11 @@ resource "aws_ecs_task_definition" "control_plane_task" {
       },
       {
         name  = "CF_SYNC_GCP_CRON_SCHEDULE",
-        value = "0 */1 * * * *"
+        value = "0 */5 * * * *"
       },
       {
         name  = "CF_PROPAGATE_ENABLED",
-        value = "false"
+        value = "true"
       },
       {
         name  = "CF_PROPAGATE_CRON_SCHEDULE",
