@@ -103,6 +103,7 @@ module "control_plane" {
   licence_key_ps_arn                  = var.licence_key_ps_arn
   enable_verbose_logging              = var.enable_verbose_logging
   grant_assume_on_role_arns           = var.control_plane_grant_assume_on_role_arns
+  oidc_control_plane_issuer           = module.cognito.auth_issuer
 }
 
 
@@ -128,20 +129,23 @@ module "web" {
 }
 
 module "access_handler" {
-  source                 = "./modules/access"
-  namespace              = var.namespace
-  stage                  = var.stage
-  aws_region             = var.aws_region
-  eventbus_arn           = module.events.event_bus_arn
-  release_tag            = var.release_tag
-  subnet_ids             = module.vpc.private_subnet_ids
-  vpc_id                 = module.vpc.vpc_id
-  auth_authority_url     = module.cognito.auth_authority_url
-  ecs_cluster_id         = module.ecs.cluster_id
-  alb_listener_arn       = module.alb.listener_arn
-  auth_issuer            = module.cognito.auth_issuer
-  enable_verbose_logging = var.enable_verbose_logging
-  app_url                = var.app_url
+  source                                    = "./modules/access"
+  namespace                                 = var.namespace
+  stage                                     = var.stage
+  aws_region                                = var.aws_region
+  eventbus_arn                              = module.events.event_bus_arn
+  release_tag                               = var.release_tag
+  subnet_ids                                = module.vpc.private_subnet_ids
+  vpc_id                                    = module.vpc.vpc_id
+  auth_authority_url                        = module.cognito.auth_authority_url
+  ecs_cluster_id                            = module.ecs.cluster_id
+  alb_listener_arn                          = module.alb.listener_arn
+  auth_issuer                               = module.cognito.auth_issuer
+  enable_verbose_logging                    = var.enable_verbose_logging
+  app_url                                   = var.app_url
+  oidc_access_handler_service_client_id     = module.cognito.access_handler_service_client_id
+  oidc_access_handler_service_client_secret = module.cognito.access_handler_service_client_secret
+  oidc_access_handler_service_issuer        = module.cognito.auth_issuer
 }
 
 module "authz" {

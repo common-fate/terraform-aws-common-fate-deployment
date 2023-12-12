@@ -90,3 +90,18 @@ variable "enable_verbose_logging" {
   type        = bool
   default     = false
 }
+
+variable "oidc_access_handler_service_client_id" {
+  description = "OIDC client ID for the Access Handler Service"
+  type        = string
+}
+
+variable "oidc_access_handler_service_client_secret" {
+  description = "OIDC client secret for the Access Handler Service"
+  type        = string
+}
+
+variable "oidc_access_handler_service_issuer" {
+  description = "OIDC issuer for the Access Handler Service"
+  type        = string
+}

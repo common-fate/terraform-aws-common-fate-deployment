@@ -304,6 +304,10 @@ resource "aws_ecs_task_definition" "control_plane_task" {
         name  = "CF_CONTROL_PLANE_SERVICE_OIDC_CLIENT_SECRET",
         value = var.control_plane_service_client_secret
       },
+      {
+        name  = "CF_CONTROL_PLANE_SERVICE_OIDC_ISSUER",
+        value = var.oidc_control_plane_issuer
+      },
       { name  = "CF_CORS_ALLOWED_ORIGINS"
         value = join(",", [var.app_url])
       },

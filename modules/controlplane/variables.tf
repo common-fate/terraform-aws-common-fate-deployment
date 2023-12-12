@@ -136,6 +136,11 @@ variable "control_plane_service_client_secret" {
   sensitive   = true
 }
 
+variable "oidc_control_plane_issuer" {
+  description = "OIDC issuer for the Control Plane service"
+  type        = string
+}
+
 variable "alb_listener_arn" {
   description = "Specifies the Amazon Load Balancer (ALB) listener ARN."
   type        = string
