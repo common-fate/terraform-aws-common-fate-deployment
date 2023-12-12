@@ -20,23 +20,8 @@ variable "release_tag" {
   type        = string
 }
 
-variable "control_plane_certificate_arn" {
-  description = "The Amazon Certificate Manager (ACM) certificate ARN for the control_plane_domain."
-  type        = string
-}
-
-variable "authz_certificate_arn" {
-  description = "The Amazon Certificate Manager (ACM) certificate ARN for the authz_domain."
-  type        = string
-}
-
-variable "web_certificate_arn" {
-  description = "The Amazon Certificate Manager (ACM) certificate ARN for the web_domain."
-  type        = string
-}
-
-variable "access_handler_certificate_arn" {
-  description = "The Amazon Certificate Manager (ACM) certificate ARN for the access_handler_domain."
+variable "app_certificate_arn" {
+  description = "The Amazon Certificate Manager (ACM) certificate ARN for the application."
   type        = string
 }
 
@@ -85,43 +70,13 @@ variable "auth_url" {
   }
 }
 
-variable "authz_domain" {
-  description = "The authorization domain (e.g., 'https://authz.mydomain.com')."
+variable "app_url" {
+  description = "The app url (e.g., 'https://common-fate.mydomain.com')."
   type        = string
 
   validation {
-    condition     = can(regex("^https://", var.authz_domain))
-    error_message = "The authz_domain must start with 'https://'."
-  }
-}
-
-variable "web_domain" {
-  description = "The frontend domain (e.g., 'https://mydomain.com')."
-  type        = string
-
-  validation {
-    condition     = can(regex("^https://", var.web_domain))
-    error_message = "The web_domain must start with 'https://'."
-  }
-}
-
-variable "control_plane_domain" {
-  description = "The Control Plane domain (e.g., 'https://api.mydomain.com')."
-  type        = string
-
-  validation {
-    condition     = can(regex("^https://", var.control_plane_domain))
-    error_message = "The control_plane_domain must start with 'https://'."
-  }
-}
-
-variable "access_handler_domain" {
-  description = "The access handler domain (e.g., 'https://access.mydomain.com')."
-  type        = string
-
-  validation {
-    condition     = can(regex("^https://", var.access_handler_domain))
-    error_message = "The access_handler_domain must start with 'https://'."
+    condition     = can(regex("^https://", var.app_url))
+    error_message = "The app_url must start with 'https://'."
   }
 }
 
@@ -149,6 +104,14 @@ variable "saml_provider_name" {
   type        = string
 }
 
+
+variable "scim_source" {
+  description = "The name of the SCIM identity provider (e.g., 'Entra')"
+  default     = ""
+  type        = string
+}
+
+
 variable "saml_metadata_is_file" {
   description = "Determines if the 'saml_metadata_source' is a file path or a URL. Set to true for a file, false for a URL."
   default     = false
@@ -171,8 +134,17 @@ variable "licence_key_ps_arn" {
   description = "The AWS Parameter Store ARN for the license key."
   type        = string
 }
+variable "enable_verbose_logging" {
+  description = "Enables debug level verbose logging on ecs tasks"
+  type        = bool
+  default     = false
+}
 
-
+variable "control_plane_grant_assume_on_role_arns" {
+  description = "The ARNs of the IAM roles which the controlplane should be able to assume."
+  type        = list(string)
+  default     = []
+}
 variable "vpc_id" {
   description = "Specifies the ID of the Virtual Private Cloud (VPC) for deployment."
   type        = string

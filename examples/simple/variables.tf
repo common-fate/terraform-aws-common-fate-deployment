@@ -20,23 +20,8 @@ variable "release_tag" {
   type        = string
 }
 
-variable "control_plane_certificate_arn" {
-  description = "The Amazon Certificate Manager (ACM) certificate ARN for the control_plane_domain."
-  type        = string
-}
-
-variable "authz_certificate_arn" {
-  description = "The Amazon Certificate Manager (ACM) certificate ARN for the authz_domain."
-  type        = string
-}
-
-variable "web_certificate_arn" {
-  description = "The Amazon Certificate Manager (ACM) certificate ARN for the web_domain."
-  type        = string
-}
-
-variable "access_handler_certificate_arn" {
-  description = "The Amazon Certificate Manager (ACM) certificate ARN for the access_handler_domain."
+variable "app_certificate_arn" {
+  description = "The Amazon Certificate Manager (ACM) certificate ARN for the application."
   type        = string
 }
 
@@ -85,44 +70,32 @@ variable "auth_url" {
   }
 }
 
-variable "authz_domain" {
-  description = "The authorization domain (e.g., 'https://authz.mydomain.com')."
+variable "app_url" {
+  description = "The app url (e.g., 'https://common-fate.mydomain.com')."
   type        = string
 
   validation {
-    condition     = can(regex("^https://", var.authz_domain))
-    error_message = "The authz_domain must start with 'https://'."
+    condition     = can(regex("^https://", var.app_url))
+    error_message = "The app_url must start with 'https://'."
   }
 }
 
-variable "web_domain" {
-  description = "The frontend domain (e.g., 'https://mydomain.com')."
+variable "team_name" {
+  description = "Specifies the team name used for branding on the frontend."
+  default     = "Common Fate"
   type        = string
-
-  validation {
-    condition     = can(regex("^https://", var.web_domain))
-    error_message = "The web_domain must start with 'https://'."
-  }
 }
 
-variable "control_plane_domain" {
-  description = "The API domain (e.g., 'https://api.mydomain.com')."
+variable "favicon_url" {
+  description = "Specifies a public favicon URL for frontend branding (e.g., 'https://commonfate.io/favicon.ico')."
+  default     = "https://commonfate.io/favicon.ico"
   type        = string
-
-  validation {
-    condition     = can(regex("^https://", var.control_plane_domain))
-    error_message = "The control_plane_domain must start with 'https://'."
-  }
 }
 
-variable "access_handler_domain" {
-  description = "The access handler domain (e.g., 'https://access.mydomain.com')."
+variable "logo_url" {
+  description = "Specifies a public logo URL for frontend branding."
+  default     = "https://commonfate.io/logo.png"
   type        = string
-
-  validation {
-    condition     = can(regex("^https://", var.access_handler_domain))
-    error_message = "The access_handler_domain must start with 'https://'."
-  }
 }
 
 variable "saml_provider_name" {
@@ -130,6 +103,14 @@ variable "saml_provider_name" {
   default     = ""
   type        = string
 }
+
+
+variable "scim_source" {
+  description = "The name of the SCIM identity provider (e.g., 'Entra')"
+  default     = ""
+  type        = string
+}
+
 
 variable "saml_metadata_is_file" {
   description = "Determines if the 'saml_metadata_source' is a file path or a URL. Set to true for a file, false for a URL."
@@ -152,4 +133,15 @@ variable "scim_token_ps_arn" {
 variable "licence_key_ps_arn" {
   description = "The AWS Parameter Store ARN for the license key."
   type        = string
+}
+variable "enable_verbose_logging" {
+  description = "Enables debug level verbose logging on ecs tasks"
+  type        = bool
+  default     = false
+}
+
+variable "control_plane_grant_assume_on_role_arns" {
+  description = "The ARNs of the IAM roles which the controlplane should be able to assume."
+  type        = list(string)
+  default     = []
 }

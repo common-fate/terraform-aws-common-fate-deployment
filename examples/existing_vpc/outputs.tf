@@ -2,6 +2,15 @@
 # Outputs
 ######################################################
 
+output "first_time_setup_config" {
+  description = "Values to use when finishing the initial Common Fate deployment process"
+  value = {
+    dns_cname_record_for_app_domain  = module.alb.domain
+    dns_cname_record_for_auth_domain = module.cognito.user_pool_cloudfront_distribution
+    saml_sso_entity_id               = module.cognito.saml_entity_id
+    saml_sso_acs_url                 = module.cognito.saml_acs_url
+  }
+}
 
 output "cognito_saml_entity_id" {
   description = "The cognito entity ID required for SAML configuration"
@@ -45,3 +54,33 @@ output "terraform_client_secret" {
   sensitive   = true
 }
 
+output "control_plane_task_role_arn" {
+  description = "The control plane task role arn."
+  value       = module.control_plane.task_role_arn
+}
+
+output "access_handler_security_group_id" {
+  description = "The access handler security group id."
+  value       = module.access_handler.security_group_id
+}
+
+output "vpc_id" {
+  description = "The vpc id."
+  value       = module.vpc.vpc_id
+}
+
+
+output "private_subnet_ids" {
+  description = "The private subnet id."
+  value       = module.vpc.private_subnet_ids
+}
+
+
+output "ecs_cluster_id" {
+  description = "The ecs id."
+  value       = module.ecs.cluster_id
+}
+output "auth_issuer" {
+  description = "The auth issuer."
+  value       = module.cognito.auth_issuer
+}

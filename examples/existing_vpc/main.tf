@@ -6,14 +6,6 @@ data "aws_partition" "current" {}
 data "aws_caller_identity" "current" {}
 
 
-module "vpc" {
-  source     = "common-fate/common-fate-deployment/aws//modules/vpc"
-  version    = "1.0.0"
-  namespace  = var.namespace
-  stage      = var.stage
-  aws_region = var.aws_region
-}
-
 module "alb" {
   source    = "common-fate/common-fate-deployment/aws//modules/alb"
   version   = "1.0.0"
@@ -22,8 +14,8 @@ module "alb" {
   certificate_arns = [
     var.app_certificate_arn
   ]
-  public_subnet_ids = module.vpc.public_subnet_ids
-  vpc_id            = module.vpc.vpc_id
+  public_subnet_ids = var.public_subnet_ids
+  vpc_id            = var.vpc_id
 }
 
 module "control_plane_db" {
@@ -31,8 +23,8 @@ module "control_plane_db" {
   version         = "1.0.0"
   namespace       = var.namespace
   stage           = var.stage
-  vpc_id          = module.vpc.vpc_id
-  subnet_group_id = module.vpc.database_subnet_group_id
+  vpc_id          = var.vpc_id
+  subnet_group_id = var.database_subnet_group_id
 }
 
 module "authz_db" {
@@ -96,8 +88,8 @@ module "control_plane" {
   slack_client_id                     = var.slack_client_id
   slack_client_secret_ps_arn          = var.slack_client_secret_ps_arn
   slack_signing_secret_ps_arn         = var.slack_signing_secret_ps_arn
-  subnet_ids                          = module.vpc.private_subnet_ids
-  vpc_id                              = module.vpc.vpc_id
+  subnet_ids                          = var.private_subnet_ids
+  vpc_id                              = var.vpc_id
   ecs_cluster_id                      = module.ecs.cluster_id
   auth_authority_url                  = module.cognito.auth_authority_url
   database_host                       = module.control_plane_db.endpoint
@@ -120,8 +112,8 @@ module "web" {
   stage              = var.stage
   aws_region         = var.aws_region
   release_tag        = var.release_tag
-  subnet_ids         = module.vpc.private_subnet_ids
-  vpc_id             = module.vpc.vpc_id
+  subnet_ids         = var.private_subnet_ids
+  vpc_id             = var.vpc_id
   auth_authority_url = module.cognito.auth_authority_url
   auth_cli_client_id = module.cognito.cli_client_id
   auth_url           = var.auth_url
@@ -143,8 +135,8 @@ module "access_handler" {
   aws_region             = var.aws_region
   eventbus_arn           = module.events.event_bus_arn
   release_tag            = var.release_tag
-  subnet_ids             = module.vpc.private_subnet_ids
-  vpc_id                 = module.vpc.vpc_id
+  subnet_ids             = var.private_subnet_ids
+  vpc_id                 = var.vpc_id
   auth_authority_url     = module.cognito.auth_authority_url
   ecs_cluster_id         = module.ecs.cluster_id
   alb_listener_arn       = module.alb.listener_arn
@@ -161,8 +153,8 @@ module "authz" {
   aws_region                            = var.aws_region
   eventbus_arn                          = module.events.event_bus_arn
   release_tag                           = var.release_tag
-  subnet_ids                            = module.vpc.private_subnet_ids
-  vpc_id                                = module.vpc.vpc_id
+  subnet_ids                            = var.private_subnet_ids
+  vpc_id                                = var.vpc_id
   ecs_cluster_id                        = module.ecs.cluster_id
   alb_listener_arn                      = module.alb.listener_arn
   dynamodb_table_name                   = module.authz_db.dynamodb_table_name
