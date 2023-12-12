@@ -87,21 +87,7 @@ resource "aws_iam_role_policy_attachment" "control_plane_ecs_task_database_secre
   policy_arn = aws_iam_policy.database_secrets_read_access.arn
 }
 
-locals {
-  secret_arns = {
-    for arn in concat([
-      var.pager_duty_client_secret_ps_arn,
-      var.slack_client_secret_ps_arn,
-      var.slack_signing_secret_ps_arn,
-      var.scim_token_ps_arn,
-      var.licence_key_ps_arn
-    ], var.parameter_store_secret_arns) : arn => arn if arn != ""
-  }
-}
-
-
 resource "aws_iam_policy" "parameter_store_secrets_read_access" {
-  count       = 1
   name        = "${var.namespace}-${var.stage}-control-plane-ps"
   description = "Allows reading secrets from SSM Parameter Store"
 
@@ -109,7 +95,6 @@ resource "aws_iam_policy" "parameter_store_secrets_read_access" {
     Version = "2012-10-17",
     // include only the secrets that are configured
     Statement = [
-      for arn in local.secret_arns :
       {
         Effect = "Allow"
         Action = [
@@ -126,9 +111,8 @@ resource "aws_iam_policy" "parameter_store_secrets_read_access" {
 
 
 resource "aws_iam_role_policy_attachment" "control_plane_ecs_task_parameter_store_secrets_read_access_attach" {
-  count      = 1
   role       = aws_iam_role.control_plane_ecs_execution_role.name
-  policy_arn = aws_iam_policy.parameter_store_secrets_read_access[0].arn
+  policy_arn = aws_iam_policy.parameter_store_secrets_read_access.arn
 }
 
 
@@ -149,6 +133,12 @@ resource "aws_iam_role" "control_plane_ecs_task_role" {
     ]
   })
 }
+
+resource "aws_iam_role_policy_attachment" "control_plane_ecs_task_parameter_store_secrets_read_access_attach" {
+  role       = aws_iam_role.control_plane_ecs_task_role.name
+  policy_arn = aws_iam_policy.parameter_store_secrets_read_access.arn
+}
+
 
 resource "aws_iam_policy" "eventbus_put_events" {
   name        = "${var.namespace}-${var.stage}-control-plane-eb"

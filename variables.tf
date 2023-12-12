@@ -145,9 +145,3 @@ variable "control_plane_grant_assume_on_role_arns" {
   type        = list(string)
   default     = []
 }
-
-variable "control_plane_grant_read_parameter_store_secret_arns" {
-  description = "The ARNs of the parameter store secrets which the controlplane should be able to read."
-  type        = list(string)
-  default     = []
-}

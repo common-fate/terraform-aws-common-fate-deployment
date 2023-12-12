@@ -180,12 +180,6 @@ variable "scim_source" {
   default     = ""
   type        = string
 }
-variable "parameter_store_secret_arns" {
-  description = "The AWS Parameter Store secret ARN for to grant read access to."
-  default     = []
-  type        = list(string)
-}
-
 variable "aws_partition" {
   description = "The AWS partition the module is being deployed to"
 }

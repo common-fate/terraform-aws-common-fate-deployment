@@ -103,7 +103,6 @@ module "control_plane" {
   licence_key_ps_arn                  = var.licence_key_ps_arn
   enable_verbose_logging              = var.enable_verbose_logging
   grant_assume_on_role_arns           = var.control_plane_grant_assume_on_role_arns
-  parameter_store_secret_arns         = var.control_plane_grant_read_parameter_store_secret_arns
 }
 
 
