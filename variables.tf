@@ -134,14 +134,30 @@ variable "licence_key_ps_arn" {
   description = "The AWS Parameter Store ARN for the license key."
   type        = string
 }
-variable "enable_verbose_logging" {
-  description = "Enables debug level verbose logging on ecs tasks"
-  type        = bool
-  default     = false
-}
+
 
 variable "control_plane_grant_assume_on_role_arns" {
   description = "The ARNs of the IAM roles which the controlplane should be able to assume."
   type        = list(string)
   default     = []
+}
+
+
+variable "access_handler_log_level" {
+  description = "Log level for Access Handler service"
+  type        = string
+  default     = "INFO"
+}
+
+
+variable "control_plane_log_level" {
+  description = "Log level for Control Plane service"
+  type        = string
+  default     = "INFO"
+}
+
+variable "authz_log_level" {
+  description = "Log level for Authz service"
+  type        = string
+  default     = "INFO"
 }

@@ -127,8 +127,19 @@ resource "aws_ecs_task_definition" "access_handler_task" {
       },
       {
         name  = "LOG_LEVEL"
-        value = var.enable_verbose_logging ? "DEBUG" : "INFO"
-
+        value = var.log_level
+      },
+      {
+        name  = "CF_ACCESS_SERVICE_CLIENT_ID",
+        value = var.oidc_access_handler_service_client_id
+      },
+      {
+        name  = "CF_ACCESS_SERVICE_CLIENT_SECRET",
+        value = var.oidc_access_handler_service_client_secret
+      },
+      {
+        name  = "CF_ACCESS_SERVICE_OIDC_ISSUER",
+        value = var.oidc_access_handler_service_issuer
       }
     ],
     secrets = [

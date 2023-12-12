@@ -136,6 +136,11 @@ variable "control_plane_service_client_secret" {
   sensitive   = true
 }
 
+variable "oidc_control_plane_issuer" {
+  description = "OIDC issuer for the Control Plane service"
+  type        = string
+}
+
 variable "alb_listener_arn" {
   description = "Specifies the Amazon Load Balancer (ALB) listener ARN."
   type        = string
@@ -165,11 +170,7 @@ variable "desired_task_count" {
   type        = number
   default     = 1
 }
-variable "enable_verbose_logging" {
-  description = "Enables debug level verbose logging on ecs tasks"
-  type        = bool
-  default     = false
-}
+
 variable "grant_assume_on_role_arns" {
   description = "The ARNs of the IAM roles which the controlplane should be able to assume."
   type        = list(string)
@@ -186,4 +187,11 @@ variable "aws_partition" {
 
 variable "aws_account_id" {
   description = "The AWS account ID the module is being deployed to"
+}
+
+
+variable "log_level" {
+  description = "Log level for ECS service"
+  type        = string
+  default     = "INFO"
 }

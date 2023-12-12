@@ -86,13 +86,6 @@ variable "app_url" {
 }
 
 
-variable "enable_verbose_logging" {
-  description = "Enables debug level verbose logging on ecs tasks"
-  type        = bool
-  default     = false
-}
-
-
 variable "oidc_trusted_issuer" {
   description = "Trusted OIDC issuer to seed entities for"
   type        = string
@@ -111,4 +104,10 @@ variable "oidc_control_plane_client_id" {
 variable "oidc_access_handler_service_client_id" {
   description = "Access Handler Service Account OIDC Client ID"
   type        = string
+}
+
+variable "log_level" {
+  description = "Log level for ECS service"
+  type        = string
+  default     = "INFO"
 }

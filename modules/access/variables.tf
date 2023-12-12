@@ -85,8 +85,24 @@ variable "desired_task_count" {
   type        = number
   default     = 1
 }
-variable "enable_verbose_logging" {
-  description = "Enables debug level verbose logging on ecs tasks"
-  type        = bool
-  default     = false
+
+variable "log_level" {
+  description = "Log level for ECS service"
+  type        = string
+  default     = "INFO"
+}
+
+variable "oidc_access_handler_service_client_id" {
+  description = "OIDC client ID for the Access Handler Service"
+  type        = string
+}
+
+variable "oidc_access_handler_service_client_secret" {
+  description = "OIDC client secret for the Access Handler Service"
+  type        = string
+}
+
+variable "oidc_access_handler_service_issuer" {
+  description = "OIDC issuer for the Access Handler Service"
+  type        = string
 }

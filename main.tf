@@ -48,7 +48,7 @@ module "events" {
 module "ecs" {
   source                                = "terraform-aws-modules/ecs/aws"
   version                               = "~> 4.1.3"
-  cluster_name                          = "${var.namespace}-${var.stage}-common-fate"
+  cluster_name                          = "${var.namespace}-${var.stage}-cluster"
   default_capacity_provider_use_fargate = true
 }
 
@@ -101,8 +101,9 @@ module "control_plane" {
   control_plane_service_client_id     = module.cognito.control_plane_service_client_id
   control_plane_service_client_secret = module.cognito.control_plane_service_client_secret
   licence_key_ps_arn                  = var.licence_key_ps_arn
-  enable_verbose_logging              = var.enable_verbose_logging
+  log_level                           = var.control_plane_log_level
   grant_assume_on_role_arns           = var.control_plane_grant_assume_on_role_arns
+  oidc_control_plane_issuer           = module.cognito.auth_issuer
 }
 
 
@@ -128,20 +129,23 @@ module "web" {
 }
 
 module "access_handler" {
-  source                 = "./modules/access"
-  namespace              = var.namespace
-  stage                  = var.stage
-  aws_region             = var.aws_region
-  eventbus_arn           = module.events.event_bus_arn
-  release_tag            = var.release_tag
-  subnet_ids             = module.vpc.private_subnet_ids
-  vpc_id                 = module.vpc.vpc_id
-  auth_authority_url     = module.cognito.auth_authority_url
-  ecs_cluster_id         = module.ecs.cluster_id
-  alb_listener_arn       = module.alb.listener_arn
-  auth_issuer            = module.cognito.auth_issuer
-  enable_verbose_logging = var.enable_verbose_logging
-  app_url                = var.app_url
+  source                                    = "./modules/access"
+  namespace                                 = var.namespace
+  stage                                     = var.stage
+  aws_region                                = var.aws_region
+  eventbus_arn                              = module.events.event_bus_arn
+  release_tag                               = var.release_tag
+  subnet_ids                                = module.vpc.private_subnet_ids
+  vpc_id                                    = module.vpc.vpc_id
+  auth_authority_url                        = module.cognito.auth_authority_url
+  ecs_cluster_id                            = module.ecs.cluster_id
+  alb_listener_arn                          = module.alb.listener_arn
+  auth_issuer                               = module.cognito.auth_issuer
+  log_level                                 = var.access_handler_log_level
+  app_url                                   = var.app_url
+  oidc_access_handler_service_client_id     = module.cognito.access_handler_service_client_id
+  oidc_access_handler_service_client_secret = module.cognito.access_handler_service_client_secret
+  oidc_access_handler_service_issuer        = module.cognito.auth_issuer
 }
 
 module "authz" {
@@ -156,7 +160,7 @@ module "authz" {
   ecs_cluster_id                        = module.ecs.cluster_id
   alb_listener_arn                      = module.alb.listener_arn
   dynamodb_table_name                   = module.authz_db.dynamodb_table_name
-  enable_verbose_logging                = var.enable_verbose_logging
+  log_level                             = var.authz_log_level
   dynamodb_table_arn                    = module.authz_db.dynamodb_table_arn
   app_url                               = var.app_url
   oidc_trusted_issuer                   = module.cognito.auth_issuer
