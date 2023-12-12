@@ -102,3 +102,13 @@ variable "oidc_terraform_client_id" {
   description = "Terraform Service Account OIDC Client ID"
   type        = string
 }
+
+variable "oidc_control_plane_client_id" {
+  description = "Control Plane Service Account OIDC Client ID"
+  type        = string
+}
+
+variable "oidc_access_handler_service_client_id" {
+  description = "Access Handler Service Account OIDC Client ID"
+  type        = string
+}

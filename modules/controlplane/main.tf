@@ -99,17 +99,11 @@ locals {
   }
 }
 
-locals {
-  task_secret_arns = {
-    for arn in var.parameter_store_secret_arns : arn => arn if arn != ""
-  }
-}
-
 
 resource "aws_iam_policy" "parameter_store_secrets_read_access" {
-  count       = length(local.secret_arns) > 0 ? 1 : 0
+  count       = 1
   name        = "${var.namespace}-${var.stage}-control-plane-ps"
-  description = "Allows read secret from parameter store"
+  description = "Allows reading secrets from SSM Parameter Store"
 
   policy = jsonencode({
     Version = "2012-10-17",
@@ -119,9 +113,12 @@ resource "aws_iam_policy" "parameter_store_secrets_read_access" {
       {
         Effect = "Allow"
         Action = [
-          "ssm:GetParameters",
+          "ssm:GetParameter",
+          "ssm:GetParameters"
         ]
-        Resource = arn
+        Resource = [
+          "arn:${var.aws_partition}:ssm:${var.aws_region}:${var.aws_account_id}:parameter/${var.namespace}/${var.stage}/*",
+        ]
       }
     ]
   })
@@ -129,7 +126,7 @@ resource "aws_iam_policy" "parameter_store_secrets_read_access" {
 
 
 resource "aws_iam_role_policy_attachment" "control_plane_ecs_task_parameter_store_secrets_read_access_attach" {
-  count      = length(local.secret_arns) > 0 ? 1 : 0
+  count      = 1
   role       = aws_iam_role.control_plane_ecs_execution_role.name
   policy_arn = aws_iam_policy.parameter_store_secrets_read_access[0].arn
 }
@@ -153,34 +150,6 @@ resource "aws_iam_role" "control_plane_ecs_task_role" {
   })
 }
 
-
-resource "aws_iam_policy" "task_role_parameter_store_secrets_read_access" {
-  count       = length(local.secret_arns) > 0 ? 1 : 0
-  name        = "${var.namespace}-${var.stage}-control-plane-ps-tr"
-  description = "Allows read secret from parameter store"
-
-  policy = jsonencode({
-    Version = "2012-10-17",
-    // include only the secrets that are configured
-    Statement = [
-      for arn in local.task_secret_arns :
-      {
-        Effect = "Allow"
-        // @TODO: Security revert this to the correct scoped permissions for only teh ssmn params read access
-        Action = [
-          "*",
-        ]
-        Resource = "*"
-      }
-    ]
-  })
-}
-
-resource "aws_iam_role_policy_attachment" "control_plane_ecs_task_task_role_parameter_store_secrets_read_access_attach" {
-  count      = length(local.secret_arns) > 0 ? 1 : 0
-  role       = aws_iam_role.control_plane_ecs_task_role.name
-  policy_arn = aws_iam_policy.task_role_parameter_store_secrets_read_access[0].arn
-}
 resource "aws_iam_policy" "eventbus_put_events" {
   name        = "${var.namespace}-${var.stage}-control-plane-eb"
   description = "Allows ECS tasks to put events to the event bus"

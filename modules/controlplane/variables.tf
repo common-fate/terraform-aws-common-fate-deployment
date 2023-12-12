@@ -185,3 +185,11 @@ variable "parameter_store_secret_arns" {
   default     = []
   type        = list(string)
 }
+
+variable "aws_partition" {
+  description = "The AWS partition the module is being deployed to"
+}
+
+variable "aws_account_id" {
+  description = "The AWS account ID the module is being deployed to"
+}
