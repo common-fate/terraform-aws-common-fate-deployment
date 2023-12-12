@@ -313,7 +313,7 @@ resource "aws_ecs_task_definition" "control_plane_task" {
       },
       {
         name  = "LOG_LEVEL"
-        value = var.enable_verbose_logging ? "DEBUG" : "INFO"
+        value = var.log_level
       },
       {
         name  = "CF_SYNC_PAGERDUTY_ENABLED",

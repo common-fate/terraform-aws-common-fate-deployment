@@ -150,7 +150,7 @@ resource "aws_ecs_task_definition" "authz_task" {
       },
       {
         name  = "LOG_LEVEL"
-        value = "INFO"
+        value = var.log_level
       },
       {
         name  = "CF_OIDC_TRUSTED_ISSUER_COGNITO",

@@ -101,7 +101,7 @@ module "control_plane" {
   control_plane_service_client_id     = module.cognito.control_plane_service_client_id
   control_plane_service_client_secret = module.cognito.control_plane_service_client_secret
   licence_key_ps_arn                  = var.licence_key_ps_arn
-  enable_verbose_logging              = var.enable_verbose_logging
+  log_level                           = var.control_plane_log_level
   grant_assume_on_role_arns           = var.control_plane_grant_assume_on_role_arns
   oidc_control_plane_issuer           = module.cognito.auth_issuer
 }
@@ -141,7 +141,7 @@ module "access_handler" {
   ecs_cluster_id                            = module.ecs.cluster_id
   alb_listener_arn                          = module.alb.listener_arn
   auth_issuer                               = module.cognito.auth_issuer
-  enable_verbose_logging                    = var.enable_verbose_logging
+  log_level                                 = var.access_handler_log_level
   app_url                                   = var.app_url
   oidc_access_handler_service_client_id     = module.cognito.access_handler_service_client_id
   oidc_access_handler_service_client_secret = module.cognito.access_handler_service_client_secret
@@ -160,7 +160,7 @@ module "authz" {
   ecs_cluster_id                        = module.ecs.cluster_id
   alb_listener_arn                      = module.alb.listener_arn
   dynamodb_table_name                   = module.authz_db.dynamodb_table_name
-  enable_verbose_logging                = var.enable_verbose_logging
+  log_level                             = var.authz_log_level
   dynamodb_table_arn                    = module.authz_db.dynamodb_table_arn
   app_url                               = var.app_url
   oidc_trusted_issuer                   = module.cognito.auth_issuer

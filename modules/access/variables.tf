@@ -85,10 +85,11 @@ variable "desired_task_count" {
   type        = number
   default     = 1
 }
-variable "enable_verbose_logging" {
-  description = "Enables debug level verbose logging on ecs tasks"
-  type        = bool
-  default     = false
+
+variable "log_level" {
+  description = "Log level for ECS service"
+  type        = string
+  default     = "INFO"
 }
 
 variable "oidc_access_handler_service_client_id" {
