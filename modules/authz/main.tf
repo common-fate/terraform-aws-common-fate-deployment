@@ -88,27 +88,24 @@ resource "aws_iam_policy" "dynamodb_write" {
   name        = "${var.namespace}-${var.stage}-authz-ddb"
   description = "Allows ECS tasks to write to dynamodb"
 
-  // @TODO:SECURITY
-  // revert these permissions
   policy = jsonencode({
     "Version" : "2012-10-17",
     "Statement" : [
       {
         "Effect" : "Allow",
         "Action" : [
-          "*",
-          # "dynamodb:BatchGetItem",
-          # "dynamodb:BatchWriteItem",
-          # "dynamodb:ConditionCheckItem",
-          # "dynamodb:PutItem",
-          # "dynamodb:DescribeTable",
-          # "dynamodb:DeleteItem",
-          # "dynamodb:GetItem",
-          # "dynamodb:Scan",
-          # "dynamodb:Query",
-          # "dynamodb:UpdateItem"
+          "dynamodb:BatchGetItem",
+          "dynamodb:BatchWriteItem",
+          "dynamodb:ConditionCheckItem",
+          "dynamodb:PutItem",
+          "dynamodb:DescribeTable",
+          "dynamodb:DeleteItem",
+          "dynamodb:GetItem",
+          "dynamodb:Scan",
+          "dynamodb:Query",
+          "dynamodb:UpdateItem"
         ],
-        "Resource" : "*", #var.dynamodb_table_arn
+        "Resource" : var.dynamodb_table_arn
       }
     ]
   })
