@@ -92,6 +92,23 @@ resource "aws_iam_policy" "dynamodb_write" {
     "Version" : "2012-10-17",
     "Statement" : [
       {
+        "Sid" : "DynamoDBIndexAndStreamAccess",
+        "Effect" : "Allow",
+        "Action" : [
+          "dynamodb:GetShardIterator",
+          "dynamodb:Scan",
+          "dynamodb:Query",
+          "dynamodb:DescribeStream",
+          "dynamodb:GetRecords",
+          "dynamodb:ListStreams"
+        ],
+        "Resource" : [
+          "${var.dynamodb_table_arn}/index/*",
+          "${var.dynamodb_table_arn}/stream/*"
+        ]
+      },
+      {
+        "Sid" : "DynamoDBTableAccess",
         "Effect" : "Allow",
         "Action" : [
           "dynamodb:BatchGetItem",
@@ -106,6 +123,15 @@ resource "aws_iam_policy" "dynamodb_write" {
           "dynamodb:UpdateItem"
         ],
         "Resource" : var.dynamodb_table_arn
+      },
+      {
+        "Sid" : "DynamoDBDescribeLimitsAccess",
+        "Effect" : "Allow",
+        "Action" : "dynamodb:DescribeLimits",
+        "Resource" : [
+          var.dynamodb_table_arn,
+          "${var.dynamodb_table_arn}/index/*"
+        ]
       }
     ]
   })
