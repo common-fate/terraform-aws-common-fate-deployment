@@ -163,6 +163,10 @@ resource "aws_ecs_task_definition" "provisioner_task" {
         name  = "CF_AWS_IDC_INSTANCE_ARN"
         value = var.provisioner_aws_idc_instance_arn
       },
+      {
+        name  = "CF_GCP_WORKLOAD_IDENTITY_CONFIG_JSON"
+        value = var.provisioner_aws_idc_instance_arn
+      }
 
     ],
 
