@@ -339,6 +339,14 @@ resource "aws_ecs_task_definition" "control_plane_task" {
         name  = "CF_PROPAGATE_CRON_SCHEDULE",
         value = "*/30 * * * * *"
       },
+      {
+        name  = "CF_MAKE_AVAILABLE_ENABLED",
+        value = "true"
+      },
+      {
+        name  = "CF_MAKE_AVAILABLE_CRON_SCHEDULE",
+        value = "0 */5 * * * *"
+      },
 
     ],
 
