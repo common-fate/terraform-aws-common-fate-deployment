@@ -12,6 +12,34 @@ output "first_time_setup_config" {
   }
 }
 
+output "outputs" {
+  description = "All outputs from the Common Fate module"
+  value = {
+    dns_cname_record_for_app_domain  = module.alb.domain
+    dns_cname_record_for_auth_domain = module.cognito.user_pool_cloudfront_distribution
+    saml_sso_entity_id               = module.cognito.saml_entity_id
+    saml_sso_acs_url                 = module.cognito.saml_acs_url
+    web_client_id                    = module.cognito.web_client_id
+    cli_client_id                    = module.cognito.cli_client_id
+    terraform_client_id              = module.cognito.terraform_client_id
+    control_plane_task_role_arn      = module.control_plane.task_role_arn
+    access_handler_security_group_id = module.access_handler.security_group_id
+    vpc_id                           = module.vpc.vpc_id
+    private_subnet_ids               = module.vpc.private_subnet_ids
+    ecs_cluster_id                   = module.ecs.cluster_id
+    auth_issuer                      = module.cognito.auth_issuer
+  }
+}
+
+
+output "sensitive_outputs" {
+  description = "Sensitive output values such as generated OIDC client secrets"
+  sensitive   = true
+  value = {
+    terraform_client_secret = module.cognito.terraform_client_secret
+  }
+}
+
 output "cognito_saml_entity_id" {
   description = "The cognito entity ID required for SAML configuration"
   value       = module.cognito.saml_entity_id
