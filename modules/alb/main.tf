@@ -18,6 +18,13 @@ resource "aws_security_group" "alb_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
 }
 resource "aws_lb" "main_alb" {
   name                             = "${var.namespace}-${var.stage}-common-fate"
@@ -26,7 +33,6 @@ resource "aws_lb" "main_alb" {
   security_groups                  = [aws_security_group.alb_sg.id]
   subnets                          = var.public_subnet_ids
   enable_cross_zone_load_balancing = true
-
 }
 
 locals {
@@ -48,6 +54,23 @@ resource "aws_lb_listener" "https_listener" {
       content_type = "text/plain"
       message_body = "Not Found (Common Fate)"
       status_code  = "404"
+    }
+  }
+}
+
+# http to https redirect
+resource "aws_lb_listener" "http" {
+  load_balancer_arn = aws_lb.main_alb.arn
+  port              = "80"
+  protocol          = "HTTP"
+
+  default_action {
+    type = "redirect"
+
+    redirect {
+      port        = "443"
+      protocol    = "HTTPS"
+      status_code = "HTTP_301"
     }
   }
 }
