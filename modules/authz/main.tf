@@ -183,7 +183,7 @@ resource "aws_ecs_task_definition" "authz_task" {
         value = var.oidc_trusted_issuer
       },
       {
-        name  = "CF_OIDC_TERRAFORM_CLIENT_ID",
+        name  = "CF_OIDC_TERRAFORM_SERVICE_CLIENT_ID",
         value = var.oidc_terraform_client_id
       },
       {
