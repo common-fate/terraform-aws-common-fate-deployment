@@ -82,12 +82,13 @@ variable "provisioner_role_arn" {
 }
 
 variable "provisioner_gcp_service_account_client_json_ps_arn" {
-  description = "When deployed for GCP, and using service account credentials, this is arn of the secret credentials."
+  description = "When deployed for GCP, and using service account credentials, this is ARN of the secret credentials."
   default     = ""
   type        = string
 }
-variable "provisioner_gcp_workload_identity_conig_json" {
-  description = "When deployed for GCP and using worklaod identity federation, this is the config file."
+
+variable "provisioner_gcp_workload_identity_config_json" {
+  description = "When provisioning for GCP and using Workload Identity Federation, this is the config file."
   default     = ""
   type        = string
 }

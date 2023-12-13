@@ -165,7 +165,7 @@ resource "aws_ecs_task_definition" "provisioner_task" {
       },
       {
         name  = "CF_GCP_WORKLOAD_IDENTITY_CONFIG_JSON"
-        value = var.provisioner_aws_idc_instance_arn
+        value = var.provisioner_gcp_workload_identity_config_json
       }
 
     ],
