@@ -3,16 +3,16 @@ provider "google" {
 }
 
 resource "google_iam_workload_identity_pool" "this" {
-  workload_identity_pool_id = "common-fate-gcp"
-  display_name              = "Common Fate"
+  workload_identity_pool_id = var.workload_identity_pool_id
+  display_name              = var.workload_identity_pool_display_name
   description               = "Identity Pool for Common Fate GCP Integration"
 }
 
 resource "google_iam_workload_identity_pool_provider" "this" {
   workload_identity_pool_id          = google_iam_workload_identity_pool.this.workload_identity_pool_id
-  workload_identity_pool_provider_id = "common-fate-aws-deployment"
+  workload_identity_pool_provider_id = var.workload_identity_pool_provider_id
 
-  display_name = "Common Fate AWS"
+  display_name = var.workload_identity_pool_provider_display_name
   description  = "Common Fate AWS Deployment Account Provider"
   attribute_mapping = {
     "google.subject"        = "assertion.arn"
@@ -30,7 +30,7 @@ resource "google_iam_workload_identity_pool_provider" "this" {
 # used for reading resources
 #######################################################
 resource "google_organization_iam_custom_role" "read" {
-  role_id     = "commonfate.read"
+  role_id     = var.gcp_reader_iam_role_id
   org_id      = var.gcp_organization_id
   title       = "Common Fate Read"
   description = "Common Fate read-only role which allows reading GCP resources"
@@ -53,7 +53,7 @@ resource "google_organization_iam_custom_role" "read" {
 }
 
 resource "google_service_account" "read" {
-  account_id   = "common-fate-gcp-read"
+  account_id   = var.gcp_reader_service_account_id
   display_name = "Common Fate Read"
 }
 
@@ -79,7 +79,7 @@ resource "google_service_account_iam_binding" "read" {
 # used for provisioning access to entitlements
 #######################################################
 resource "google_organization_iam_custom_role" "provision" {
-  role_id     = "commonfate.provision"
+  role_id     = var.gcp_provisioner_iam_role_id
   org_id      = var.gcp_organization_id
   title       = "Common Fate Provision"
   description = "Common Fate provisioner role which allows assigning entitlements"
@@ -90,7 +90,7 @@ resource "google_organization_iam_custom_role" "provision" {
 }
 
 resource "google_service_account" "provision" {
-  account_id   = "common-fate-gcp-provision"
+  account_id   = var.gcp_provisioner_service_account_id
   display_name = "Common Fate Provision"
 }
 
