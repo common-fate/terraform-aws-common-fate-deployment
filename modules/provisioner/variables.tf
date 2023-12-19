@@ -10,6 +10,17 @@ variable "stage" {
   type        = string
 }
 
+variable "name_prefix" {
+  description = "A unique identifier consisting of letters, numbers, and hyphens. can optionally be left empty when only deploying a signal instance of this module"
+  type        = string
+  default     = ""
+
+  # validation {
+  #   condition     = var.name_prefix != "" && can(regex("^[a-zA-Z0-9-]+$", var.name_prefix))
+  #   error_message = "name_prefix should only contain letters, numbers, and hyphens"
+  # }
+}
+
 variable "vpc_id" {
   description = "Specifies the ID of the VPC."
   type        = string
@@ -69,39 +80,41 @@ variable "access_handler_sg_id" {
   description = "The Access Handler security group ID which will be allowed to make API calls to this provisioner."
   type        = string
 }
-variable "provisioner_type" {
-  description = "The mode to run the provisioner, GCP."
-  default     = "GCP"
-  type        = string
+
+
+variable "aws_idc_config" {
+  description = <<EOF
+  Configuration for AWS IDC. The following keys are expected:
+  - role_arn: The ARN of the IAM role for the provisioner to assume which hass permissions to provision access in an AWS organization.
+  - idc_region: The AWS IDC Region.
+  - idc_instance_arn: The AWS Identity Center instance ARN.
+  EOF
+  type = object({
+    role_arn         = string
+    idc_region       = string
+    idc_instance_arn = string
+  })
+  default = null
 }
 
-variable "provisioner_role_arn" {
-  description = "The Optional ARN of the IAM roles to assume which grants the provisioner access to a cloud environment or service."
-  default     = ""
-  type        = string
-}
-
-variable "provisioner_gcp_service_account_client_json_ps_arn" {
-  description = "When deployed for GCP, and using service account credentials, this is ARN of the secret credentials."
-  default     = ""
-  type        = string
-}
-
-variable "provisioner_gcp_workload_identity_config_json" {
-  description = "When provisioning for GCP and using Workload Identity Federation, this is the config file."
-  default     = ""
-  type        = string
-}
-
-
-variable "provisioner_aws_idc_region" {
-  description = "When deployed for AWS, this is the AWS IDC Region."
-  default     = ""
-  type        = string
-}
-
-variable "provisioner_aws_idc_instance_arn" {
-  description = "When deployed for AWS, this is the AWS Identity Center instance ARN."
-  default     = ""
-  type        = string
+variable "gcp_config" {
+  description = <<EOF
+  Configuration for GCP. The following keys are expected:
+  - service_account_client_json_ps_arn: (Optional) when using service account credentials, this is ARN of the secret credentials.
+  - workload_identity_config_json: (Optional) using Workload Identity Federation, this is the config file.
+  EOF
+  type = object({
+    service_account_client_json_ps_arn = optional(string)
+    workload_identity_config_json      = optional(string)
+  })
+  default = null
+  validation {
+    condition = (
+      var.gcp_config != null && (
+        var.gcp_config.service_account_client_json_ps_arn != null ||
+        var.gcp_config.workload_identity_config_json != null
+      )
+    )
+    error_message = "At least one of 'service_account_client_json_ps_arn' or 'workload_identity_config_json' must be provided in 'gcp_config'."
+  }
 }
