@@ -5,11 +5,6 @@
 # You can also deploy multiple instances of the module by setting the 'name' parameter
 ######################################################
 
-// This is added so that we can use teh experimental optional() function on object variables
-terraform {
-  experiments = [module_variable_optional_attrs]
-}
-
 locals {
   aws_idc_config = var.aws_idc_config != null ? var.aws_idc_config : {}
   gcp_config     = var.gcp_config != null ? var.gcp_config : {}
