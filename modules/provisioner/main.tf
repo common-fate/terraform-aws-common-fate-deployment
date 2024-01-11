@@ -5,10 +5,6 @@
 # You can also deploy multiple instances of the module by setting the 'name' parameter
 ######################################################
 
-// This is added so that we can use teh experimental optional() function on object variables
-terraform {
-  experiments = [module_variable_optional_attrs]
-}
 data "aws_caller_identity" "current" {}
 
 locals {
