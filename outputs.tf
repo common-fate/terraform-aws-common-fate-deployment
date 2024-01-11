@@ -28,6 +28,7 @@ output "outputs" {
     private_subnet_ids               = module.vpc.private_subnet_ids
     ecs_cluster_id                   = module.ecs.cluster_id
     auth_issuer                      = module.cognito.auth_issuer
+    event_bus_log_group_name         = module.events.event_bus_log_group_name
   }
 }
 
@@ -111,4 +112,8 @@ output "ecs_cluster_id" {
 output "auth_issuer" {
   description = "The auth issuer."
   value       = module.cognito.auth_issuer
+}
+output "event_bus_log_group_name" {
+  description = "The Event Bus log group name."
+  value       = module.events.event_bus_log_group_name
 }
