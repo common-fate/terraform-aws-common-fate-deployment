@@ -9,6 +9,7 @@
 terraform {
   experiments = [module_variable_optional_attrs]
 }
+data "aws_caller_identity" "current" {}
 
 locals {
   aws_idc_config = var.aws_idc_config != null ? var.aws_idc_config : {}
@@ -71,8 +72,9 @@ locals {
 
   entra_secrets = var.entra_config != null ? [
     {
-      name      = "CF_ENTRA_CLIENT_SECRET",
-      valueFrom = local.entra_config.client_secret_ps_arn
+      name = "CF_ENTRA_CLIENT_SECRET",
+      // construct the arn from a path to make configuration most simple and consistent accross infra and config
+      valueFrom = "arn:aws:ssm:${var.aws_region}:${data.aws_caller_identity.current.account_id}:parameter${local.entra_config.client_secret_secret_path}"
     }
   ] : []
 

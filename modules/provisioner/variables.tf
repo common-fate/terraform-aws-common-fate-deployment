@@ -128,9 +128,9 @@ variable "entra_config" {
   - client_secret_ps_arn: The SSM Parameter store secret path for the client secret for the Entra App Registration.
   EOF
   type = object({
-    tenant_id            = string
-    client_id            = string
-    client_secret_ps_arn = string
+    tenant_id                 = string
+    client_id                 = string
+    client_secret_secret_path = string
   })
   default = null
 
