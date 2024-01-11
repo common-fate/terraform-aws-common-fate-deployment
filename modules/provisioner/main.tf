@@ -13,10 +13,12 @@ terraform {
 locals {
   aws_idc_config = var.aws_idc_config != null ? var.aws_idc_config : {}
   gcp_config     = var.gcp_config != null ? var.gcp_config : {}
+  entra_config   = var.entra_config != null ? var.entra_config : {}
 
   provisioner_types = compact([
     var.aws_idc_config != null ? "AWS_IDC" : "",
-    var.gcp_config != null ? "GCP" : ""
+    var.gcp_config != null ? "GCP" : "",
+    var.entra_config != null ? "Entra" : ""
   ])
 
   env_vars = [
@@ -56,6 +58,24 @@ locals {
     }
   ] : []
 
+  entra_env_vars = var.entra_config != null ? [
+    {
+      name  = "CF_ENTRA_TENANT_ID"
+      value = local.entra_config.tenant_id
+    },
+    {
+      name  = "CF_ENTRA_CLIENT_ID"
+      value = local.entra_config.client_id
+    }
+  ] : []
+
+  entra_secrets = var.entra_config != null ? [
+    {
+      name      = "CF_ENTRA_CLIENT_SECRET",
+      valueFrom = local.entra_config.client_secret_ps_arn
+    }
+  ] : []
+
   grant_assume_roles = compact([
     var.aws_idc_config != null ? var.aws_idc_config.role_arn : ""
   ])
@@ -63,8 +83,8 @@ locals {
     var.gcp_config != null ? var.gcp_config.service_account_client_json_ps_arn : ""
   ])
 
-  combined_env_vars = concat(local.env_vars, local.aws_env_vars, local.gcp_env_vars)
-  combined_secrets  = concat(local.gcp_secrets)
+  combined_env_vars = concat(local.env_vars, local.aws_env_vars, local.gcp_env_vars, local.entra_env_vars)
+  combined_secrets  = concat(local.gcp_secrets, local.entra_secrets)
   name_prefix       = join("-", compact([var.namespace, var.stage, var.name_prefix]))
 }
 

@@ -118,3 +118,20 @@ variable "gcp_config" {
     error_message = "At least one of 'service_account_client_json_ps_arn' or 'workload_identity_config_json' must be provided in 'gcp_config'."
   }
 }
+
+
+variable "entra_config" {
+  description = <<EOF
+  Configuration for GCP. The following keys are expected:
+  - tenant_id: The Entra tenant ID.
+  - client_id: The client ID for the Entra App Registration.
+  - client_secret_ps_arn: The SSM Parameter store secret path for the client secret for the Entra App Registration.
+  EOF
+  type = object({
+    tenant_id            = string
+    client_id            = string
+    client_secret_ps_arn = string
+  })
+  default = null
+
+}
