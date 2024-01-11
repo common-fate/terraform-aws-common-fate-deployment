@@ -125,7 +125,7 @@ variable "entra_config" {
   Configuration for GCP. The following keys are expected:
   - tenant_id: The Entra tenant ID.
   - client_id: The client ID for the Entra App Registration.
-  - client_secret_ps_arn: The SSM Parameter store secret path for the client secret for the Entra App Registration.
+  - client_secret_secret_path: The SSM Parameter store secret path for the client secret for the Entra App Registration.
   EOF
   type = object({
     tenant_id                 = string
