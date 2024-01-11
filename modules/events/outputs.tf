@@ -17,3 +17,7 @@ output "sqs_queue_name" {
   value       = aws_sqs_queue.event_queue.name
 }
 
+output "event_bus_log_group_name" {
+  description = "The event bus arn"
+  value       = aws_cloudwatch_log_group.event_log_group.name
+}
