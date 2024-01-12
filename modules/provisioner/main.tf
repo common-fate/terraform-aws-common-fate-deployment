@@ -66,11 +66,13 @@ locals {
     }
   ] : []
 
+  entra_client_secret_path_arn = var.entra_config != null ? "arn:aws:ssm:${var.aws_region}:${data.aws_caller_identity.current.account_id}:parameter${local.entra_config.client_secret_secret_path}" : ""
+
   entra_secrets = var.entra_config != null ? [
     {
       name = "CF_ENTRA_CLIENT_SECRET",
       // construct the arn from a path to make configuration most simple and consistent accross infra and config
-      valueFrom = "arn:aws:ssm:${var.aws_region}:${data.aws_caller_identity.current.account_id}:parameter${local.entra_config.client_secret_secret_path}"
+      valueFrom = local.entra_client_secret_path_arn
     }
   ] : []
 
@@ -78,7 +80,8 @@ locals {
     var.aws_idc_config != null ? var.aws_idc_config.role_arn : ""
   ])
   grant_read_secret_arns = compact([
-    var.gcp_config != null ? var.gcp_config.service_account_client_json_ps_arn : ""
+    var.gcp_config != null ? var.gcp_config.service_account_client_json_ps_arn : "",
+    var.entra_config != null ? local.entra_client_secret_path_arn : "",
   ])
 
   combined_env_vars = concat(local.env_vars, local.aws_env_vars, local.gcp_env_vars, local.entra_env_vars)
@@ -171,6 +174,7 @@ resource "aws_iam_policy" "parameter_store_secrets_read_access" {
       {
         Effect = "Allow"
         Action = [
+          "ssm:GetParameter",
           "ssm:GetParameters",
         ]
         Resource = arn
