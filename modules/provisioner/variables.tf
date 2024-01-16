@@ -135,3 +135,21 @@ variable "entra_config" {
   default = null
 
 }
+
+
+variable "aws_rds_config" {
+  description = <<EOF
+  Configuration for AWS RDS. The following keys are expected:
+  - role_arn: The ARN of the IAM role for the provisioner to assume which hass permissions to provision access in an AWS organization.
+  - idc_region: The AWS IDC Region.
+  - idc_instance_arn: The AWS Identity Center instance ARN.
+  - infra_role_name: The name of the IAM role which is deployed each each account containing databases.
+  EOF
+  type = object({
+    idc_role_arn     = string
+    idc_region       = string
+    idc_instance_arn = string
+    infra_role_name  = string
+  })
+  default = null
+}
