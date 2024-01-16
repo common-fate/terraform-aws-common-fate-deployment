@@ -252,6 +252,10 @@ resource "aws_ecs_task_definition" "provisioner_task" {
         name  = "LOG_LEVEL"
         value = var.enable_verbose_logging ? "DEBUG" : "INFO"
       },
+      {
+        name  = "CF_RELEASE_TAG"
+        value = var.release_tag
+      }
     ], local.combined_env_vars),
 
     secrets = local.combined_secrets
