@@ -255,7 +255,23 @@ resource "aws_ecs_task_definition" "provisioner_task" {
       {
         name  = "CF_RELEASE_TAG"
         value = var.release_tag
-      }
+      },
+      {
+        name  = "CF_API_URL"
+        value = var.app_url
+      },
+      {
+        name  = "CF_CLIENT_ID"
+        value = var.provisioner_service_client_id
+      },
+      {
+        name  = "CF_CLIENT_SECRET"
+        value = var.provisioner_service_client_secret
+      },
+      {
+        name  = "CF_OIDC_ISSUER"
+        value = var.auth_issuer
+      },
     ], local.combined_env_vars),
 
     secrets = local.combined_secrets

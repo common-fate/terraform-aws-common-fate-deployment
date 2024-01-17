@@ -20,6 +20,15 @@ variable "name_prefix" {
   #   error_message = "name_prefix should only contain letters, numbers, and hyphens"
   # }
 }
+variable "app_url" {
+  description = "The app url (e.g., 'https://common-fate.mydomain.com')."
+  type        = string
+
+  validation {
+    condition     = can(regex("^https://", var.app_url))
+    error_message = "The app_url must start with 'https://'."
+  }
+}
 
 variable "vpc_id" {
   description = "Specifies the ID of the VPC."
@@ -78,6 +87,22 @@ variable "enable_verbose_logging" {
 
 variable "access_handler_sg_id" {
   description = "The Access Handler security group ID which will be allowed to make API calls to this provisioner."
+  type        = string
+}
+
+variable "provisioner_service_client_id" {
+  description = "Specifies the client ID for the provisioner service."
+  type        = string
+}
+
+variable "provisioner_service_client_secret" {
+  description = "Specifies the client secret for the provisioner service."
+  type        = string
+  sensitive   = true
+}
+
+variable "auth_issuer" {
+  description = "Specifies the issuer for authentication."
   type        = string
 }
 
