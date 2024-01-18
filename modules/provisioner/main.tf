@@ -257,7 +257,7 @@ resource "aws_ecs_task_definition" "provisioner_task" {
         value = var.release_tag
       },
       {
-        name  = "CF_API_URL"
+        name  = "CF_ACCESS_URL"
         value = var.app_url
       },
       {
