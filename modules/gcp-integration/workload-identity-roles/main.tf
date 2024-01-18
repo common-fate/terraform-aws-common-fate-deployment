@@ -48,7 +48,8 @@ resource "google_organization_iam_custom_role" "read" {
     "resourcemanager.tagKeys.list",
     "resourcemanager.tagValues.list",
     "resourcemanager.hierarchyNodes.listEffectiveTags",
-    "resourcemanager.hierarchyNodes.listTagBindings"
+    "resourcemanager.hierarchyNodes.listTagBindings",
+    "cloudasset.assets.listResource"
   ]
 }
 
