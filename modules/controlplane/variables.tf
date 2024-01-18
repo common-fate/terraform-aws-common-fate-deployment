@@ -157,13 +157,13 @@ variable "log_retention_in_days" {
 variable "ecs_task_cpu" {
   description = "The amount of CPU to allocate for the ECS task. Specified in CPU units (1024 units = 1 vCPU)."
   type        = string
-  default     = "256" # Example default, adjust as needed
+  default     = "512" # Example default, adjust as needed
 }
 
 variable "ecs_task_memory" {
   description = "The amount of memory to allocate for the ECS task. Specified in MiB."
   type        = string
-  default     = "512" # Example default, adjust as needed
+  default     = "1024" # Example default, adjust as needed
 }
 variable "desired_task_count" {
   description = "The desired number of instances of the task to run."
@@ -194,4 +194,14 @@ variable "log_level" {
   description = "Log level for ECS service"
   type        = string
   default     = "INFO"
+}
+
+variable "otel_log_group_name" {
+  description = "Log group for OTel collector"
+  type        = string
+}
+
+variable "otel_writer_iam_policy_arn" {
+  description = "IAM policy for OpenTelemetry"
+  type        = string
 }
