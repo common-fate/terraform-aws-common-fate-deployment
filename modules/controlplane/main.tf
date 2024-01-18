@@ -141,7 +141,7 @@ resource "aws_iam_role_policy_attachment" "control_plane_ecs_task_parameter_stor
 
 
 resource "aws_iam_role_policy_attachment" "otel" {
-  role       = aws_iam_role.access_handler_ecs_task_role.name
+  role       = aws_iam_role.control_plane_ecs_task_role.name
   policy_arn = var.otel_writer_iam_policy_arn
 }
 
