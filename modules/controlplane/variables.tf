@@ -195,3 +195,13 @@ variable "log_level" {
   type        = string
   default     = "INFO"
 }
+
+variable "otel_log_group_name" {
+  description = "Log group for OTel collector"
+  type        = string
+}
+
+variable "otel_writer_iam_policy_arn" {
+  description = "IAM policy for OpenTelemetry"
+  type        = string
+}

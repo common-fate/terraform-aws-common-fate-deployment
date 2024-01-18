@@ -108,6 +108,8 @@ module "control_plane" {
   log_level                           = var.control_plane_log_level
   grant_assume_on_role_arns           = var.control_plane_grant_assume_on_role_arns
   oidc_control_plane_issuer           = module.cognito.auth_issuer
+  otel_log_group_name                 = module.ecs_base.otel_log_group_name
+  otel_writer_iam_policy_arn          = module.ecs_base.otel_writer_iam_policy_arn
 }
 
 

@@ -140,6 +140,11 @@ resource "aws_iam_role_policy_attachment" "control_plane_ecs_task_parameter_stor
 }
 
 
+resource "aws_iam_role_policy_attachment" "otel" {
+  role       = aws_iam_role.access_handler_ecs_task_role.name
+  policy_arn = var.otel_writer_iam_policy_arn
+}
+
 resource "aws_iam_policy" "eventbus_put_events" {
   name        = "${var.namespace}-${var.stage}-control-plane-eb"
   description = "Allows ECS tasks to put events to the event bus"
@@ -214,206 +219,227 @@ resource "aws_ecs_task_definition" "control_plane_task" {
   execution_role_arn       = aws_iam_role.control_plane_ecs_execution_role.arn
   task_role_arn            = aws_iam_role.control_plane_ecs_task_role.arn
 
-  container_definitions = jsonencode([{
-    name  = "control-plane-container",
-    image = "commonfate/common-fate-cloud-api:${var.release_tag}",
+  container_definitions = jsonencode([
+    {
+      name  = "control-plane-container",
+      image = "commonfate/common-fate-cloud-api:${var.release_tag}",
 
 
-    portMappings = [{
-      containerPort = 8080,
-    }],
-    environment = [
-      {
-        name  = "CF_SCIM_SOURCE",
-        value = var.scim_source
-      },
-      {
-        name  = "CF_OIDC_AUTHORITY_URL",
-        value = var.auth_authority_url
-      },
-      // used for client credentials
-      {
-        name  = "CF_CONTROL_PLANE_SERVICE_OIDC_ISSUER",
-        value = var.auth_issuer
-      },
-      // used for auth middleware
-      {
-        name  = "CF_OIDC_TRUSTED_ISSUER_COGNITO",
-        value = var.auth_issuer
-      },
-      {
-        name  = "CF_EVENT_BRIDGE_ARN",
-        value = var.eventbus_arn
-      },
-      {
-        name  = "CF_EVENT_HANDLER_SQS_QUEUE",
-        value = var.sqs_queue_name
-      },
-
-      {
-        name  = "CF_PAGERDUTY_CLIENT_ID",
-        value = var.pager_duty_client_id
-      },
-      {
-        name  = "CF_PAGERDUTY_REDIRECT_URL",
-        value = "${var.app_url}/api/v1/oauth2/callback/pagerduty"
-      },
-      {
-        name  = "CF_FRONTEND_URL",
-        value = var.app_url
-      },
-      {
-        name  = "CF_API_URL",
-        value = var.app_url
-      },
-      {
-        name  = "CF_AUTHZ_URL",
-        value = var.app_url
-      },
-      {
-        name  = "CF_ACCESS_URL",
-        value = var.app_url
-      },
-      {
-        name  = "CF_SLACK_CLIENT_ID",
-        value = var.slack_client_id
-      },
-
-      {
-        name  = "CF_SLACK_REDIRECT_URL",
-        value = "${var.app_url}/api/v1/oauth2/callback/slack"
-      },
-      {
-        name  = "CF_PG_USER",
-        value = var.database_user
-      },
-      {
-        name  = "CF_PG_HOST",
-        value = var.database_host
-      },
-      {
-        name  = "CF_PG_SSLMode",
-        value = "require"
-      },
-
-      {
-        name  = "CF_CONTROL_PLANE_SERVICE_OIDC_CLIENT_ID",
-        value = var.control_plane_service_client_id
-      },
-      {
-        name  = "CF_CONTROL_PLANE_SERVICE_OIDC_CLIENT_SECRET",
-        value = var.control_plane_service_client_secret
-      },
-      {
-        name  = "CF_CONTROL_PLANE_SERVICE_OIDC_ISSUER",
-        value = var.oidc_control_plane_issuer
-      },
-      { name  = "CF_CORS_ALLOWED_ORIGINS"
-        value = join(",", [var.app_url])
-      },
-      {
-        name  = "LOG_LEVEL"
-        value = var.log_level
-      },
-      {
-        name  = "CF_SYNC_PAGERDUTY_ENABLED",
-        value = "true"
-      },
-      {
-        name  = "CF_SYNC_PAGERDUTY_CRON_SCHEDULE",
-        value = "0 */5 * * * *"
-      },
-      {
-        name  = "CF_SYNC_OPSGENIE_ENABLED",
-        value = "true"
-      },
-      {
-        name  = "CF_SYNC_OPSGENIE_CRON_SCHEDULE",
-        value = "0 */5 * * * *"
-      },
-      {
-        name  = "CF_SYNC_GCP_ENABLED",
-        value = "true"
-      },
-      {
-        name  = "CF_SYNC_GCP_CRON_SCHEDULE",
-        value = "0 */5 * * * *"
-      },
-      {
-        name  = "CF_PROPAGATE_ENABLED",
-        value = "true"
-      },
-      {
-        name  = "CF_PROPAGATE_CRON_SCHEDULE",
-        value = "*/30 * * * * *"
-      },
-      {
-        name  = "CF_MAKE_AVAILABLE_ENABLED",
-        value = "true"
-      },
-      {
-        name  = "CF_MAKE_AVAILABLE_CRON_SCHEDULE",
-        value = "0 */5 * * * *"
-      },
-      {
-        name  = "CF_SYNC_AWSIDC_ENABLED",
-        value = "true"
-      },
-      {
-        name  = "CF_SYNC_AWSIDC_CRON_SCHEDULE",
-        value = "0 */5 * * * *"
-      },
-
-
-    ],
-
-    // Only add these secrets if their values are provided
-    secrets = concat(
-      var.pager_duty_client_secret_ps_arn != "" ? [{
-        name      = "CF_PAGERDUTY_CLIENT_SECRET",
-        valueFrom = var.pager_duty_client_secret_ps_arn
-      }] : [],
-      var.slack_client_secret_ps_arn != "" ? [{
-        name      = "CF_SLACK_CLIENT_SECRET",
-        valueFrom = var.slack_client_secret_ps_arn
-      }] : [],
-      var.slack_signing_secret_ps_arn != "" ? [{
-        name      = "CF_SLACK_SIGNING_SECRET",
-        valueFrom = var.slack_signing_secret_ps_arn
-      }] : [],
-      var.scim_token_ps_arn != "" ? [{
-        name      = "CF_SCIM_TOKEN",
-        valueFrom = var.scim_token_ps_arn
-      }] : [],
-
-      [
+      portMappings = [{
+        containerPort = 8080,
+      }],
+      environment = [
         {
-          name = "CF_PG_PASSWORD",
-          // the password key is extracted from the json that is stored in secrets manager so that we don't need to decode it in the go server
-          valueFrom = "${var.database_secret_sm_arn}:password::"
+          name  = "CF_SCIM_SOURCE",
+          value = var.scim_source
         },
         {
-          name      = "CF_LICENCE_KEY",
-          valueFrom = var.licence_key_ps_arn
+          name  = "CF_OIDC_AUTHORITY_URL",
+          value = var.auth_authority_url
+        },
+        // used for client credentials
+        {
+          name  = "CF_CONTROL_PLANE_SERVICE_OIDC_ISSUER",
+          value = var.auth_issuer
+        },
+        // used for auth middleware
+        {
+          name  = "CF_OIDC_TRUSTED_ISSUER_COGNITO",
+          value = var.auth_issuer
+        },
+        {
+          name  = "CF_EVENT_BRIDGE_ARN",
+          value = var.eventbus_arn
+        },
+        {
+          name  = "CF_EVENT_HANDLER_SQS_QUEUE",
+          value = var.sqs_queue_name
         },
 
-      ]
-    )
+        {
+          name  = "CF_PAGERDUTY_CLIENT_ID",
+          value = var.pager_duty_client_id
+        },
+        {
+          name  = "CF_PAGERDUTY_REDIRECT_URL",
+          value = "${var.app_url}/api/v1/oauth2/callback/pagerduty"
+        },
+        {
+          name  = "CF_FRONTEND_URL",
+          value = var.app_url
+        },
+        {
+          name  = "CF_API_URL",
+          value = var.app_url
+        },
+        {
+          name  = "CF_AUTHZ_URL",
+          value = var.app_url
+        },
+        {
+          name  = "CF_ACCESS_URL",
+          value = var.app_url
+        },
+        {
+          name  = "CF_SLACK_CLIENT_ID",
+          value = var.slack_client_id
+        },
 
-    logConfiguration = {
-      logDriver = "awslogs",
-      options = {
-        "awslogs-group"         = aws_cloudwatch_log_group.control_plane_log_group.name,
-        "awslogs-region"        = var.aws_region,
-        "awslogs-stream-prefix" = "control-plane"
+        {
+          name  = "CF_SLACK_REDIRECT_URL",
+          value = "${var.app_url}/api/v1/oauth2/callback/slack"
+        },
+        {
+          name  = "CF_PG_USER",
+          value = var.database_user
+        },
+        {
+          name  = "CF_PG_HOST",
+          value = var.database_host
+        },
+        {
+          name  = "CF_PG_SSLMode",
+          value = "require"
+        },
+
+        {
+          name  = "CF_CONTROL_PLANE_SERVICE_OIDC_CLIENT_ID",
+          value = var.control_plane_service_client_id
+        },
+        {
+          name  = "CF_CONTROL_PLANE_SERVICE_OIDC_CLIENT_SECRET",
+          value = var.control_plane_service_client_secret
+        },
+        {
+          name  = "CF_CONTROL_PLANE_SERVICE_OIDC_ISSUER",
+          value = var.oidc_control_plane_issuer
+        },
+        { name  = "CF_CORS_ALLOWED_ORIGINS"
+          value = join(",", [var.app_url])
+        },
+        {
+          name  = "LOG_LEVEL"
+          value = var.log_level
+        },
+        {
+          name  = "CF_SYNC_PAGERDUTY_ENABLED",
+          value = "true"
+        },
+        {
+          name  = "CF_SYNC_PAGERDUTY_CRON_SCHEDULE",
+          value = "0 */5 * * * *"
+        },
+        {
+          name  = "CF_SYNC_OPSGENIE_ENABLED",
+          value = "true"
+        },
+        {
+          name  = "CF_SYNC_OPSGENIE_CRON_SCHEDULE",
+          value = "0 */5 * * * *"
+        },
+        {
+          name  = "CF_SYNC_GCP_ENABLED",
+          value = "true"
+        },
+        {
+          name  = "CF_SYNC_GCP_CRON_SCHEDULE",
+          value = "0 */5 * * * *"
+        },
+        {
+          name  = "CF_PROPAGATE_ENABLED",
+          value = "true"
+        },
+        {
+          name  = "CF_PROPAGATE_CRON_SCHEDULE",
+          value = "*/30 * * * * *"
+        },
+        {
+          name  = "CF_MAKE_AVAILABLE_ENABLED",
+          value = "true"
+        },
+        {
+          name  = "CF_MAKE_AVAILABLE_CRON_SCHEDULE",
+          value = "0 */5 * * * *"
+        },
+        {
+          name  = "CF_SYNC_AWSIDC_ENABLED",
+          value = "true"
+        },
+        {
+          name  = "CF_SYNC_AWSIDC_CRON_SCHEDULE",
+          value = "0 */5 * * * *"
+        },
+      ],
+
+      // Only add these secrets if their values are provided
+      secrets = concat(
+        var.pager_duty_client_secret_ps_arn != "" ? [{
+          name      = "CF_PAGERDUTY_CLIENT_SECRET",
+          valueFrom = var.pager_duty_client_secret_ps_arn
+        }] : [],
+        var.slack_client_secret_ps_arn != "" ? [{
+          name      = "CF_SLACK_CLIENT_SECRET",
+          valueFrom = var.slack_client_secret_ps_arn
+        }] : [],
+        var.slack_signing_secret_ps_arn != "" ? [{
+          name      = "CF_SLACK_SIGNING_SECRET",
+          valueFrom = var.slack_signing_secret_ps_arn
+        }] : [],
+        var.scim_token_ps_arn != "" ? [{
+          name      = "CF_SCIM_TOKEN",
+          valueFrom = var.scim_token_ps_arn
+        }] : [],
+
+        [
+          {
+            name = "CF_PG_PASSWORD",
+            // the password key is extracted from the json that is stored in secrets manager so that we don't need to decode it in the go server
+            valueFrom = "${var.database_secret_sm_arn}:password::"
+          },
+          {
+            name      = "CF_LICENCE_KEY",
+            valueFrom = var.licence_key_ps_arn
+          },
+
+        ]
+      )
+
+      logConfiguration = {
+        logDriver = "awslogs",
+        options = {
+          "awslogs-group"         = aws_cloudwatch_log_group.control_plane_log_group.name,
+          "awslogs-region"        = var.aws_region,
+          "awslogs-stream-prefix" = "control-plane"
+        }
+      },
+
+      # Link to the security group
+      linuxParameters = {
+        securityGroupIds = [aws_security_group.ecs_control_plane_sg.id]
       }
     },
-
-    # Link to the security group
-    linuxParameters = {
-      securityGroupIds = [aws_security_group.ecs_control_plane_sg.id]
+    {
+      name      = "aws-otel-collector",
+      image     = "amazon/aws-otel-collector",
+      command   = ["--config=/etc/ecs/ecs-default-config.yaml"],
+      essential = true,
+      logConfiguration = {
+        logDriver = "awslogs",
+        options = {
+          "awslogs-group"         = var.otel_log_group_name,
+          "awslogs-region"        = var.aws_region,
+          "awslogs-stream-prefix" = "access-handler"
+        }
+      },
+      healthCheck = {
+        "command"     = ["/healthcheck"],
+        "interval"    = 5,
+        "timeout"     = 6,
+        "retries"     = 5,
+        "startPeriod" = 1
+      }
     }
-  }])
+  ])
 }
 
 
