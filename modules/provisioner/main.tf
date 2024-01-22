@@ -94,8 +94,14 @@ locals {
     {
       name  = "CF_AWS_RDS_INFRA_ROLE_NAME"
       value = local.aws_rds_config.infra_role_name
+    },
+    {
+      name  = "CF_AWS_RDS_SHOULD_PROVISION_SG"
+      value = var.aws_rds_config.should_provision_security_groups == null ? false : var.aws_rds_config.should_provision_security_groups
     }
   ] : []
+
+
 
   grant_assume_roles = compact([
     var.aws_idc_config != null ? var.aws_idc_config.role_arn : ""

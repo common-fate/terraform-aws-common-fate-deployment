@@ -169,12 +169,14 @@ variable "aws_rds_config" {
   - idc_region: The AWS IDC Region.
   - idc_instance_arn: The AWS Identity Center instance ARN.
   - infra_role_name: The name of the IAM role which is deployed each each account containing databases.
+  - should_provision_security_groups: (Optional) Whether or not the provisioner should attempt to provision security groups. Set this to true if you are not using pre deployed security groups.
   EOF
   type = object({
-    idc_role_arn     = string
-    idc_region       = string
-    idc_instance_arn = string
-    infra_role_name  = string
+    idc_role_arn                     = string
+    idc_region                       = string
+    idc_instance_arn                 = string
+    infra_role_name                  = string
+    should_provision_security_groups = optional(bool)
   })
   default = null
 }
