@@ -224,7 +224,6 @@ resource "aws_ecs_task_definition" "control_plane_task" {
       name  = "control-plane-container",
       image = "commonfate/common-fate-cloud-api:${var.release_tag}",
 
-
       portMappings = [{
         containerPort = 8080,
       }],
@@ -367,6 +366,14 @@ resource "aws_ecs_task_definition" "control_plane_task" {
         },
         {
           name  = "CF_SYNC_AWSIDC_CRON_SCHEDULE",
+          value = "0 */5 * * * *"
+        },
+        {
+          name  = "CF_SYNC_AWSRDS_ENABLED",
+          value = "true"
+        },
+        {
+          name  = "CF_SYNC_AWSRDS_CRON_SCHEDULE",
           value = "0 */5 * * * *"
         },
       ],

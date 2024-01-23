@@ -11,11 +11,13 @@ locals {
   aws_idc_config = var.aws_idc_config != null ? var.aws_idc_config : {}
   gcp_config     = var.gcp_config != null ? var.gcp_config : {}
   entra_config   = var.entra_config != null ? var.entra_config : {}
+  aws_rds_config = var.aws_rds_config != null ? var.aws_rds_config : {}
 
   provisioner_types = compact([
     var.aws_idc_config != null ? "AWS_IDC" : "",
     var.gcp_config != null ? "GCP" : "",
-    var.entra_config != null ? "Entra" : ""
+    var.entra_config != null ? "Entra" : "",
+    var.aws_rds_config != null ? "AWS_RDS" : "",
   ])
 
   env_vars = [
@@ -75,6 +77,31 @@ locals {
       valueFrom = local.entra_client_secret_path_arn
     }
   ] : []
+
+  aws_rds_env_vars = var.aws_rds_config != null ? [
+    {
+      name  = "CF_AWS_RDS_IDC_ROLE_ARN"
+      value = local.aws_rds_config.idc_role_arn
+    },
+    {
+      name  = "CF_AWS_RDS_IDC_REGION"
+      value = local.aws_rds_config.idc_region
+    },
+    {
+      name  = "CF_AWS_RDS_IDC_INSTANCE_ARN"
+      value = local.aws_rds_config.idc_instance_arn
+    },
+    {
+      name  = "CF_AWS_RDS_INFRA_ROLE_NAME"
+      value = local.aws_rds_config.infra_role_name
+    },
+    {
+      name  = "CF_AWS_RDS_SHOULD_PROVISION_SG"
+      value = var.aws_rds_config.should_provision_security_groups == null ? false : var.aws_rds_config.should_provision_security_groups
+    }
+  ] : []
+
+
 
   grant_assume_roles = compact([
     var.aws_idc_config != null ? var.aws_idc_config.role_arn : ""
@@ -230,6 +257,26 @@ resource "aws_ecs_task_definition" "provisioner_task" {
       {
         name  = "LOG_LEVEL"
         value = var.enable_verbose_logging ? "DEBUG" : "INFO"
+      },
+      {
+        name  = "CF_RELEASE_TAG"
+        value = var.release_tag
+      },
+      {
+        name  = "CF_ACCESS_URL"
+        value = var.app_url
+      },
+      {
+        name  = "CF_CLIENT_ID"
+        value = var.provisioner_service_client_id
+      },
+      {
+        name  = "CF_CLIENT_SECRET"
+        value = var.provisioner_service_client_secret
+      },
+      {
+        name  = "CF_OIDC_ISSUER"
+        value = var.auth_issuer
       },
     ], local.combined_env_vars),
 

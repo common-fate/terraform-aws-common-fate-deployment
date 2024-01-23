@@ -20,6 +20,15 @@ variable "name_prefix" {
   #   error_message = "name_prefix should only contain letters, numbers, and hyphens"
   # }
 }
+variable "app_url" {
+  description = "The app url (e.g., 'https://common-fate.mydomain.com')."
+  type        = string
+
+  validation {
+    condition     = can(regex("^https://", var.app_url))
+    error_message = "The app_url must start with 'https://'."
+  }
+}
 
 variable "vpc_id" {
   description = "Specifies the ID of the VPC."
@@ -81,6 +90,22 @@ variable "access_handler_sg_id" {
   type        = string
 }
 
+variable "provisioner_service_client_id" {
+  description = "Specifies the client ID for the provisioner service."
+  type        = string
+}
+
+variable "provisioner_service_client_secret" {
+  description = "Specifies the client secret for the provisioner service."
+  type        = string
+  sensitive   = true
+}
+
+variable "auth_issuer" {
+  description = "Specifies the issuer for authentication."
+  type        = string
+}
+
 
 variable "aws_idc_config" {
   description = <<EOF
@@ -134,4 +159,24 @@ variable "entra_config" {
   })
   default = null
 
+}
+
+
+variable "aws_rds_config" {
+  description = <<EOF
+  Configuration for AWS RDS. The following keys are expected:
+  - role_arn: The ARN of the IAM role for the provisioner to assume which hass permissions to provision access in an AWS organization.
+  - idc_region: The AWS IDC Region.
+  - idc_instance_arn: The AWS Identity Center instance ARN.
+  - infra_role_name: The name of the IAM role which is deployed each each account containing databases.
+  - should_provision_security_groups: (Optional) Whether or not the provisioner should attempt to provision security groups. Set this to true if you are not using pre deployed security groups.
+  EOF
+  type = object({
+    idc_role_arn                     = string
+    idc_region                       = string
+    idc_instance_arn                 = string
+    infra_role_name                  = string
+    should_provision_security_groups = optional(bool)
+  })
+  default = null
 }

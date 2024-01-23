@@ -51,6 +51,18 @@ output "terraform_client_secret" {
   description = "The client secret for Terraform authentication."
   value       = aws_cognito_user_pool_client.terraform_client.client_secret
 }
+output "provisioner_client_id" {
+  description = "The client ID for Provisioner authentication."
+  value       = aws_cognito_user_pool_client.provisioner_client.id
+}
+
+output "provisioner_client_secret" {
+  description = "The client secret for Provisioner authentication."
+  value       = aws_cognito_user_pool_client.provisioner_client.client_secret
+}
+
+
+
 
 output "control_plane_service_client_id" {
   description = "The client ID for the control plane service."
