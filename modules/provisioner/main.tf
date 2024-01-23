@@ -48,7 +48,7 @@ locals {
     }
   ] : []
 
-  gcp_secrets = var.gcp_config != null && local.gcp_config.service_account_client_json_ps_arn != null ? [
+  gcp_secrets = var.gcp_config != null && var.gcp_config.service_account_client_json_ps_arn != null ? [
     {
       name      = "CF_GCP_SERVICE_ACCOUNT_CREDENTIALS_JSON",
       valueFrom = local.gcp_config.service_account_client_json_ps_arn
