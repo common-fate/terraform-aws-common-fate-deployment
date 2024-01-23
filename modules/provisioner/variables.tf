@@ -127,21 +127,14 @@ variable "gcp_config" {
   Configuration for GCP. The following keys are expected:
   - service_account_client_json_ps_arn: (Optional) when using service account credentials, this is ARN of the secret credentials.
   - workload_identity_config_json: (Optional) using Workload Identity Federation, this is the config file.
+
+  Either `workload_identity_config_json` or `service_account_client_json_ps_arn` must be provided (not both).
   EOF
   type = object({
     service_account_client_json_ps_arn = optional(string)
     workload_identity_config_json      = optional(string)
   })
   default = null
-  validation {
-    condition = (
-      var.gcp_config != null && (
-        var.gcp_config.service_account_client_json_ps_arn != null ||
-        var.gcp_config.workload_identity_config_json != null
-      )
-    )
-    error_message = "At least one of 'service_account_client_json_ps_arn' or 'workload_identity_config_json' must be provided in 'gcp_config'."
-  }
 }
 
 
@@ -158,7 +151,6 @@ variable "entra_config" {
     client_secret_secret_path = string
   })
   default = null
-
 }
 
 
