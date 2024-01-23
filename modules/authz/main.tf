@@ -223,9 +223,10 @@ resource "aws_lb_target_group" "grpc_tg" {
 
   health_check {
     enabled  = true
-    port     = 9090
+    port     = 5050
     protocol = "HTTP"
-    path     = "/health"
+    path     = "/commonfate.authz.v1alpha1.HealthService/HealthCheck"
+    matcher  = "0"
   }
 
 }
