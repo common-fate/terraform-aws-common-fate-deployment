@@ -116,7 +116,7 @@ locals {
     var.entra_config != null ? local.entra_client_secret_path_arn : "",
   ])
 
-  combined_env_vars = concat(local.env_vars, local.aws_env_vars, local.gcp_env_vars, local.entra_env_vars)
+  combined_env_vars = concat(local.env_vars, local.aws_env_vars, local.gcp_env_vars, local.entra_env_vars, local.aws_rds_env_vars)
   combined_secrets  = concat(local.gcp_secrets, local.entra_secrets)
   name_prefix       = join("-", compact([var.namespace, var.stage, var.name_prefix]))
 }
