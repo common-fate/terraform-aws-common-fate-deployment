@@ -109,14 +109,16 @@ locals {
 
 
   grant_assume_roles = compact([
-    var.aws_idc_config != null ? var.aws_idc_config.role_arn : ""
+    var.aws_idc_config != null ? var.aws_idc_config.role_arn : "",
+    var.aws_rds_config != null ? var.aws_rds_config.idc_role_arn : "",
+    var.aws_rds_config != null ? "arn:aws:iam::*:role/${var.aws_rds_config.infra_role_name}" : ""
   ])
   grant_read_secret_arns = compact([
     var.gcp_config != null ? var.gcp_config.service_account_client_json_ps_arn : "",
     var.entra_config != null ? local.entra_client_secret_path_arn : "",
   ])
 
-  combined_env_vars = concat(local.env_vars, local.aws_env_vars, local.gcp_env_vars, local.entra_env_vars)
+  combined_env_vars = concat(local.env_vars, local.aws_env_vars, local.gcp_env_vars, local.entra_env_vars, local.aws_rds_env_vars)
   combined_secrets  = concat(local.gcp_secrets, local.entra_secrets)
   name_prefix       = join("-", compact([var.namespace, var.stage, var.name_prefix]))
 }
