@@ -20,7 +20,6 @@ resource "aws_security_group" "ecs_access_handler_sg" {
 resource "aws_cloudwatch_log_group" "access_handler_log_group" {
   name              = "${var.namespace}-${var.stage}-access-handler"
   retention_in_days = var.log_retention_in_days
-
 }
 
 
@@ -40,8 +39,8 @@ resource "aws_iam_role" "access_handler_ecs_execution_role" {
       }
     ]
   })
-
 }
+
 resource "aws_iam_role_policy_attachment" "access_handler_ecs_execution_role_policy_attach" {
   role       = aws_iam_role.access_handler_ecs_execution_role.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
@@ -82,12 +81,18 @@ resource "aws_iam_policy" "eventbus_put_events" {
       }
     ]
   })
-
 }
+
+resource "aws_iam_role_policy_attachment" "otel" {
+  role       = aws_iam_role.access_handler_ecs_task_role.name
+  policy_arn = var.otel_writer_iam_policy_arn
+}
+
 resource "aws_iam_role_policy_attachment" "access_handler_eventbus_put_events_attach" {
   role       = aws_iam_role.access_handler_ecs_task_role.name
   policy_arn = aws_iam_policy.eventbus_put_events.arn
 }
+
 resource "aws_ecs_task_definition" "access_handler_task" {
   family                   = "${var.namespace}-${var.stage}-access-handler"
   network_mode             = "awsvpc"
@@ -98,68 +103,91 @@ resource "aws_ecs_task_definition" "access_handler_task" {
   execution_role_arn = aws_iam_role.access_handler_ecs_execution_role.arn
   task_role_arn      = aws_iam_role.access_handler_ecs_task_role.arn
 
-  container_definitions = jsonencode([{
-    name  = "access-handler-container",
-    image = "commonfate/common-fate-cloud-access-handler:${var.release_tag}",
+  container_definitions = jsonencode([
+    {
+      name  = "access-handler-container",
+      image = "commonfate/common-fate-cloud-access-handler:${var.release_tag}",
 
-    portMappings = [{
-      containerPort = 9090,
-    }],
-    environment = [
-      {
-        name  = "CF_OIDC_AUTHORITY_URL",
-        value = var.auth_authority_url
-      },
-      {
-        name  = "CF_EVENT_BRIDGE_ARN",
-        value = var.eventbus_arn
-      },
-      {
-        name  = "CF_AUTHZ_URL",
-        value = var.app_url
-      },
-      {
-        name  = "CF_OIDC_TRUSTED_ISSUER_COGNITO",
-        value = var.auth_issuer
-      },
-      { name  = "CF_CORS_ALLOWED_ORIGINS"
-        value = join(",", [var.app_url])
-      },
-      {
-        name  = "LOG_LEVEL"
-        value = var.log_level
-      },
-      {
-        name  = "CF_ACCESS_SERVICE_CLIENT_ID",
-        value = var.oidc_access_handler_service_client_id
-      },
-      {
-        name  = "CF_ACCESS_SERVICE_CLIENT_SECRET",
-        value = var.oidc_access_handler_service_client_secret
-      },
-      {
-        name  = "CF_ACCESS_SERVICE_OIDC_ISSUER",
-        value = var.oidc_access_handler_service_issuer
-      }
-    ],
-    secrets = [
+      portMappings = [{
+        containerPort = 9090,
+      }],
+      environment = [
+        {
+          name  = "CF_OIDC_AUTHORITY_URL",
+          value = var.auth_authority_url
+        },
+        {
+          name  = "CF_EVENT_BRIDGE_ARN",
+          value = var.eventbus_arn
+        },
+        {
+          name  = "CF_AUTHZ_URL",
+          value = var.app_url
+        },
+        {
+          name  = "CF_OIDC_TRUSTED_ISSUER_COGNITO",
+          value = var.auth_issuer
+        },
+        { name  = "CF_CORS_ALLOWED_ORIGINS"
+          value = join(",", [var.app_url])
+        },
+        {
+          name  = "LOG_LEVEL"
+          value = var.log_level
+        },
+        {
+          name  = "CF_ACCESS_SERVICE_CLIENT_ID",
+          value = var.oidc_access_handler_service_client_id
+        },
+        {
+          name  = "CF_ACCESS_SERVICE_CLIENT_SECRET",
+          value = var.oidc_access_handler_service_client_secret
+        },
+        {
+          name  = "CF_ACCESS_SERVICE_OIDC_ISSUER",
+          value = var.oidc_access_handler_service_issuer
+        }
+      ],
+      secrets = [
 
-    ]
+      ]
 
-    logConfiguration = {
-      logDriver = "awslogs",
-      options = {
-        "awslogs-group"         = aws_cloudwatch_log_group.access_handler_log_group.name,
-        "awslogs-region"        = var.aws_region,
-        "awslogs-stream-prefix" = "access-handler"
+      logConfiguration = {
+        logDriver = "awslogs",
+        options = {
+          "awslogs-group"         = aws_cloudwatch_log_group.access_handler_log_group.name,
+          "awslogs-region"        = var.aws_region,
+          "awslogs-stream-prefix" = "access-handler"
+        }
+      },
+
+      # Link to the security group
+      linuxParameters = {
+        securityGroupIds = [aws_security_group.ecs_access_handler_sg.id]
       }
     },
-
-    # Link to the security group
-    linuxParameters = {
-      securityGroupIds = [aws_security_group.ecs_access_handler_sg.id]
+    {
+      name      = "aws-otel-collector",
+      image     = "amazon/aws-otel-collector",
+      command   = ["--config=/etc/ecs/ecs-default-config.yaml"],
+      essential = true,
+      logConfiguration = {
+        logDriver = "awslogs",
+        options = {
+          "awslogs-group"         = var.otel_log_group_name,
+          "awslogs-region"        = var.aws_region,
+          "awslogs-stream-prefix" = "access-handler"
+        }
+      },
+      healthCheck = {
+        "command"     = ["/healthcheck"],
+        "interval"    = 5,
+        "timeout"     = 6,
+        "retries"     = 5,
+        "startPeriod" = 1
+      }
     }
-  }])
+  ])
 
 }
 

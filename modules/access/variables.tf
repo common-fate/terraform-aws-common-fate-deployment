@@ -106,3 +106,13 @@ variable "oidc_access_handler_service_issuer" {
   description = "OIDC issuer for the Access Handler Service"
   type        = string
 }
+
+variable "otel_log_group_name" {
+  description = "Log group for OTel collector"
+  type        = string
+}
+
+variable "otel_writer_iam_policy_arn" {
+  description = "IAM policy for OpenTelemetry"
+  type        = string
+}

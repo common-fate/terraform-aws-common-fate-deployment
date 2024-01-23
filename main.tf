@@ -52,6 +52,10 @@ module "ecs" {
   default_capacity_provider_use_fargate = true
 }
 
+module "ecs_base" {
+  source = "./modules/ecs-base"
+}
+
 
 module "cognito" {
   source                = "./modules/cognito"
@@ -104,6 +108,8 @@ module "control_plane" {
   log_level                           = var.control_plane_log_level
   grant_assume_on_role_arns           = var.control_plane_grant_assume_on_role_arns
   oidc_control_plane_issuer           = module.cognito.auth_issuer
+  otel_log_group_name                 = module.ecs_base.otel_log_group_name
+  otel_writer_iam_policy_arn          = module.ecs_base.otel_writer_iam_policy_arn
 }
 
 
@@ -146,6 +152,8 @@ module "access_handler" {
   oidc_access_handler_service_client_id     = module.cognito.access_handler_service_client_id
   oidc_access_handler_service_client_secret = module.cognito.access_handler_service_client_secret
   oidc_access_handler_service_issuer        = module.cognito.auth_issuer
+  otel_log_group_name                       = module.ecs_base.otel_log_group_name
+  otel_writer_iam_policy_arn                = module.ecs_base.otel_writer_iam_policy_arn
 }
 
 module "authz" {
