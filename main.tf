@@ -175,5 +175,6 @@ module "authz" {
   oidc_terraform_client_id              = module.cognito.terraform_client_id
   oidc_access_handler_service_client_id = module.cognito.access_handler_service_client_id
   oidc_control_plane_client_id          = module.cognito.control_plane_service_client_id
+  oidc_provisioner_service_client_id    = module.cognito.provisioner_client_id
 }
 
