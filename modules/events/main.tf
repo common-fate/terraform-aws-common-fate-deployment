@@ -50,7 +50,7 @@ resource "aws_sqs_queue_policy" "event_queue_policy" {
   })
 }
 resource "aws_cloudwatch_log_group" "event_log_group" {
-  name_prefix       = "/aws/events/${var.namespace}-${var.stage}/events"
+  name              = "/aws/events/${var.namespace}-${var.stage}/events"
   retention_in_days = var.log_retention_in_days
 
 }
