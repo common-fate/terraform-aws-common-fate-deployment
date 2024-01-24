@@ -18,6 +18,7 @@ resource "aws_cloudwatch_event_rule" "to_sqs_rule" {
   event_pattern = jsonencode({
     "source" : ["commonfate.io/events"]
   })
+
 }
 
 resource "aws_cloudwatch_event_target" "sqs_target" {
@@ -25,6 +26,7 @@ resource "aws_cloudwatch_event_target" "sqs_target" {
   target_id      = "SendToSQS"
   arn            = aws_sqs_queue.event_queue.arn
   event_bus_name = aws_cloudwatch_event_bus.event_bus.name
+
 }
 
 resource "aws_sqs_queue_policy" "event_queue_policy" {
@@ -48,7 +50,7 @@ resource "aws_sqs_queue_policy" "event_queue_policy" {
   })
 }
 resource "aws_cloudwatch_log_group" "event_log_group" {
-  name_prefix       = "/aws/events/${var.namespace}-${var.stage}/events"
+  name              = "/aws/events/${var.namespace}-${var.stage}/events"
   retention_in_days = var.log_retention_in_days
 
 }
@@ -86,6 +88,9 @@ POLICY
 
 #Create a new Event Rule
 resource "aws_cloudwatch_event_rule" "to_cw_logs_rule" {
+  name           = "${var.namespace}-${var.stage}-to-cloudwatch-rule"
+  description    = "Route events to cloudwatch"
+  event_bus_name = aws_cloudwatch_event_bus.event_bus.name
   event_pattern = jsonencode({
     "source" : ["commonfate.io/events"]
   })
@@ -93,7 +98,9 @@ resource "aws_cloudwatch_event_rule" "to_cw_logs_rule" {
 
 
 resource "aws_cloudwatch_event_target" "cw_logs_target" {
-  rule = aws_cloudwatch_event_rule.to_cw_logs_rule.name
-  arn  = aws_cloudwatch_log_group.event_log_group.arn
+  rule           = aws_cloudwatch_event_rule.to_cw_logs_rule.name
+  arn            = aws_cloudwatch_log_group.event_log_group.arn
+  event_bus_name = aws_cloudwatch_event_bus.event_bus.name
+  target_id      = "SendToCloudwatch"
 }
 
