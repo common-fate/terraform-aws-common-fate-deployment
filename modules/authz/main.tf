@@ -193,7 +193,13 @@ resource "aws_ecs_task_definition" "authz_task" {
       {
         name  = "CF_OIDC_ACCESS_SERVICE_CLIENT_ID",
         value = var.oidc_access_handler_service_client_id
-      }
+      },
+      {
+        name  = "CF_OIDC_PROVISIONER_SERVICE_CLIENT_ID",
+        value = var.oidc_provisioner_service_client_id
+      },
+
+
     ],
     secrets = []
 

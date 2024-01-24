@@ -85,6 +85,17 @@ output "terraform_client_secret" {
   sensitive   = true
 }
 
+output "provisioner_client_id" {
+  description = "provisioner client id"
+  value       = module.cognito.provisioner_client_id
+}
+
+output "provisioner_client_secret" {
+  description = "provisioner client secret"
+  value       = module.cognito.provisioner_client_secret
+  sensitive   = true
+}
+
 output "control_plane_task_role_arn" {
   description = "The control plane task role arn."
   value       = module.control_plane.task_role_arn

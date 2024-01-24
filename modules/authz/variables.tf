@@ -106,6 +106,11 @@ variable "oidc_access_handler_service_client_id" {
   type        = string
 }
 
+variable "oidc_provisioner_service_client_id" {
+  description = "Provisioner Service Account OIDC Client ID"
+  type        = string
+}
+
 variable "log_level" {
   description = "Log level for ECS service"
   type        = string
