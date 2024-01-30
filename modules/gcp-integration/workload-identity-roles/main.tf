@@ -86,7 +86,9 @@ resource "google_organization_iam_custom_role" "provision" {
   description = "Common Fate provisioner role which allows assigning entitlements"
   permissions = [
     "resourcemanager.projects.getIamPolicy",
-    "resourcemanager.projects.setIamPolicy"
+    "resourcemanager.projects.setIamPolicy",
+    "resourcemanager.folders.getIamPolicy",
+    "resourcemanager.folders.setIamPolicy"
   ]
 }
 
