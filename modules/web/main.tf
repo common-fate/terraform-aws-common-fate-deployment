@@ -103,10 +103,6 @@ resource "aws_ecs_task_definition" "web_task" {
         value = var.team_name
       },
       {
-        name  = "CF_FAVICON_URL"
-        value = var.favicon_url
-      },
-      {
         name  = "CF_LOGO_URL"
         value = var.logo_url
       },
