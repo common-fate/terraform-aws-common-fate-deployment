@@ -110,28 +110,31 @@ module "control_plane" {
   oidc_control_plane_issuer           = module.cognito.auth_issuer
   otel_log_group_name                 = module.ecs_base.otel_log_group_name
   otel_writer_iam_policy_arn          = module.ecs_base.otel_writer_iam_policy_arn
+  alb_security_group_id               = module.alb.alb_security_group_id
+
 }
 
 
 module "web" {
-  source             = "./modules/web"
-  namespace          = var.namespace
-  stage              = var.stage
-  aws_region         = var.aws_region
-  release_tag        = var.release_tag
-  subnet_ids         = module.vpc.private_subnet_ids
-  vpc_id             = module.vpc.vpc_id
-  auth_authority_url = module.cognito.auth_authority_url
-  auth_cli_client_id = module.cognito.cli_client_id
-  auth_url           = var.auth_url
-  auth_web_client_id = module.cognito.web_client_id
-  favicon_url        = var.favicon_url
-  logo_url           = var.logo_url
-  team_name          = var.team_name
-  ecs_cluster_id     = module.ecs.cluster_id
-  alb_listener_arn   = module.alb.listener_arn
-  app_url            = var.app_url
-  auth_issuer        = module.cognito.auth_issuer
+  source                = "./modules/web"
+  namespace             = var.namespace
+  stage                 = var.stage
+  aws_region            = var.aws_region
+  release_tag           = var.release_tag
+  subnet_ids            = module.vpc.private_subnet_ids
+  vpc_id                = module.vpc.vpc_id
+  auth_authority_url    = module.cognito.auth_authority_url
+  auth_cli_client_id    = module.cognito.cli_client_id
+  auth_url              = var.auth_url
+  auth_web_client_id    = module.cognito.web_client_id
+  favicon_url           = var.favicon_url
+  logo_url              = var.logo_url
+  team_name             = var.team_name
+  ecs_cluster_id        = module.ecs.cluster_id
+  alb_listener_arn      = module.alb.listener_arn
+  app_url               = var.app_url
+  auth_issuer           = module.cognito.auth_issuer
+  alb_security_group_id = module.alb.alb_security_group_id
 }
 
 module "access_handler" {
@@ -154,6 +157,8 @@ module "access_handler" {
   oidc_access_handler_service_issuer        = module.cognito.auth_issuer
   otel_log_group_name                       = module.ecs_base.otel_log_group_name
   otel_writer_iam_policy_arn                = module.ecs_base.otel_writer_iam_policy_arn
+  alb_security_group_id                     = module.alb.alb_security_group_id
+
 }
 
 module "authz" {
