@@ -81,6 +81,7 @@ resource "aws_lambda_permission" "cognito_permission" {
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.pre_token_generation_lambda_function.function_name
   principal     = "cognito-idp.amazonaws.com"
+ 
 }
 
 resource "aws_lambda_function" "pre_token_generation_lambda_function" {

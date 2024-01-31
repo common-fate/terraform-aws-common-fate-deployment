@@ -13,12 +13,6 @@ resource "aws_security_group" "ecs_control_plane_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  ingress {
-    from_port   = 8080
-    to_port     = 8080
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"] # Allow incoming HTTP requests from anywhere
-  }
 
 }
 
@@ -31,6 +25,16 @@ resource "aws_security_group_rule" "rds_access_from_control_plane" {
   security_group_id        = var.database_security_group_id
   source_security_group_id = aws_security_group.ecs_control_plane_sg.id
 }
+
+resource "aws_security_group_rule" "alb_access_from_control_plane" {
+  type                     = "ingress"
+  from_port                = 8080
+  to_port                  = 8080
+  protocol                 = "tcp"
+  security_group_id        = var.alb_security_group_id
+  source_security_group_id = aws_security_group.ecs_control_plane_sg.id
+}
+
 
 resource "aws_cloudwatch_log_group" "control_plane_log_group" {
   name              = "${var.namespace}-${var.stage}-control-plane"
@@ -211,6 +215,7 @@ resource "aws_iam_role_policy_attachment" "assume_roles_policy_attach" {
 }
 
 resource "aws_ecs_task_definition" "control_plane_task" {
+  tags= {}
   family                   = "${var.namespace}-${var.stage}-control-plane"
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
@@ -221,6 +226,7 @@ resource "aws_ecs_task_definition" "control_plane_task" {
 
   container_definitions = jsonencode([
     {
+      
       name  = "control-plane-container",
       image = "commonfate/common-fate-cloud-api:${var.release_tag}",
 

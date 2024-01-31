@@ -110,6 +110,7 @@ module "control_plane" {
   licence_key_ps_arn                  = var.licence_key_ps_arn
   enable_verbose_logging              = var.enable_verbose_logging
   grant_assume_on_role_arns           = var.control_plane_grant_assume_on_role_arns
+  alb_security_group_arn              = module.alb.alb_security_group_id
 }
 
 
@@ -133,6 +134,8 @@ module "web" {
   alb_listener_arn   = module.alb.listener_arn
   app_url            = var.app_url
   auth_issuer        = module.cognito.auth_issuer
+  alb_security_group_arn = module.alb.alb_security_group_id
+
 }
 
 module "access_handler" {
@@ -151,6 +154,8 @@ module "access_handler" {
   auth_issuer            = module.cognito.auth_issuer
   enable_verbose_logging = var.enable_verbose_logging
   app_url                = var.app_url
+  alb_security_group_arn = module.alb.alb_security_group_id
+
 }
 
 module "authz" {

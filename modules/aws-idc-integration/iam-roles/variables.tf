@@ -23,3 +23,8 @@ variable "permit_management_account_assignments" {
   type        = bool
   default     = false
 }
+
+
+variable "controlplane_task_role_arn" {
+  type = string
+}

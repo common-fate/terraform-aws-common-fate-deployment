@@ -116,3 +116,7 @@ variable "otel_writer_iam_policy_arn" {
   description = "IAM policy for OpenTelemetry"
   type        = string
 }
+variable "alb_security_group_id" {
+  type=string
+  description = "the security group id for the outward facing alb"
+}

@@ -33,6 +33,8 @@ resource "aws_lb" "main_alb" {
   security_groups                  = [aws_security_group.alb_sg.id]
   subnets                          = var.public_subnet_ids
   enable_cross_zone_load_balancing = true
+  drop_invalid_header_fields = true
+
 }
 
 locals {
@@ -73,6 +75,7 @@ resource "aws_lb_listener" "http" {
       status_code = "HTTP_301"
     }
   }
+  
 }
 
 // if there are any other distict certificates, add them to the listener
