@@ -3,7 +3,7 @@
 # Control Plane
 ######################################################
 #trivy:ignore:AVD-AWS-0104
-resource "aws_security_group" "ecs_control_plane_sg" {
+resource "aws_security_group" "ecs_control_plane_sg_v2" {
   description = "allow access from the alb"
 
   vpc_id = var.vpc_id
@@ -22,6 +22,9 @@ resource "aws_security_group" "ecs_control_plane_sg" {
     security_groups = [var.alb_security_group_id]
   }
 
+  lifecycle {
+    create_before_destroy = true
+  }
 
 }
 
@@ -32,7 +35,7 @@ resource "aws_security_group_rule" "rds_access_from_control_plane" {
   to_port                  = 5432
   protocol                 = "tcp"
   security_group_id        = var.database_security_group_id
-  source_security_group_id = aws_security_group.ecs_control_plane_sg.id
+  source_security_group_id = aws_security_group.ecs_control_plane_sg_v2.id
 }
 
 
@@ -428,7 +431,7 @@ resource "aws_ecs_task_definition" "control_plane_task" {
 
       # Link to the security group
       linuxParameters = {
-        securityGroupIds = [aws_security_group.ecs_control_plane_sg.id]
+        securityGroupIds = [aws_security_group.ecs_control_plane_sg_v2.id]
       }
     },
     {
@@ -478,7 +481,7 @@ resource "aws_ecs_service" "control_plane_service" {
 
   network_configuration {
     subnets          = var.subnet_ids
-    security_groups  = [aws_security_group.ecs_control_plane_sg.id]
+    security_groups  = [aws_security_group.ecs_control_plane_sg_v2.id]
     assign_public_ip = true
   }
 

@@ -2,7 +2,7 @@
 # Web Task
 ######################################################
 #trivy:ignore:AVD-AWS-0104
-resource "aws_security_group" "ecs_web_sg" {
+resource "aws_security_group" "ecs_web_sg_v2" {
 
   vpc_id      = var.vpc_id
   description = "allow access from the alb"
@@ -21,6 +21,9 @@ resource "aws_security_group" "ecs_web_sg" {
     security_groups = [var.alb_security_group_id]
   }
 
+  lifecycle {
+    create_before_destroy = true
+  }
 
 }
 
@@ -137,7 +140,7 @@ resource "aws_ecs_task_definition" "web_task" {
 
     # Link to the security group
     linuxParameters = {
-      securityGroupIds = [aws_security_group.ecs_web_sg.id]
+      securityGroupIds = [aws_security_group.ecs_web_sg_v2.id]
     }
   }])
 }
@@ -160,7 +163,7 @@ resource "aws_ecs_service" "web_service" {
 
   network_configuration {
     subnets         = var.subnet_ids
-    security_groups = [aws_security_group.ecs_web_sg.id]
+    security_groups = [aws_security_group.ecs_web_sg_v2.id]
   }
 
   load_balancer {

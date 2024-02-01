@@ -3,8 +3,8 @@
 # Authz Task
 ######################################################
 #trivy:ignore:AVD-AWS-0104
-resource "aws_security_group" "ecs_authz_sg" {
-  description = "security group for access from the alb allows traffic from authz api, graphql, and monitoring api's"
+resource "aws_security_group" "ecs_authz_sg_v2" {
+  description = "security group for access from the alb allows traffic from authz api, graphql, and monitoring apis"
 
   vpc_id = var.vpc_id
 
@@ -36,6 +36,10 @@ resource "aws_security_group" "ecs_authz_sg" {
     to_port         = 9090
     protocol        = "tcp"
     security_groups = [var.alb_security_group_id]
+  }
+
+  lifecycle {
+    create_before_destroy = true
   }
 
 
@@ -217,7 +221,7 @@ resource "aws_ecs_task_definition" "authz_task" {
 
     # Link to the security group
     linuxParameters = {
-      securityGroupIds = [aws_security_group.ecs_authz_sg.id]
+      securityGroupIds = [aws_security_group.ecs_authz_sg_v2.id]
     }
   }])
 }
@@ -264,7 +268,7 @@ resource "aws_ecs_service" "authz_service" {
 
   network_configuration {
     subnets         = var.subnet_ids
-    security_groups = [aws_security_group.ecs_authz_sg.id]
+    security_groups = [aws_security_group.ecs_authz_sg_v2.id]
   }
 
   load_balancer {

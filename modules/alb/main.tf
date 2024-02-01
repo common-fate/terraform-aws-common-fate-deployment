@@ -4,9 +4,8 @@
 #trivy:ignore:AVD-AWS-0104
 #trivy:ignore:AVD-AWS-0107
 resource "aws_security_group" "alb_sg" {
-  description = "Allows traffic from anywhere"
-  vpc_id      = var.vpc_id
-  name        = "${var.namespace}-${var.stage}-alb-security-group"
+  vpc_id = var.vpc_id
+  name   = "${var.namespace}-${var.stage}-alb-security-group"
   egress {
     from_port   = 0
     to_port     = 0
@@ -29,7 +28,7 @@ resource "aws_security_group" "alb_sg" {
   }
 
 }
-#trivy:ignore:AVD-AWS-0053
+#trivy:ignore:AVD-AWS-0053 
 resource "aws_lb" "main_alb" {
   name                             = "${var.namespace}-${var.stage}-common-fate"
   internal                         = false

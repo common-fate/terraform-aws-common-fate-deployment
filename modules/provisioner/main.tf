@@ -120,7 +120,7 @@ locals {
 
 # Use 'local.combined_env_vars' wherever you need to pass these environment variables
 #trivy:ignore:AVD-AWS-0104
-resource "aws_security_group" "ecs_provisioner_sg" {
+resource "aws_security_group" "ecs_provisioner_sg_v2" {
   description = "allow access from the access handler"
 
   vpc_id = var.vpc_id
@@ -138,6 +138,10 @@ resource "aws_security_group" "ecs_provisioner_sg" {
     protocol  = "tcp"
     // Only allow incoming traffic from the access handler
     security_groups = [var.access_handler_sg_id]
+  }
+
+  lifecycle {
+    create_before_destroy = true
   }
 }
 
@@ -298,7 +302,7 @@ resource "aws_ecs_task_definition" "provisioner_task" {
 
     # Link to the security group
     linuxParameters = {
-      securityGroupIds = [aws_security_group.ecs_provisioner_sg.id]
+      securityGroupIds = [aws_security_group.ecs_provisioner_sg_v2.id]
     }
   }])
 
@@ -334,7 +338,7 @@ resource "aws_ecs_service" "provisioner_service" {
 
   network_configuration {
     subnets         = var.subnet_ids
-    security_groups = [aws_security_group.ecs_provisioner_sg.id]
+    security_groups = [aws_security_group.ecs_provisioner_sg_v2.id]
   }
 
   service_registries {
