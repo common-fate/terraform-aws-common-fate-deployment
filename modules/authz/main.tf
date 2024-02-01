@@ -4,6 +4,8 @@
 ######################################################
 #trivy:ignore:AVD-AWS-0104
 resource "aws_security_group" "ecs_authz_sg" {
+  description = "security group for access from the alb allows traffic from authz api, graphql, and monitoring api's"
+
   vpc_id = var.vpc_id
 
   egress {
