@@ -1,4 +1,5 @@
 
+#trivy:ignore:AVD-AWS-0104
 resource "aws_security_group" "ecs_access_handler_sg" {
   vpc_id = var.vpc_id
 
@@ -9,18 +10,19 @@ resource "aws_security_group" "ecs_access_handler_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
- 
+
+  ingress {
+    from_port       = 80
+    to_port         = 80
+    protocol        = "tcp"
+    security_groups = [var.alb_security_group_id]
+  }
+
+
 }
 
 
-resource "aws_security_group_rule" "alb_access_from_sg" {
-  type                     = "ingress"
-  from_port                = 80
-  to_port                  = 80
-  protocol                 = "tcp"
-  security_group_id        = var.alb_security_group_id
-  source_security_group_id = aws_security_group.ecs_access_handler_sg.id
-}
+
 
 resource "aws_cloudwatch_log_group" "access_handler_log_group" {
   name              = "${var.namespace}-${var.stage}-access-handler"

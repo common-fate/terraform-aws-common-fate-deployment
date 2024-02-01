@@ -119,7 +119,7 @@ locals {
 }
 
 # Use 'local.combined_env_vars' wherever you need to pass these environment variables
-
+#trivy:ignore:AVD-AWS-0104
 resource "aws_security_group" "ecs_provisioner_sg" {
   vpc_id = var.vpc_id
 

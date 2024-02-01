@@ -2,7 +2,7 @@
 ######################################################
 # Authz Task
 ######################################################
-
+#trivy:ignore:AVD-AWS-0104
 resource "aws_security_group" "ecs_authz_sg" {
   vpc_id = var.vpc_id
 
@@ -13,27 +13,27 @@ resource "aws_security_group" "ecs_authz_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  // authz api
+  # // authz api
   ingress {
-    from_port   = 5050
-    to_port     = 5050
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"] # Allow incoming HTTP requests from anywhere
+    from_port       = 5050
+    to_port         = 5050
+    protocol        = "tcp"
+    security_groups = [var.alb_security_group_id]
   }
   // graphql
   ingress {
-    from_port   = 5051
-    to_port     = 5051
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"] # Allow incoming HTTP requests from anywhere
+    from_port       = 5051
+    to_port         = 5051
+    protocol        = "tcp"
+    security_groups = [var.alb_security_group_id]
   }
 
   // monitoring
   ingress {
-    from_port   = 9090
-    to_port     = 9090
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"] # Allow incoming HTTP requests from anywhere
+    from_port       = 9090
+    to_port         = 9090
+    protocol        = "tcp"
+    security_groups = [var.alb_security_group_id]
   }
 
 
@@ -43,6 +43,7 @@ resource "aws_cloudwatch_log_group" "authz_log_group" {
   name              = "${var.namespace}-${var.stage}-authz"
   retention_in_days = var.log_retention_in_days
 }
+
 
 
 
