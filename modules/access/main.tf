@@ -13,8 +13,8 @@ resource "aws_security_group" "ecs_access_handler_sg" {
 
 
   ingress {
-    from_port       = 80
-    to_port         = 80
+    from_port       = 9090
+    to_port         = 9090
     protocol        = "tcp"
     security_groups = [var.alb_security_group_id]
   }

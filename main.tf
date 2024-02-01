@@ -47,7 +47,7 @@ module "events" {
 
 module "ecs" {
   source                                = "terraform-aws-modules/ecs/aws"
-  version                               = "~> 5.8.0"
+  version                               = "~> 4.1.3"
   cluster_name                          = "${var.namespace}-${var.stage}-cluster"
   default_capacity_provider_use_fargate = true
 }

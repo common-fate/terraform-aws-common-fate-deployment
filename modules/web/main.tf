@@ -50,6 +50,7 @@ resource "aws_iam_role_policy_attachment" "web_ecs_execution_role_policy_attach"
 resource "aws_cloudwatch_log_group" "web_log_group" {
   name              = "${var.namespace}-${var.stage}-web"
   retention_in_days = var.log_retention_in_days
+
 }
 
 resource "aws_ecs_task_definition" "web_task" {
