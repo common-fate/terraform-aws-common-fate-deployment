@@ -118,7 +118,6 @@ module "web" {
   auth_cli_client_id = module.cognito.cli_client_id
   auth_url           = var.auth_url
   auth_web_client_id = module.cognito.web_client_id
-  favicon_url        = var.favicon_url
   logo_url           = var.logo_url
   team_name          = var.team_name
   ecs_cluster_id     = module.ecs.cluster_id
