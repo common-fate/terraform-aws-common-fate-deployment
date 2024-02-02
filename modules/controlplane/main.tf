@@ -2,6 +2,46 @@
 ######################################################
 # Control Plane
 ######################################################
+
+
+locals {
+
+
+
+
+  container_definitions_secrets = concat(
+    var.pager_duty_client_secret_ps_arn != "" ? [{
+      name      = "CF_PAGERDUTY_CLIENT_SECRET",
+      valueFrom = var.pager_duty_client_secret_ps_arn
+    }] : [],
+    var.slack_client_secret_ps_arn != "" ? [{
+      name      = "CF_SLACK_CLIENT_SECRET",
+      valueFrom = var.slack_client_secret_ps_arn
+    }] : [],
+    var.slack_signing_secret_ps_arn != "" ? [{
+      name      = "CF_SLACK_SIGNING_SECRET",
+      valueFrom = var.slack_signing_secret_ps_arn
+    }] : [],
+    var.scim_token_ps_arn != "" ? [{
+      name      = "CF_SCIM_TOKEN",
+      valueFrom = var.scim_token_ps_arn
+    }] : [],
+
+    [
+      {
+        name = "CF_PG_PASSWORD",
+        // the password key is extracted from the json that is stored in secrets manager so that we don't need to decode it in the go server
+        valueFrom = "${var.database_secret_sm_arn}:password::"
+      },
+      {
+        name      = "CF_LICENCE_KEY",
+        valueFrom = var.licence_key_ps_arn
+      },
+
+    ]
+  )
+}
+
 #trivy:ignore:AVD-AWS-0104
 resource "aws_security_group" "ecs_control_plane_sg_v2" {
   description = "allow access from the alb"
@@ -218,7 +258,7 @@ resource "aws_iam_role_policy_attachment" "assume_roles_policy_attach" {
 }
 
 resource "aws_ecs_task_definition" "control_plane_task" {
-  tags                     = {}
+  tags                     = null
   family                   = "${var.namespace}-${var.stage}-control-plane"
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
@@ -229,7 +269,6 @@ resource "aws_ecs_task_definition" "control_plane_task" {
 
   container_definitions = jsonencode([
     {
-
       name      = "control-plane-container",
       image     = "commonfate/common-fate-cloud-api:${var.release_tag}",
       essential = true,
@@ -384,38 +423,10 @@ resource "aws_ecs_task_definition" "control_plane_task" {
         },
       ]
 
+
+
       // Only add these secrets if their values are provided
-      secrets = concat(
-        var.pager_duty_client_secret_ps_arn != "" ? [{
-          name      = "CF_PAGERDUTY_CLIENT_SECRET",
-          valueFrom = var.pager_duty_client_secret_ps_arn
-        }] : [],
-        var.slack_client_secret_ps_arn != "" ? [{
-          name      = "CF_SLACK_CLIENT_SECRET",
-          valueFrom = var.slack_client_secret_ps_arn
-        }] : [],
-        var.slack_signing_secret_ps_arn != "" ? [{
-          name      = "CF_SLACK_SIGNING_SECRET",
-          valueFrom = var.slack_signing_secret_ps_arn
-        }] : [],
-        var.scim_token_ps_arn != "" ? [{
-          name      = "CF_SCIM_TOKEN",
-          valueFrom = var.scim_token_ps_arn
-        }] : [],
-
-        [
-          {
-            name = "CF_PG_PASSWORD",
-            // the password key is extracted from the json that is stored in secrets manager so that we don't need to decode it in the go server
-            valueFrom = "${var.database_secret_sm_arn}:password::"
-          },
-          {
-            name      = "CF_LICENCE_KEY",
-            valueFrom = var.licence_key_ps_arn
-          },
-
-        ]
-      )
+      secrets = local.container_definitions_secrets
 
       logConfiguration = {
         logDriver = "awslogs",
@@ -457,6 +468,12 @@ resource "aws_ecs_task_definition" "control_plane_task" {
 
     }
   ])
+
+  # lifecycle {
+  #   ignore_changes = [
+  #     container_definitions
+  #   ]
+  # }
 }
 
 

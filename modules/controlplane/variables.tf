@@ -208,6 +208,7 @@ variable "otel_writer_iam_policy_arn" {
 
 
 variable "alb_security_group_id" {
-  type=string
+  type        = string
   description = "the security group id for the outward facing alb"
 }
+
