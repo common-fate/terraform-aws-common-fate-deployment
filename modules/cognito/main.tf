@@ -120,6 +120,12 @@ resource "aws_cognito_identity_provider" "saml_idp" {
     } : {
     MetadataURL = var.saml_metadata_source
   }
+
+  lifecycle {
+    ignore_changes = [
+      provider_details
+    ]
+  }
 }
 
 // default to cognito when saml is not yet configured

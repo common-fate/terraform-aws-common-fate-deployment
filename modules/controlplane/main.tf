@@ -230,50 +230,16 @@ resource "aws_ecs_task_definition" "control_plane_task" {
   container_definitions = jsonencode([
     {
 
-      name  = "control-plane-container",
-      image = "commonfate/common-fate-cloud-api:${var.release_tag}",
+      name      = "control-plane-container",
+      image     = "commonfate/common-fate-cloud-api:${var.release_tag}",
+      essential = true,
 
       portMappings = [{
         containerPort = 8080,
       }],
       environment = [
         {
-          name  = "CF_SCIM_SOURCE",
-          value = var.scim_source
-        },
-        {
-          name  = "CF_OIDC_AUTHORITY_URL",
-          value = var.auth_authority_url
-        },
-        // used for client credentials
-        {
-          name  = "CF_CONTROL_PLANE_SERVICE_OIDC_ISSUER",
-          value = var.auth_issuer
-        },
-        // used for auth middleware
-        {
-          name  = "CF_OIDC_TRUSTED_ISSUER_COGNITO",
-          value = var.auth_issuer
-        },
-        {
-          name  = "CF_EVENT_BRIDGE_ARN",
-          value = var.eventbus_arn
-        },
-        {
-          name  = "CF_EVENT_HANDLER_SQS_QUEUE",
-          value = var.sqs_queue_name
-        },
-
-        {
-          name  = "CF_PAGERDUTY_CLIENT_ID",
-          value = var.pager_duty_client_id
-        },
-        {
-          name  = "CF_PAGERDUTY_REDIRECT_URL",
-          value = "${var.app_url}/api/v1/oauth2/callback/pagerduty"
-        },
-        {
-          name  = "CF_FRONTEND_URL",
+          name  = "CF_ACCESS_URL",
           value = var.app_url
         },
         {
@@ -285,31 +251,9 @@ resource "aws_ecs_task_definition" "control_plane_task" {
           value = var.app_url
         },
         {
-          name  = "CF_ACCESS_URL",
-          value = var.app_url
+          name  = "CF_CORS_ALLOWED_ORIGINS",
+          value = join(",", [var.app_url])
         },
-        {
-          name  = "CF_SLACK_CLIENT_ID",
-          value = var.slack_client_id
-        },
-
-        {
-          name  = "CF_SLACK_REDIRECT_URL",
-          value = "${var.app_url}/api/v1/oauth2/callback/slack"
-        },
-        {
-          name  = "CF_PG_USER",
-          value = var.database_user
-        },
-        {
-          name  = "CF_PG_HOST",
-          value = var.database_host
-        },
-        {
-          name  = "CF_PG_SSLMode",
-          value = "require"
-        },
-
         {
           name  = "CF_CONTROL_PLANE_SERVICE_OIDC_CLIENT_ID",
           value = var.control_plane_service_client_id
@@ -322,51 +266,80 @@ resource "aws_ecs_task_definition" "control_plane_task" {
           name  = "CF_CONTROL_PLANE_SERVICE_OIDC_ISSUER",
           value = var.oidc_control_plane_issuer
         },
-        { name  = "CF_CORS_ALLOWED_ORIGINS"
-          value = join(",", [var.app_url])
+        {
+          name  = "CF_CONTROL_PLANE_SERVICE_OIDC_ISSUER",
+          value = var.auth_issuer
         },
         {
-          name  = "LOG_LEVEL"
-          value = var.log_level
+          name  = "CF_EVENT_BRIDGE_ARN",
+          value = var.eventbus_arn
         },
         {
-          name  = "CF_SYNC_PAGERDUTY_ENABLED",
-          value = "true"
+          name  = "CF_EVENT_HANDLER_SQS_QUEUE",
+          value = var.sqs_queue_name
         },
         {
-          name  = "CF_SYNC_PAGERDUTY_CRON_SCHEDULE",
+          name  = "CF_FRONTEND_URL",
+          value = var.app_url
+        },
+        {
+          name  = "CF_MAKE_AVAILABLE_CRON_SCHEDULE",
           value = "0 */5 * * * *"
-        },
-        {
-          name  = "CF_SYNC_OPSGENIE_ENABLED",
-          value = "true"
-        },
-        {
-          name  = "CF_SYNC_OPSGENIE_CRON_SCHEDULE",
-          value = "0 */5 * * * *"
-        },
-        {
-          name  = "CF_SYNC_GCP_ENABLED",
-          value = "true"
-        },
-        {
-          name  = "CF_SYNC_GCP_CRON_SCHEDULE",
-          value = "0 */5 * * * *"
-        },
-        {
-          name  = "CF_PROPAGATE_ENABLED",
-          value = "true"
-        },
-        {
-          name  = "CF_PROPAGATE_CRON_SCHEDULE",
-          value = "*/30 * * * * *"
         },
         {
           name  = "CF_MAKE_AVAILABLE_ENABLED",
           value = "true"
         },
         {
-          name  = "CF_MAKE_AVAILABLE_CRON_SCHEDULE",
+          name  = "CF_OIDC_AUTHORITY_URL",
+          value = var.scim_source
+        },
+        {
+          name  = "CF_OIDC_TRUSTED_ISSUER_COGNITO",
+          value = var.auth_issuer
+        },
+        {
+          name  = "CF_PAGERDUTY_CLIENT_ID",
+          value = var.pager_duty_client_id
+        },
+        {
+          name  = "CF_PAGERDUTY_REDIRECT_URL",
+          value = "${var.app_url}/api/v1/oauth2/callback/pagerduty"
+        },
+        {
+          name  = "CF_PG_HOST",
+          value = var.database_host
+        },
+        {
+          name  = "CF_PG_SSLMode",
+          value = "require"
+        },
+        {
+          name  = "CF_PG_USER",
+          value = var.database_user
+        },
+        {
+          name  = "CF_PROPAGATE_CRON_SCHEDULE",
+          value = "*/30 * * * * *"
+        },
+        {
+          name  = "CF_PROPAGATE_ENABLED",
+          value = "true"
+        },
+        {
+          name  = "CF_SCIM_SOURCE",
+          value = var.scim_source
+        },
+        {
+          name  = "CF_SLACK_CLIENT_ID",
+          value = var.slack_client_id
+        },
+        {
+          name  = "CF_SLACK_REDIRECT_URL",
+          value = "${var.app_url}/api/v1/oauth2/callback/slack"
+        },
+        {
+          name  = "CF_SYNC_AWSIDC_CRON_SCHEDULE",
           value = "0 */5 * * * *"
         },
         {
@@ -374,7 +347,7 @@ resource "aws_ecs_task_definition" "control_plane_task" {
           value = "true"
         },
         {
-          name  = "CF_SYNC_AWSIDC_CRON_SCHEDULE",
+          name  = "CF_SYNC_AWSRDS_CRON_SCHEDULE",
           value = "0 */5 * * * *"
         },
         {
@@ -382,10 +355,34 @@ resource "aws_ecs_task_definition" "control_plane_task" {
           value = "true"
         },
         {
-          name  = "CF_SYNC_AWSRDS_CRON_SCHEDULE",
+          name  = "CF_SYNC_GCP_CRON_SCHEDULE",
           value = "0 */5 * * * *"
         },
-      ],
+        {
+          name  = "CF_SYNC_GCP_ENABLED",
+          value = "true"
+        },
+        {
+          name  = "CF_SYNC_OPSGENIE_CRON_SCHEDULE",
+          value = "0 */5 * * * *"
+        },
+        {
+          name  = "CF_SYNC_OPSGENIE_ENABLED",
+          value = "true"
+        },
+        {
+          name  = "CF_SYNC_PAGERDUTY_CRON_SCHEDULE",
+          value = "0 */5 * * * *"
+        },
+        {
+          name  = "CF_SYNC_PAGERDUTY_ENABLED",
+          value = "true"
+        },
+        {
+          name  = "LOG_LEVEL",
+          value = var.log_level
+        },
+      ]
 
       // Only add these secrets if their values are provided
       secrets = concat(
@@ -433,6 +430,8 @@ resource "aws_ecs_task_definition" "control_plane_task" {
       linuxParameters = {
         securityGroupIds = [aws_security_group.ecs_control_plane_sg_v2.id]
       }
+
+      user = "0"
     },
     {
       name      = "aws-otel-collector",
@@ -454,6 +453,8 @@ resource "aws_ecs_task_definition" "control_plane_task" {
         "retries"     = 5,
         "startPeriod" = 1
       }
+      user = "0"
+
     }
   ])
 }
