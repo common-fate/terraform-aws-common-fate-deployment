@@ -14,7 +14,7 @@ output "saml_acs_url" {
 
 output "user_pool_cloudfront_distribution" {
   description = "The CloudFront domain of the Cognito user pool, required for configuring DNS records for the auth domain."
-  value       = aws_cognito_user_pool_domain.custom_domain.cloudfront_distribution
+  value       = aws_cognito_user_pool_domain.custom_domain.domain
 }
 
 output "user_pool_id" {

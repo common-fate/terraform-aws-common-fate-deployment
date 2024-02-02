@@ -28,6 +28,7 @@ variable "app_certificate_arn" {
 variable "auth_certificate_arn" {
   description = "The Amazon Certificate Manager (ACM) certificate ARN for the auth domain. Must be provisioned in us-east-1 for CloudFront."
   type        = string
+  default     = ""
 }
 
 variable "pager_duty_client_id" {
@@ -59,13 +60,13 @@ variable "slack_signing_secret_ps_arn" {
   default     = ""
   type        = string
 }
-
 variable "auth_url" {
-  description = "The authorization domain (e.g., 'https://auth.mydomain.com')."
+  description = "The auth url (e.g., 'https://auth.mydomain.com')."
   type        = string
+  default     = ""
 
   validation {
-    condition     = can(regex("^https://", var.auth_url))
+    condition     = var.auth_url == "" ? true : can(regex("^https://", var.auth_url))
     error_message = "The auth_url must start with 'https://'."
   }
 }

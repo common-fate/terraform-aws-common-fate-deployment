@@ -4,6 +4,7 @@
 ######################################################
 resource "aws_cognito_user_pool" "cognito_user_pool" {
   name = "${var.namespace}-${var.stage}-cognito-user-pool"
+
   // disables self serve signup
   admin_create_user_config {
     allow_admin_create_user_only = true
@@ -98,11 +99,7 @@ resource "aws_lambda_function" "pre_token_generation_lambda_function" {
   }
 }
 
-resource "aws_cognito_user_pool_domain" "custom_domain" {
-  domain          = replace(var.auth_url, "https://", "")
-  user_pool_id    = aws_cognito_user_pool.cognito_user_pool.id
-  certificate_arn = var.auth_certificate_arn
-}
+
 
 resource "aws_cognito_identity_provider" "saml_idp" {
   count         = length(var.saml_provider_name) > 0 && length(var.saml_metadata_source) > 0 ? 1 : 0
@@ -246,4 +243,16 @@ resource "aws_cognito_user_pool_client" "access_handler_service_client" {
   allowed_oauth_scopes                 = aws_cognito_resource_server.resource_server.scope_identifiers
   allowed_oauth_flows_user_pool_client = true
   generate_secret                      = true
+}
+
+
+
+locals {
+  has_custom_domain = var.auth_url != "" && var.auth_certificate_arn != ""
+}
+// Optionally configure a custom domain if the auth_url and auth_certificate_arn are provided
+resource "aws_cognito_user_pool_domain" "custom_domain" {
+  domain          = local.has_custom_domain ? replace(var.auth_url, "https://", "") : var.cognito_auth_domain_prefix
+  user_pool_id    = aws_cognito_user_pool.cognito_user_pool.id
+  certificate_arn = local.has_custom_domain ? var.auth_certificate_arn : null
 }
