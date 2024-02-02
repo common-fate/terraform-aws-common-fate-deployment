@@ -4,7 +4,6 @@ module "common-fate" {
   namespace                               = var.namespace
   auth_certificate_arn                    = var.auth_certificate_arn
   aws_region                              = var.aws_region
-  favicon_url                             = var.favicon_url
   licence_key_ps_arn                      = var.licence_key_ps_arn
   logo_url                                = var.logo_url
   pager_duty_client_id                    = var.pager_duty_client_id

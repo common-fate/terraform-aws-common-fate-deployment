@@ -54,11 +54,6 @@ variable "team_name" {
   type        = string
 }
 
-variable "favicon_url" {
-  description = "Specifies a public URL for the favicon used in frontend branding (e.g., 'https://commonfate.io/favicon.ico')."
-  type        = string
-}
-
 variable "logo_url" {
   description = "Specifies a public URL for the logo used in frontend branding."
   type        = string
