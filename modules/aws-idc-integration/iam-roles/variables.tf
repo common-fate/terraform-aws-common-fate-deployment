@@ -25,6 +25,3 @@ variable "permit_management_account_assignments" {
 }
 
 
-variable "controlplane_task_role_arn" {
-  type = string
-}

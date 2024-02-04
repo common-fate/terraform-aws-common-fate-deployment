@@ -47,7 +47,7 @@ resource "aws_iam_policy" "idc_read" {
           "sso:ListTagsForResource",
 
         ],
-        "Resource" : "*" #var.controlplane_task_role_arn
+        "Resource" : "*"
       }
     ]
   })
@@ -92,7 +92,7 @@ resource "aws_iam_policy" "idc_provision" {
           "sso:DescribeAccountAssignmentCreationStatus",
           "sso:DescribeAccountAssignmentDeletionStatus",
         ],
-        "Resource" : "*" # var.common_fate_aws_provisioner_role_arn
+        "Resource" : "*"
       }
     ]
   })
