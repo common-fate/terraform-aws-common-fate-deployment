@@ -121,8 +121,8 @@ locals {
 # Use 'local.combined_env_vars' wherever you need to pass these environment variables
 #trivy:ignore:AVD-AWS-0104
 resource "aws_security_group" "ecs_provisioner_sg_v2" {
-  name = "provisioner security group"
-  description = "allow access from the access handler"
+  name        = "${local.name_prefix}-provisioner"
+  description = "Common Fate Provisioner networking"
 
   vpc_id = var.vpc_id
 
@@ -144,6 +144,10 @@ resource "aws_security_group" "ecs_provisioner_sg_v2" {
   lifecycle {
     create_before_destroy = true
   }
+}
+
+resource "aws_security_group" "ecs_provisioner_sg" {
+  vpc_id = var.vpc_id
 }
 
 resource "aws_cloudwatch_log_group" "provisioner_log_group" {

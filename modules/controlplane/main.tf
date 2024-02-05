@@ -5,8 +5,8 @@
 
 #trivy:ignore:AVD-AWS-0104
 resource "aws_security_group" "ecs_control_plane_sg_v2" {
-  name        = "control plane security group"
-  description = "allow access from the alb"
+  name        = "${var.namespace}-${var.stage}-control-plane"
+  description = "Common Fate Control Plane networking"
 
   vpc_id = var.vpc_id
 
@@ -28,6 +28,9 @@ resource "aws_security_group" "ecs_control_plane_sg_v2" {
     create_before_destroy = true
   }
 
+}
+resource "aws_security_group" "ecs_control_plane_sg" {
+  vpc_id = var.vpc_id
 }
 
 # Update the RDS security group to allow connections from the ECS control-plane service

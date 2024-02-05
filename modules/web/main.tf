@@ -3,9 +3,10 @@
 ######################################################
 #trivy:ignore:AVD-AWS-0104
 resource "aws_security_group" "ecs_web_sg_v2" {
-  name        = "web security group"
+  name        = "${var.namespace}-${var.stage}-web"
+  description = "Common Fate Web networking"
   vpc_id      = var.vpc_id
-  description = "allow access from the alb"
+
 
   egress {
     from_port   = 0
@@ -27,7 +28,9 @@ resource "aws_security_group" "ecs_web_sg_v2" {
 
 }
 
-
+resource "aws_security_group" "ecs_web_sg" {
+  vpc_id = var.vpc_id
+}
 
 resource "aws_iam_role" "web_ecs_execution_role" {
   name = "${var.namespace}-${var.stage}-web-ecs-er"

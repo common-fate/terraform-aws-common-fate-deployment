@@ -1,8 +1,8 @@
 
 #trivy:ignore:AVD-AWS-0104
 resource "aws_security_group" "ecs_access_handler_sg_v2" {
-  name="access handler security group"
-  description = "allow access from the alb"
+  name        = "${var.namespace}-${var.stage}-access-handler"
+  description = "Common Fate Access Handler networking"
   vpc_id      = var.vpc_id
 
   egress {
@@ -23,11 +23,12 @@ resource "aws_security_group" "ecs_access_handler_sg_v2" {
   lifecycle {
     create_before_destroy = true
   }
-
-
 }
 
-
+// @TODO remove
+resource "aws_security_group" "ecs_access_handler_sg" {
+  vpc_id = var.vpc_id
+}
 
 
 resource "aws_cloudwatch_log_group" "access_handler_log_group" {
