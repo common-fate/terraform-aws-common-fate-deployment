@@ -1,3 +1,9 @@
+node_modules
+.DS_Store
+
+*__debug*
+.env
+
 # Local .terraform directories
 **/.terraform/*
 

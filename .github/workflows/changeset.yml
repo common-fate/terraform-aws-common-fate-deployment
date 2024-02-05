@@ -1,0 +1,52 @@
+name: Changeset and Tag Releases
+
+on:
+  push:
+    branches:
+      - "main"
+      - "release/*"
+
+permissions:
+  id-token: write
+  contents: write
+
+jobs:
+  changeset:
+    name: Changeset
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          lfs: true
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Setup Node.JS
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.12
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Run Changesets Action
+        id: changesets
+        uses: changesets/action@v1
+        with:
+          title: Version Packages for ${{ github.head_ref || github.ref_name }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Publish
+        if: steps.changesets.outputs.hasChangesets == 'false'
+        # Push a new tag when changesets have been merged.
+        run: |
+          echo publishing
+          pnpm changeset tag
+          git push --follow-tags
+          echo pushed tags
