@@ -9,95 +9,8 @@ resource "aws_cognito_user_pool" "cognito_user_pool" {
   admin_create_user_config {
     allow_admin_create_user_only = true
   }
-  lambda_config {
-    pre_token_generation = aws_lambda_function.pre_token_generation_lambda_function.arn
-  }
 }
 
-
-data "archive_file" "lambda" {
-  type                    = "zip"
-  source_content_filename = "preTokenGenerationLambda.js"
-  source_content          = <<EOT
-exports.handler = async (event) => {
-  event.response = {
-    claimsOverrideDetails: {
-      claimsToAddOrOverride: {
-        appUrl: process.env.APP_URL,
-      },
-    },
-  };
-  return event;
-};
-EOT
-  output_path             = "pre_token_generation_function.zip"
-}
-resource "aws_cloudwatch_log_group" "pre_token_gen_lambda_lg" {
-  name              = "/aws/lambda/${var.namespace}-${var.stage}-pre-token-generation"
-  retention_in_days = 14
-
-}
-
-resource "aws_iam_role" "lambda_exec_role" {
-  name = "${var.namespace}-${var.stage}-lambda-exec-role"
-
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17",
-    Statement = [
-      {
-        Action = "sts:AssumeRole",
-        Effect = "Allow",
-        Principal = {
-          Service = "lambda.amazonaws.com"
-        }
-      }
-    ]
-  })
-}
-resource "aws_iam_policy" "pre_token_gen_lambda_logging_policy" {
-  name        = "${var.namespace}-${var.stage}-pre_token_gen_lambda-logging-policy"
-  description = "Allow Lambda to write logs to CloudWatch"
-
-  policy = jsonencode({
-    Version = "2012-10-17",
-    Statement = [
-      {
-        Action = [
-          "logs:CreateLogGroup",
-          "logs:CreateLogStream",
-          "logs:PutLogEvents"
-        ],
-        Effect   = "Allow",
-        Resource = aws_cloudwatch_log_group.pre_token_gen_lambda_lg.arn
-      }
-    ]
-  })
-}
-resource "aws_iam_role_policy_attachment" "pre_token_gen_lambda_logs_attachment" {
-  policy_arn = aws_iam_policy.pre_token_gen_lambda_logging_policy.arn
-  role       = aws_iam_role.lambda_exec_role.name
-}
-resource "aws_lambda_permission" "cognito_permission" {
-  statement_id  = "AllowExecutionFromCognito"
-  action        = "lambda:InvokeFunction"
-  function_name = aws_lambda_function.pre_token_generation_lambda_function.function_name
-  principal     = "cognito-idp.amazonaws.com"
-}
-
-resource "aws_lambda_function" "pre_token_generation_lambda_function" {
-  function_name    = "${var.namespace}-${var.stage}-pre-token-generation"
-  filename         = "pre_token_generation_function.zip"
-  handler          = "preTokenGenerationLambda.handler"
-  runtime          = "nodejs18.x"
-  source_code_hash = data.archive_file.lambda.output_base64sha256
-  role             = aws_iam_role.lambda_exec_role.arn
-  timeout          = 10
-  environment {
-    variables = {
-      APP_URL = var.app_url
-    }
-  }
-}
 
 
 
@@ -245,14 +158,16 @@ resource "aws_cognito_user_pool_client" "access_handler_service_client" {
   generate_secret                      = true
 }
 
-
-
+// generates a friendly name like "cf-auth-gentle-shad" to be used as the cognito auth prefix when a custom domain is not in use
+resource "random_pet" "auth_domain_prefix" {
+  prefix = "cf-auth"
+}
 locals {
   has_custom_domain = var.auth_url != "" && var.auth_certificate_arn != ""
 }
 // Optionally configure a custom domain if the auth_url and auth_certificate_arn are provided
 resource "aws_cognito_user_pool_domain" "custom_domain" {
-  domain          = local.has_custom_domain ? replace(var.auth_url, "https://", "") : var.cognito_auth_domain_prefix
+  domain          = local.has_custom_domain ? replace(var.auth_url, "https://", "") : random_id.auth_domain_prefix.id
   user_pool_id    = aws_cognito_user_pool.cognito_user_pool.id
   certificate_arn = local.has_custom_domain ? var.auth_certificate_arn : null
 }
