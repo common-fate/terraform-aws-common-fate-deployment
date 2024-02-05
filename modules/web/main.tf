@@ -3,7 +3,7 @@
 ######################################################
 #trivy:ignore:AVD-AWS-0104
 resource "aws_security_group" "ecs_web_sg_v2" {
-
+  name        = "web security group"
   vpc_id      = var.vpc_id
   description = "allow access from the alb"
 

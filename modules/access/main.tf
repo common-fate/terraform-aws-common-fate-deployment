@@ -1,6 +1,7 @@
 
 #trivy:ignore:AVD-AWS-0104
 resource "aws_security_group" "ecs_access_handler_sg_v2" {
+  name="access handler security group"
   description = "allow access from the alb"
   vpc_id      = var.vpc_id
 

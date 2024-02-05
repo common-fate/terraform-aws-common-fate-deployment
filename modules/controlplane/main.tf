@@ -5,6 +5,7 @@
 
 #trivy:ignore:AVD-AWS-0104
 resource "aws_security_group" "ecs_control_plane_sg_v2" {
+  name        = "control plane security group"
   description = "allow access from the alb"
 
   vpc_id = var.vpc_id
@@ -430,7 +431,7 @@ resource "aws_ecs_task_definition" "control_plane_task" {
 
       # Link to the security group
       linuxParameters = {
-        securityGroupIds = [aws_security_group.ecs_control_plane_sg.id]
+        securityGroupIds = [aws_security_group.ecs_control_plane_sg_v2.id]
       }
     },
     {
@@ -480,7 +481,7 @@ resource "aws_ecs_service" "control_plane_service" {
 
   network_configuration {
     subnets          = var.subnet_ids
-    security_groups  = [aws_security_group.ecs_control_plane_sg.id]
+    security_groups  = [aws_security_group.ecs_control_plane_sg_v2.id]
     assign_public_ip = true
   }
 
