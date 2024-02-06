@@ -146,9 +146,7 @@ resource "aws_security_group" "ecs_provisioner_sg_v2" {
   }
 }
 
-resource "aws_security_group" "ecs_provisioner_sg" {
-  vpc_id = var.vpc_id
-}
+
 
 resource "aws_cloudwatch_log_group" "provisioner_log_group" {
   name              = "${local.name_prefix}-provisioner"
