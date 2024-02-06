@@ -23,3 +23,5 @@ variable "permit_management_account_assignments" {
   type        = bool
   default     = false
 }
+
+

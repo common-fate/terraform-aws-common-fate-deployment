@@ -81,6 +81,7 @@ resource "aws_lambda_permission" "cognito_permission" {
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.pre_token_generation_lambda_function.function_name
   principal     = "cognito-idp.amazonaws.com"
+  source_arn    = aws_cognito_user_pool.cognito_user_pool.arn
 }
 
 resource "aws_lambda_function" "pre_token_generation_lambda_function" {
@@ -119,6 +120,8 @@ resource "aws_cognito_identity_provider" "saml_idp" {
     } : {
     MetadataURL = var.saml_metadata_source
   }
+
+
 }
 
 // default to cognito when saml is not yet configured

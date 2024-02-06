@@ -9,6 +9,7 @@ resource "aws_cloudwatch_event_bus" "event_bus" {
 
 resource "aws_sqs_queue" "event_queue" {
   name = "${var.namespace}-${var.stage}-event-queue"
+  sqs_managed_sse_enabled = true
   # Additional configurations like redrive policy can be added here
 }
 resource "aws_cloudwatch_event_rule" "to_sqs_rule" {

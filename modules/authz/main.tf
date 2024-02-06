@@ -2,8 +2,11 @@
 ######################################################
 # Authz Task
 ######################################################
+#trivy:ignore:AVD-AWS-0104
+resource "aws_security_group" "ecs_authz_sg_v2" {
+  name        = "${var.namespace}-${var.stage}-authz"
+  description = "Common Fate Authz networking"
 
-resource "aws_security_group" "ecs_authz_sg" {
   vpc_id = var.vpc_id
 
   egress {
@@ -13,36 +16,44 @@ resource "aws_security_group" "ecs_authz_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  // authz api
+  # // authz api
   ingress {
-    from_port   = 5050
-    to_port     = 5050
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"] # Allow incoming HTTP requests from anywhere
+    from_port       = 5050
+    to_port         = 5050
+    protocol        = "tcp"
+    security_groups = [var.alb_security_group_id]
   }
   // graphql
   ingress {
-    from_port   = 5051
-    to_port     = 5051
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"] # Allow incoming HTTP requests from anywhere
+    from_port       = 5051
+    to_port         = 5051
+    protocol        = "tcp"
+    security_groups = [var.alb_security_group_id]
   }
 
   // monitoring
   ingress {
-    from_port   = 9090
-    to_port     = 9090
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"] # Allow incoming HTTP requests from anywhere
+    from_port       = 9090
+    to_port         = 9090
+    protocol        = "tcp"
+    security_groups = [var.alb_security_group_id]
+  }
+
+  lifecycle {
+    create_before_destroy = true
   }
 
 
+}
+resource "aws_security_group" "ecs_authz_sg" {
+  vpc_id = var.vpc_id
 }
 
 resource "aws_cloudwatch_log_group" "authz_log_group" {
   name              = "${var.namespace}-${var.stage}-authz"
   retention_in_days = var.log_retention_in_days
 }
+
 
 
 
@@ -214,7 +225,7 @@ resource "aws_ecs_task_definition" "authz_task" {
 
     # Link to the security group
     linuxParameters = {
-      securityGroupIds = [aws_security_group.ecs_authz_sg.id]
+      securityGroupIds = [aws_security_group.ecs_authz_sg_v2.id]
     }
   }])
 }
@@ -261,7 +272,7 @@ resource "aws_ecs_service" "authz_service" {
 
   network_configuration {
     subnets         = var.subnet_ids
-    security_groups = [aws_security_group.ecs_authz_sg.id]
+    security_groups = [aws_security_group.ecs_authz_sg_v2.id]
   }
 
   load_balancer {

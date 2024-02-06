@@ -1,6 +1,9 @@
 
-resource "aws_security_group" "ecs_access_handler_sg" {
-  vpc_id = var.vpc_id
+#trivy:ignore:AVD-AWS-0104
+resource "aws_security_group" "ecs_access_handler_sg_v2" {
+  name        = "${var.namespace}-${var.stage}-access-handler"
+  description = "Common Fate Access Handler networking"
+  vpc_id      = var.vpc_id
 
   egress {
     from_port   = 0
@@ -9,13 +12,24 @@ resource "aws_security_group" "ecs_access_handler_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
+
   ingress {
-    from_port   = 9090
-    to_port     = 9090
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"] # Allow incoming HTTP requests from anywhere
+    from_port       = 9090
+    to_port         = 9090
+    protocol        = "tcp"
+    security_groups = [var.alb_security_group_id]
+  }
+
+  lifecycle {
+    create_before_destroy = true
   }
 }
+
+// @TODO remove
+resource "aws_security_group" "ecs_access_handler_sg" {
+  vpc_id = var.vpc_id
+}
+
 
 resource "aws_cloudwatch_log_group" "access_handler_log_group" {
   name              = "${var.namespace}-${var.stage}-access-handler"
@@ -163,7 +177,7 @@ resource "aws_ecs_task_definition" "access_handler_task" {
 
       # Link to the security group
       linuxParameters = {
-        securityGroupIds = [aws_security_group.ecs_access_handler_sg.id]
+        securityGroupIds = [aws_security_group.ecs_access_handler_sg_v2.id]
       }
     },
     {
@@ -214,7 +228,7 @@ resource "aws_ecs_service" "access_handler_service" {
 
   network_configuration {
     subnets         = var.subnet_ids
-    security_groups = [aws_security_group.ecs_access_handler_sg.id]
+    security_groups = [aws_security_group.ecs_access_handler_sg_v2.id]
   }
 
   load_balancer {
