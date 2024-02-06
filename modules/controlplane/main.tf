@@ -29,7 +29,9 @@ resource "aws_security_group" "ecs_control_plane_sg_v2" {
   }
 
 }
-
+resource "aws_security_group" "ecs_control_plane_sg" {
+  vpc_id = var.vpc_id
+}
 
 # Update the RDS security group to allow connections from the ECS control-plane service
 resource "aws_security_group_rule" "rds_access_from_control_plane" {

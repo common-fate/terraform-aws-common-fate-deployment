@@ -45,7 +45,9 @@ resource "aws_security_group" "ecs_authz_sg_v2" {
 
 
 }
-
+resource "aws_security_group" "ecs_authz_sg" {
+  vpc_id = var.vpc_id
+}
 
 resource "aws_cloudwatch_log_group" "authz_log_group" {
   name              = "${var.namespace}-${var.stage}-authz"
