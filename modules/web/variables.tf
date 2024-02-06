@@ -110,6 +110,6 @@ variable "desired_task_count" {
 }
 
 variable "alb_security_group_id" {
-  type=string
+  type        = string
   description = "the security group id for the outward facing alb"
 }
