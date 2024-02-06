@@ -43,7 +43,7 @@ locals {
     },
     {
       name  = "CF_AWS_IDC_IDENTITY_STORE_ID"
-      value = coalesce(local.aws_idc_config.idc_identity_store_id, "")
+      value = local.aws_idc_config.idc_identity_store_id
     }
   ] : []
 
