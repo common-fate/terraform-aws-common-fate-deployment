@@ -28,6 +28,9 @@ resource "aws_security_group" "ecs_web_sg_v2" {
 
 }
 
+resource "aws_security_group" "ecs_web_sg" {
+  vpc_id = var.vpc_id
+}
 
 resource "aws_iam_role" "web_ecs_execution_role" {
   name = "${var.namespace}-${var.stage}-web-ecs-er"
