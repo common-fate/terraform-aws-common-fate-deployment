@@ -30,6 +30,8 @@ output "outputs" {
     ecs_cluster_id                   = module.ecs.cluster_id
     auth_issuer                      = module.cognito.auth_issuer
     event_bus_log_group_name         = module.events.event_bus_log_group_name
+    cognito_user_pool_id             = module.cognito.user_pool_id
+    cognito_identity_provider_name   = module.cognito.identity_provider_name
   }
 }
 
@@ -149,4 +151,10 @@ output "alb_security_group_id" {
 output "cognito_identity_provider_name" {
   description = "The Cognito identity provider name."
   value       = module.cognito.identity_provider_name
+}
+
+
+output "cognito_user_pool_id" {
+  description = "The Cognito user pool ID."
+  value       = module.cognito.user_pool_id
 }
