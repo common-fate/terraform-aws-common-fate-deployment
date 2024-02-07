@@ -324,7 +324,7 @@ resource "aws_ecs_task_definition" "control_plane_task" {
           value = var.oidc_control_plane_issuer
         },
         { name  = "CF_CORS_ALLOWED_ORIGINS"
-          value = join(",", [concat([var.app_url], var.additional_cors_allowed_origins)])
+          value = join(",", concat([var.app_url], var.additional_cors_allowed_origins))
         },
         {
           name  = "LOG_LEVEL"
