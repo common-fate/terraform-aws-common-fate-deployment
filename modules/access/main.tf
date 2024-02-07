@@ -25,10 +25,6 @@ resource "aws_security_group" "ecs_access_handler_sg_v2" {
   }
 }
 
-// @TODO remove
-resource "aws_security_group" "ecs_access_handler_sg" {
-  vpc_id = var.vpc_id
-}
 
 
 resource "aws_cloudwatch_log_group" "access_handler_log_group" {
