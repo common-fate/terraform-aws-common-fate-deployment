@@ -1,15 +1,15 @@
 {
-  "name": "@common-fate/terraform-aws-common-fate-deployment",
-  "version": "1.8.0",
-  "description": "",
-  "main": "index.js",
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "devDependencies": {
-    "@changesets/cli": "^2.27.1"
-  },
-  "scripts": {
-    "changeset": "changeset"
-  }
+	"name": "@common-fate/terraform-aws-common-fate-deployment",
+	"version": "1.8.0",
+	"description": "",
+	"main": "index.js",
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"devDependencies": {
+		"@changesets/cli": "^2.27.1"
+	},
+	"scripts": {
+		"changeset": "changeset"
+	}
 }
