@@ -1,5 +1,15 @@
 # @common-fate/terraform-aws-common-fate-deployment
 
+## 1.10.0
+
+### Minor Changes
+
+- 3f62020: Adds variables to customise API URLs and CORS allowed origins
+
+### Patch Changes
+
+- 33efd74: Fixes an issue where the default logo URL pointed to a broken image if a custom logo wasn't provided for the deployment
+
 ## 1.9.0
 
 ### Minor Changes
