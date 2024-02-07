@@ -92,19 +92,19 @@ resource "aws_ecs_task_definition" "web_task" {
       },
       {
         name  = "CF_API_URL"
-        value = var.app_url
+        value = coalesce(var.controlplane_api_url, var.app_url)
       },
       {
         name  = "CF_ACCESS_API_URL"
-        value = var.app_url
+        value = coalesce(var.access_api_url, var.app_url)
       },
       {
         name  = "CF_AUTHZ_URL",
-        value = var.app_url
+        value = coalesce(var.authz_api_url, var.app_url)
       },
       {
         name  = "CF_AUTHZ_GRAPH_URL",
-        value = "${var.app_url}/graph"
+        value = "${coalesce(var.authz_api_url, var.app_url)}/graph"
       },
       {
         name  = "CF_TEAM_NAME"
