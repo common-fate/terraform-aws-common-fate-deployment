@@ -133,5 +133,11 @@ variable "desired_task_count" {
 
 variable "alb_security_group_id" {
   type        = string
-  description = "the security group id for the outward facing alb"
+  description = "the ALB security group ID."
+}
+
+variable "alb_listener_rule_priority" {
+  type        = number
+  description = "Listener priority for the ALB rule to route traffic to the service."
+  default     = 100
 }
