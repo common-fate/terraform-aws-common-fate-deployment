@@ -130,3 +130,23 @@ output "event_bus_log_group_name" {
   description = "The Event Bus log group name."
   value       = module.events.event_bus_log_group_name
 }
+
+output "alb_listener_arn" {
+  description = "The ALB Listener ARN."
+  value       = module.alb.listener_arn
+}
+
+output "auth_authority_url" {
+  description = "The OIDC authority URL."
+  value       = module.cognito.auth_authority_url
+}
+
+output "alb_security_group_id" {
+  description = "The ALB Security Group ID."
+  value       = module.alb.alb_security_group_id
+}
+
+output "cognito_identity_provider_name" {
+  description = "The Cognito identity provider name."
+  value       = module.cognito.identity_provider_name
+}
