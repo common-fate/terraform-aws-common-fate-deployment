@@ -164,7 +164,7 @@ resource "aws_iam_policy" "idc_provision_group_membership" {
 resource "aws_iam_role_policy_attachment" "idc_provision_idc_provision_group_membership_role_policy_attach" {
   count      = var.permit_group_assignment ? 1 : 0
   role       = aws_iam_role.provision_role.name
-  policy_arn = aws_iam_policy.idc_provision_idc_provision_group_membership[0].arn
+  policy_arn = aws_iam_policy.idc_provision_group_membership[0].arn
 }
 
 
