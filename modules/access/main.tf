@@ -139,7 +139,7 @@ resource "aws_ecs_task_definition" "access_handler_task" {
           value = var.auth_issuer
         },
         { name  = "CF_CORS_ALLOWED_ORIGINS"
-          value = join(",", [var.app_url])
+          value = join(",", [concat([var.app_url], var.cors_allowed_origins)])
         },
         {
           name  = "LOG_LEVEL"

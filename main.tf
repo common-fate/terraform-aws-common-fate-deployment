@@ -111,7 +111,7 @@ module "control_plane" {
   otel_log_group_name                 = module.ecs_base.otel_log_group_name
   otel_writer_iam_policy_arn          = module.ecs_base.otel_writer_iam_policy_arn
   alb_security_group_id               = module.alb.alb_security_group_id
-
+  cors_allowed_origins                = var.cors_allowed_origins
 }
 
 
@@ -158,7 +158,7 @@ module "access_handler" {
   otel_log_group_name                       = module.ecs_base.otel_log_group_name
   otel_writer_iam_policy_arn                = module.ecs_base.otel_writer_iam_policy_arn
   alb_security_group_id                     = module.alb.alb_security_group_id
-
+  cors_allowed_origins                      = var.cors_allowed_origins
 }
 
 module "authz" {
@@ -182,6 +182,6 @@ module "authz" {
   oidc_control_plane_client_id          = module.cognito.control_plane_service_client_id
   oidc_provisioner_service_client_id    = module.cognito.provisioner_client_id
   alb_security_group_id                 = module.alb.alb_security_group_id
-
+  cors_allowed_origins                  = var.cors_allowed_origins
 }
 
