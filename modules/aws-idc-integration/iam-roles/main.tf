@@ -138,3 +138,33 @@ resource "aws_iam_role_policy_attachment" "idc_provision_management_account_role
 }
 
 
+// an optional additional policy allowing IAM Identity Center group management
+resource "aws_iam_policy" "idc_provision_group_membership" {
+  count       = var.permit_group_assignment ? 1 : 0
+  name        = "${var.namespace}-${var.stage}-idc-provision-groups"
+  description = "Allows Common Fate to provision access to AWS IAM Identity Center groups"
+
+  policy = jsonencode({
+    "Version" : "2012-10-17",
+    "Statement" : [
+      {
+        "Sid" : "AssignGroups",
+        "Effect" : "Allow",
+        "Action" : [
+          "identitystore:CreateGroupMembership",
+          "identitystore:DeleteGroupMembership",
+        ],
+        "Resource" : "*"
+      }
+
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "idc_provision_idc_provision_group_membership_role_policy_attach" {
+  count      = var.permit_group_assignment ? 1 : 0
+  role       = aws_iam_role.provision_role.name
+  policy_arn = aws_iam_policy.idc_provision_idc_provision_group_membership[0].arn
+}
+
+
