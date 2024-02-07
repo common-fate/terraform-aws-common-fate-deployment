@@ -3,7 +3,11 @@
 # Control Plane
 ######################################################
 
-resource "aws_security_group" "ecs_control_plane_sg" {
+#trivy:ignore:AVD-AWS-0104
+resource "aws_security_group" "ecs_control_plane_sg_v2" {
+  name        = "${var.namespace}-${var.stage}-control-plane"
+  description = "Common Fate Control Plane networking"
+
   vpc_id = var.vpc_id
 
   egress {
@@ -14,13 +18,18 @@ resource "aws_security_group" "ecs_control_plane_sg" {
   }
 
   ingress {
-    from_port   = 8080
-    to_port     = 8080
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"] # Allow incoming HTTP requests from anywhere
+    from_port       = 8080
+    to_port         = 8080
+    protocol        = "tcp"
+    security_groups = [var.alb_security_group_id]
+  }
+
+  lifecycle {
+    create_before_destroy = true
   }
 
 }
+
 
 # Update the RDS security group to allow connections from the ECS control-plane service
 resource "aws_security_group_rule" "rds_access_from_control_plane" {
@@ -29,8 +38,9 @@ resource "aws_security_group_rule" "rds_access_from_control_plane" {
   to_port                  = 5432
   protocol                 = "tcp"
   security_group_id        = var.database_security_group_id
-  source_security_group_id = aws_security_group.ecs_control_plane_sg.id
+  source_security_group_id = aws_security_group.ecs_control_plane_sg_v2.id
 }
+
 
 resource "aws_cloudwatch_log_group" "control_plane_log_group" {
   name              = "${var.namespace}-${var.stage}-control-plane"
@@ -422,7 +432,7 @@ resource "aws_ecs_task_definition" "control_plane_task" {
 
       # Link to the security group
       linuxParameters = {
-        securityGroupIds = [aws_security_group.ecs_control_plane_sg.id]
+        securityGroupIds = [aws_security_group.ecs_control_plane_sg_v2.id]
       }
     },
     {
@@ -472,7 +482,7 @@ resource "aws_ecs_service" "control_plane_service" {
 
   network_configuration {
     subnets          = var.subnet_ids
-    security_groups  = [aws_security_group.ecs_control_plane_sg.id]
+    security_groups  = [aws_security_group.ecs_control_plane_sg_v2.id]
     assign_public_ip = true
   }
 

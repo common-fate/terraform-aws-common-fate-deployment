@@ -23,6 +23,7 @@ resource "google_iam_workload_identity_pool_provider" "this" {
   aws {
     account_id = var.common_fate_aws_account_id
   }
+
 }
 
 #######################################################

@@ -1,6 +1,8 @@
 ######################################################
 # Load Balancer
 ######################################################
+#trivy:ignore:AVD-AWS-0104
+#trivy:ignore:AVD-AWS-0107
 resource "aws_security_group" "alb_sg" {
   vpc_id = var.vpc_id
   name   = "${var.namespace}-${var.stage}-alb-security-group"
@@ -26,6 +28,7 @@ resource "aws_security_group" "alb_sg" {
   }
 
 }
+#trivy:ignore:AVD-AWS-0053 
 resource "aws_lb" "main_alb" {
   name                             = "${var.namespace}-${var.stage}-common-fate"
   internal                         = false
@@ -33,6 +36,8 @@ resource "aws_lb" "main_alb" {
   security_groups                  = [aws_security_group.alb_sg.id]
   subnets                          = var.public_subnet_ids
   enable_cross_zone_load_balancing = true
+  drop_invalid_header_fields       = true
+
 }
 
 locals {
@@ -73,6 +78,7 @@ resource "aws_lb_listener" "http" {
       status_code = "HTTP_301"
     }
   }
+
 }
 
 // if there are any other distict certificates, add them to the listener

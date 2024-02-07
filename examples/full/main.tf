@@ -110,28 +110,31 @@ module "control_plane" {
   licence_key_ps_arn                  = var.licence_key_ps_arn
   enable_verbose_logging              = var.enable_verbose_logging
   grant_assume_on_role_arns           = var.control_plane_grant_assume_on_role_arns
+  alb_security_group_id               = module.alb.alb_security_group_id
 }
 
 
 module "web" {
-  source             = "common-fate/common-fate-deployment/aws//modules/web"
-  version            = "1.0.0"
-  namespace          = var.namespace
-  stage              = var.stage
-  aws_region         = var.aws_region
-  release_tag        = var.release_tag
-  subnet_ids         = module.vpc.private_subnet_ids
-  vpc_id             = module.vpc.vpc_id
-  auth_authority_url = module.cognito.auth_authority_url
-  auth_cli_client_id = module.cognito.cli_client_id
-  auth_url           = var.auth_url
-  auth_web_client_id = module.cognito.web_client_id
-  logo_url           = var.logo_url
-  team_name          = var.team_name
-  ecs_cluster_id     = module.ecs.cluster_id
-  alb_listener_arn   = module.alb.listener_arn
-  app_url            = var.app_url
-  auth_issuer        = module.cognito.auth_issuer
+  source                = "common-fate/common-fate-deployment/aws//modules/web"
+  version               = "1.0.0"
+  namespace             = var.namespace
+  stage                 = var.stage
+  aws_region            = var.aws_region
+  release_tag           = var.release_tag
+  subnet_ids            = module.vpc.private_subnet_ids
+  vpc_id                = module.vpc.vpc_id
+  auth_authority_url    = module.cognito.auth_authority_url
+  auth_cli_client_id    = module.cognito.cli_client_id
+  auth_url              = var.auth_url
+  auth_web_client_id    = module.cognito.web_client_id
+  logo_url              = var.logo_url
+  team_name             = var.team_name
+  ecs_cluster_id        = module.ecs.cluster_id
+  alb_listener_arn      = module.alb.listener_arn
+  app_url               = var.app_url
+  auth_issuer           = module.cognito.auth_issuer
+  alb_security_group_id = module.alb.alb_security_group_id
+
 }
 
 module "access_handler" {
@@ -150,6 +153,8 @@ module "access_handler" {
   auth_issuer            = module.cognito.auth_issuer
   enable_verbose_logging = var.enable_verbose_logging
   app_url                = var.app_url
+  alb_security_group_id  = module.alb.alb_security_group_id
+
 }
 
 module "authz" {

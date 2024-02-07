@@ -1,8 +1,12 @@
 ######################################################
 # Web Task
 ######################################################
-resource "aws_security_group" "ecs_web_sg" {
-  vpc_id = var.vpc_id
+#trivy:ignore:AVD-AWS-0104
+resource "aws_security_group" "ecs_web_sg_v2" {
+  name        = "${var.namespace}-${var.stage}-web"
+  description = "Common Fate Web networking"
+  vpc_id      = var.vpc_id
+
 
   egress {
     from_port   = 0
@@ -12,12 +16,15 @@ resource "aws_security_group" "ecs_web_sg" {
   }
 
   ingress {
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"] # Allow incoming HTTP requests from anywhere
+    from_port       = 80
+    to_port         = 80
+    protocol        = "tcp"
+    security_groups = [var.alb_security_group_id]
   }
 
+  lifecycle {
+    create_before_destroy = true
+  }
 
 }
 
@@ -45,6 +52,7 @@ resource "aws_iam_role_policy_attachment" "web_ecs_execution_role_policy_attach"
 resource "aws_cloudwatch_log_group" "web_log_group" {
   name              = "${var.namespace}-${var.stage}-web"
   retention_in_days = var.log_retention_in_days
+
 }
 
 resource "aws_ecs_task_definition" "web_task" {
@@ -127,7 +135,7 @@ resource "aws_ecs_task_definition" "web_task" {
 
     # Link to the security group
     linuxParameters = {
-      securityGroupIds = [aws_security_group.ecs_web_sg.id]
+      securityGroupIds = [aws_security_group.ecs_web_sg_v2.id]
     }
   }])
 }
@@ -150,7 +158,7 @@ resource "aws_ecs_service" "web_service" {
 
   network_configuration {
     subnets         = var.subnet_ids
-    security_groups = [aws_security_group.ecs_web_sg.id]
+    security_groups = [aws_security_group.ecs_web_sg_v2.id]
   }
 
   load_balancer {
