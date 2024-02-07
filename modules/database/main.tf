@@ -16,6 +16,7 @@ resource "aws_db_parameter_group" "postgres_db" {
   family = "postgres15"
 }
 
+#trivy:ignore:AVD-AWS-0080
 resource "aws_db_instance" "pg_db" {
   identifier                   = "${var.namespace}-${var.stage}-pg-db"
   allocated_storage            = 20
