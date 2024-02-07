@@ -214,7 +214,7 @@ variable "alb_security_group_id" {
 
 
 
-variable "cors_allowed_origins" {
+variable "additional_cors_allowed_origins" {
   type        = list(string)
   default     = []
   description = "Additional origins to add to the CORS allowlist. By default, the app URL is automatically added."
