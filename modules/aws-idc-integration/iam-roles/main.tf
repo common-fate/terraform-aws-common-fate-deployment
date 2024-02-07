@@ -153,6 +153,9 @@ resource "aws_iam_policy" "idc_provision_group_membership" {
         "Action" : [
           "identitystore:CreateGroupMembership",
           "identitystore:DeleteGroupMembership",
+          "identitystore:ListGroupMembershipsForMember",
+          "identitystore:IsMemberInGroups",
+          "identitystore:ListGroupMemberships"
         ],
         "Resource" : "*"
       }
