@@ -16,16 +16,14 @@ variable "vpc_id" {
 }
 
 
-
-variable "certificate_arn" {
+variable "certificate_arns" {
   description = "The Amazon Certificate Manager (ACM) certificate ARN for the domains served by this load balancer"
-  type        = string
-}
-
-
-variable "additional_certificate_arns" {
-  description = "Additional certificate ARNs to add to the load balancer"
   type        = list(string)
+
+  validation {
+    condition     = length(var.certificate_arns) > 0
+    error_message = "The certificate_arns list must contain at least one certificate ARN."
+  }
 }
 
 

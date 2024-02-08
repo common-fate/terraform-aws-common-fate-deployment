@@ -169,7 +169,7 @@ locals {
 }
 // Optionally configure a custom domain if the auth_url and auth_certificate_arn are provided
 resource "aws_cognito_user_pool_domain" "custom_domain" {
-  domain          = local.has_custom_domain ? replace(var.auth_url, "https://", "") : random_pet.auth_domain_prefix.id
+  domain          = local.has_custom_domain ? replace(var.auth_url, "https://", "") : random_id.auth_domain_prefix.id
   user_pool_id    = aws_cognito_user_pool.cognito_user_pool.id
   certificate_arn = local.has_custom_domain ? var.auth_certificate_arn : null
 }

@@ -5,13 +5,6 @@ provider "aws" {
 data "aws_partition" "current" {}
 data "aws_caller_identity" "current" {}
 
-locals {
-  deployment_id     = "xfa3r1" # would be fetched from the factory API
-  deployment_domain = "${local.deployment_id}.deploy.devcommonfate.com"
-  app_domain        = "console.${local.deployment_id}.deploy.devcommonfate.com"
-  app_url           = coalesce(var.app_url, "https://${local.app_domain}")
-}
-
 
 module "vpc" {
   source     = "./modules/vpc"
@@ -20,35 +13,13 @@ module "vpc" {
   aws_region = var.aws_region
 }
 
-
-resource "aws_route53_zone" "primary" {
-  name    = local.deployment_domain
-  comment = "Common Fate deployment DNS zone"
-}
-
-module "default_app_certificate" {
-  source  = "./modules/acm-validated-certificate"
-  zone_id = aws_route53_zone.primary.id
-  domain  = local.app_domain
-}
-
-resource "aws_route53_record" "www-dev" {
-  zone_id         = aws_route53_zone.primary.zone_id
-  name            = "console"
-  type            = "CNAME"
-  ttl             = 60
-  allow_overwrite = true
-
-  records = [module.alb.domain]
-}
-
 module "alb" {
-  source                      = "./modules/alb"
-  namespace                   = var.namespace
-  stage                       = var.stage
-  certificate_arn             = module.default_app_certificate.arn
-  additional_certificate_arns = var.app_certificate_arn != null ? [var.app_certificate_arn] : []
-
+  source    = "./modules/alb"
+  namespace = var.namespace
+  stage     = var.stage
+  certificate_arns = [
+    var.app_certificate_arn
+  ]
   public_subnet_ids = module.vpc.public_subnet_ids
   vpc_id            = module.vpc.vpc_id
 }
@@ -91,7 +62,7 @@ module "cognito" {
   namespace             = var.namespace
   stage                 = var.stage
   aws_region            = var.aws_region
-  app_url               = local.app_url
+  app_url               = var.app_url
   auth_url              = var.auth_url
   auth_certificate_arn  = var.auth_certificate_arn
   saml_metadata_is_file = var.saml_metadata_is_file
@@ -113,7 +84,7 @@ module "control_plane" {
   database_security_group_id          = module.control_plane_db.security_group_id
   eventbus_arn                        = module.events.event_bus_arn
   sqs_queue_arn                       = module.events.sqs_queue_arn
-  app_url                             = local.app_url
+  app_url                             = var.app_url
   pager_duty_client_id                = var.pager_duty_client_id
   pager_duty_client_secret_ps_arn     = var.pager_duty_client_secret_ps_arn
   release_tag                         = var.release_tag
@@ -154,13 +125,13 @@ module "web" {
   vpc_id                = module.vpc.vpc_id
   auth_authority_url    = module.cognito.auth_authority_url
   auth_cli_client_id    = module.cognito.cli_client_id
-  auth_url              = module.cognito.auth_url
+  auth_url              = var.auth_url
   auth_web_client_id    = module.cognito.web_client_id
   logo_url              = var.logo_url
   team_name             = var.team_name
   ecs_cluster_id        = module.ecs.cluster_id
   alb_listener_arn      = module.alb.listener_arn
-  app_url               = local.app_url
+  app_url               = var.app_url
   auth_issuer           = module.cognito.auth_issuer
   alb_security_group_id = module.alb.alb_security_group_id
 
@@ -180,7 +151,7 @@ module "access_handler" {
   alb_listener_arn                          = module.alb.listener_arn
   auth_issuer                               = module.cognito.auth_issuer
   log_level                                 = var.access_handler_log_level
-  app_url                                   = local.app_url
+  app_url                                   = var.app_url
   oidc_access_handler_service_client_id     = module.cognito.access_handler_service_client_id
   oidc_access_handler_service_client_secret = module.cognito.access_handler_service_client_secret
   oidc_access_handler_service_issuer        = module.cognito.auth_issuer
@@ -204,7 +175,7 @@ module "authz" {
   dynamodb_table_name                   = module.authz_db.dynamodb_table_name
   log_level                             = var.authz_log_level
   dynamodb_table_arn                    = module.authz_db.dynamodb_table_arn
-  app_url                               = local.app_url
+  app_url                               = var.app_url
   oidc_trusted_issuer                   = module.cognito.auth_issuer
   oidc_terraform_client_id              = module.cognito.terraform_client_id
   oidc_access_handler_service_client_id = module.cognito.access_handler_service_client_id
@@ -213,3 +184,4 @@ module "authz" {
   alb_security_group_id                 = module.alb.alb_security_group_id
   additional_cors_allowed_origins       = var.additional_cors_allowed_origins
 }
+

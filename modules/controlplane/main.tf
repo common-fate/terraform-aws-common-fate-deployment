@@ -406,10 +406,6 @@ resource "aws_ecs_task_definition" "control_plane_task" {
           name      = "CF_SCIM_TOKEN",
           valueFrom = var.scim_token_ps_arn
         }] : [],
-        var.licence_key_ps_arn != null && var.licence_key_ps_arn != "" ? [{
-          name      = "CF_LICENCE_KEY",
-          valueFrom = var.licence_key_ps_arn
-        }] : [],
 
         [
           {
@@ -417,6 +413,11 @@ resource "aws_ecs_task_definition" "control_plane_task" {
             // the password key is extracted from the json that is stored in secrets manager so that we don't need to decode it in the go server
             valueFrom = "${var.database_secret_sm_arn}:password::"
           },
+          {
+            name      = "CF_LICENCE_KEY",
+            valueFrom = var.licence_key_ps_arn
+          },
+
         ]
       )
 
