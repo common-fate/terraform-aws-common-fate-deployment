@@ -113,11 +113,15 @@ variable "aws_idc_config" {
   - role_arn: The ARN of the IAM role for the provisioner to assume which hass permissions to provision access in an AWS organization.
   - idc_region: The AWS IDC Region.
   - idc_instance_arn: The AWS Identity Center instance ARN.
+  - idc_identity_store_id: The AWS IAM Identity Center Identity Store ID.
   EOF
   type = object({
     role_arn         = string
     idc_region       = string
     idc_instance_arn = string
+
+    // optional for the moment to avoid making breaking changes.
+    idc_identity_store_id = optional(string)
   })
   default = null
 }
