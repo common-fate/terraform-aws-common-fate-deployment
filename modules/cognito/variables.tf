@@ -11,8 +11,9 @@ variable "stage" {
 }
 
 variable "auth_certificate_arn" {
-  description = "The Amazon Certificate Manager (ACM) certificate ARN for the auth domain. Must be provisioned in us-east-1 for CloudFront."
+  description = "The Amazon Certificate Manager (ACM) certificate ARN for the auth domain. Must be provisioned in us-east-1 for CloudFront. Provide this and the auth_url to configure cognito with a custom domain."
   type        = string
+  default     = ""
 }
 
 variable "aws_region" {
@@ -21,23 +22,15 @@ variable "aws_region" {
 }
 
 variable "auth_url" {
-  description = "The auth url (e.g., 'https://auth.mydomain.com')."
+  description = "The custom auth url (e.g., 'https://auth.mydomain.com'). Provide this and the auth_certificate_arn to configure cognito with a custom domain."
   type        = string
-
-  validation {
-    condition     = can(regex("^https://", var.auth_url))
-    error_message = "The auth_url must start with 'https://'."
-  }
+  default     = ""
 }
+
 
 variable "app_url" {
   description = "The app url (e.g., 'https://common-fate.mydomain.com')."
   type        = string
-
-  validation {
-    condition     = can(regex("^https://", var.app_url))
-    error_message = "The app_url must start with 'https://'."
-  }
 }
 
 variable "saml_provider_name" {

@@ -26,8 +26,9 @@ variable "app_certificate_arn" {
 }
 
 variable "auth_certificate_arn" {
-  description = "The Amazon Certificate Manager (ACM) certificate ARN for the auth domain. Must be provisioned in us-east-1 for CloudFront."
+  description = "The Amazon Certificate Manager (ACM) certificate ARN for the auth domain. Must be provisioned in us-east-1 for CloudFront. Provide this and the auth_url to configure cognito with a custom domain."
   type        = string
+  default     = ""
 }
 
 variable "pager_duty_client_id" {
@@ -60,14 +61,12 @@ variable "slack_signing_secret_ps_arn" {
   type        = string
 }
 
-variable "auth_url" {
-  description = "The authorization domain (e.g., 'https://auth.mydomain.com')."
-  type        = string
 
-  validation {
-    condition     = can(regex("^https://", var.auth_url))
-    error_message = "The auth_url must start with 'https://'."
-  }
+
+variable "auth_url" {
+  description = "The custom auth url (e.g., 'https://auth.mydomain.com'). Provide this and the auth_certificate_arn to configure cognito with a custom domain."
+  type        = string
+  default     = ""
 }
 
 variable "app_url" {
