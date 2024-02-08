@@ -14,7 +14,7 @@ output "saml_acs_url" {
 
 output "auth_url" {
   description = "The Cognito Auth URL will be either the custom domain if configured or a generated cognito domain."
-  value       = aws_cognito_user_pool_domain.custom_domain.domain
+  value       = "https://${aws_cognito_user_pool_domain.custom_domain.domain}"
 }
 
 

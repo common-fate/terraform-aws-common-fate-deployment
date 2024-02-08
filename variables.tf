@@ -18,11 +18,14 @@ variable "aws_region" {
 variable "release_tag" {
   description = "Specifies the tag for frontend and backend images, typically the git commit hash."
   type        = string
+  default     = "v1.2.0"
 }
 
 variable "app_certificate_arn" {
   description = "The Amazon Certificate Manager (ACM) certificate ARN for the application."
   type        = string
+  nullable    = true
+  default     = null
 }
 
 variable "auth_certificate_arn" {
@@ -72,9 +75,11 @@ variable "auth_url" {
 variable "app_url" {
   description = "The app url (e.g., 'https://common-fate.mydomain.com')."
   type        = string
+  nullable    = true
+  default     = null
 
   validation {
-    condition     = can(regex("^https://", var.app_url))
+    condition     = (var.app_url == null || can(regex("^https://", var.app_url)))
     error_message = "The app_url must start with 'https://'."
   }
 }
@@ -128,6 +133,8 @@ variable "scim_token_ps_arn" {
 variable "licence_key_ps_arn" {
   description = "The AWS Parameter Store ARN for the license key."
   type        = string
+  nullable    = true
+  default     = null
 }
 
 

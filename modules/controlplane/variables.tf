@@ -148,6 +148,8 @@ variable "alb_listener_arn" {
 variable "licence_key_ps_arn" {
   description = "The AWS Parameter Store ARN for the license key."
   type        = string
+  nullable    = true
+  default     = null
 }
 variable "log_retention_in_days" {
   description = "Specifies the cloudwatch log retention period."
