@@ -89,7 +89,7 @@ variable "team_name" {
 
 variable "logo_url" {
   description = "Specifies a public logo URL for frontend branding."
-  default     = "https://commonfate.io/logo.png"
+  default     = ""
   type        = string
 }
 
@@ -155,4 +155,10 @@ variable "authz_log_level" {
   description = "Log level for Authz service"
   type        = string
   default     = "INFO"
+}
+
+variable "additional_cors_allowed_origins" {
+  type        = list(string)
+  default     = []
+  description = "Additional origins to add to the CORS allowlist. By default, the app URL is automatically added."
 }

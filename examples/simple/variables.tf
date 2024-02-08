@@ -89,7 +89,7 @@ variable "team_name" {
 
 variable "logo_url" {
   description = "Specifies a public logo URL for frontend branding."
-  default     = "https://commonfate.io/logo.png"
+  default     = ""
   type        = string
 }
 

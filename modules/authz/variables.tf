@@ -121,3 +121,9 @@ variable "alb_security_group_id" {
   type        = string
   description = "the security group id for the outward facing alb"
 }
+
+variable "additional_cors_allowed_origins" {
+  type        = list(string)
+  default     = []
+  description = "Additional origins to add to the CORS allowlist. By default, the app URL is automatically added."
+}

@@ -24,4 +24,9 @@ variable "permit_management_account_assignments" {
   default     = false
 }
 
+variable "permit_group_assignment" {
+  description = "By default, the AWS IAM role for the provisioner does not have the required permissions to manage IAM Identity Center group memberships. You can enable that feature with this flag set to true"
+  type        = bool
+  default     = false
+}
 
