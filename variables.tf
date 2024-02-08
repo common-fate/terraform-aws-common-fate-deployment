@@ -157,3 +157,9 @@ variable "authz_log_level" {
   type        = string
   default     = "INFO"
 }
+
+variable "additional_cors_allowed_origins" {
+  type        = list(string)
+  default     = []
+  description = "Additional origins to add to the CORS allowlist. By default, the app URL is automatically added."
+}

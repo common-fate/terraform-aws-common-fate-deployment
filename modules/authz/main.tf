@@ -180,7 +180,7 @@ resource "aws_ecs_task_definition" "authz_task" {
         value = var.dynamodb_table_name
       },
       { name  = "CF_CORS_ALLOWED_ORIGINS"
-        value = join(",", [var.app_url])
+        value = join(",", concat([var.app_url], var.additional_cors_allowed_origins))
       },
       {
         name  = "LOG_LEVEL"

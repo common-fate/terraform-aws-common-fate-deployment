@@ -83,3 +83,8 @@ output "access_handler_service_client_secret" {
   description = "The client secret for the access handler service."
   value       = aws_cognito_user_pool_client.access_handler_service_client.client_secret
 }
+
+output "identity_provider_name" {
+  description = "The name of the Cognito identity provider"
+  value       = local.identity_provider_name
+}

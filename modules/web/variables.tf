@@ -25,6 +25,27 @@ variable "release_tag" {
   type        = string
 }
 
+variable "controlplane_api_url" {
+  description = "The Control Plane API url (e.g., 'https://common-fate.mydomain.com')."
+  type        = string
+  nullable    = true
+  default     = null
+}
+
+variable "access_api_url" {
+  description = "The Access API url (e.g., 'https://common-fate.mydomain.com')."
+  type        = string
+  nullable    = true
+  default     = null
+}
+
+variable "authz_api_url" {
+  description = "The Authz API url (e.g., 'https://common-fate.mydomain.com')."
+  type        = string
+  nullable    = true
+  default     = null
+}
+
 variable "app_url" {
   description = "The app url (e.g., 'https://common-fate.mydomain.com')."
   type        = string
@@ -34,6 +55,7 @@ variable "app_url" {
     error_message = "The app_url must start with 'https://'."
   }
 }
+
 variable "aws_region" {
   description = "Determines the AWS Region for deployment."
   type        = string
@@ -111,5 +133,11 @@ variable "desired_task_count" {
 
 variable "alb_security_group_id" {
   type        = string
-  description = "the security group id for the outward facing alb"
+  description = "the ALB security group ID."
+}
+
+variable "alb_listener_rule_priority" {
+  type        = number
+  description = "Listener priority for the ALB rule to route traffic to the service."
+  default     = 100
 }
