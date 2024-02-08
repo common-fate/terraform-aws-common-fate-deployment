@@ -1,5 +1,11 @@
 # @common-fate/terraform-aws-common-fate-deployment
 
+## 1.11.0
+
+### Minor Changes
+
+- 8854a39: Remove the requirement for deploying with a custom auth domain, drop the pre token generation lambda
+
 ## 1.10.0
 
 ### Minor Changes
