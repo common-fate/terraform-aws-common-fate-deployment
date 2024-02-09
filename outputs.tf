@@ -33,6 +33,7 @@ output "outputs" {
     cognito_user_pool_id             = module.cognito.user_pool_id
     cognito_identity_provider_name   = module.cognito.identity_provider_name
     provisioner_task_role_arn        = module.provisioner.task_role_arn
+    provisioner_url                  = module.provisioner.provisioner_url
   }
 }
 
@@ -50,6 +51,12 @@ output "provisioner_task_role_arn" {
   description = "The task role arn of the builtin provisioner module"
   value       = module.provisioner.task_role_arn
 }
+
+output "provisioner_url" {
+  description = "The private ecs url of provisioner module"
+  value       = module.provisioner.provisioner_url
+}
+
 
 output "cognito_saml_entity_id" {
   description = "The cognito entity ID required for SAML configuration"
