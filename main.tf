@@ -185,3 +185,25 @@ module "authz" {
   additional_cors_allowed_origins       = var.additional_cors_allowed_origins
 }
 
+module "provisioner" {
+  source = "./modules/provisioner"
+  // A name prefix is used so that this builtin provisioner may be deployed without causing downtime when migrating from an external provisioner deployment
+  name_prefix                       = "builtin"
+  namespace                         = var.namespace
+  stage                             = var.stage
+  aws_region                        = var.aws_region
+  release_tag                       = var.release_tag
+  access_handler_sg_id              = module.access_handler.security_group_id
+  subnet_ids                        = module.vpc.private_subnet_ids
+  vpc_id                            = module.vpc.vpc_id
+  ecs_cluster_id                    = module.ecs.cluster_id
+  provisioner_service_client_id     = module.cognito.provisioner_client_id
+  provisioner_service_client_secret = module.cognito.provisioner_client_secret
+  auth_issuer                       = module.cognito.auth_issuer
+  app_url                           = var.app_url
+
+  gcp_config     = var.provisioner_gcp_config
+  aws_idc_config = var.provisioner_aws_idc_config
+  entra_config   = var.provisioner_entra_config
+  aws_rds_config = var.provisioner_aws_rds_config
+}

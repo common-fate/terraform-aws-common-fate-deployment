@@ -16,7 +16,7 @@ variable "aws_region" {
 }
 
 variable "release_tag" {
-  description = "Specifies the tag for frontend and backend images, typically the git commit hash."
+  description = "Specifies the tag for frontend and backend images, e.g v1.2.0"
   type        = string
 }
 
@@ -161,4 +161,73 @@ variable "additional_cors_allowed_origins" {
   type        = list(string)
   default     = []
   description = "Additional origins to add to the CORS allowlist. By default, the app URL is automatically added."
+}
+
+
+variable "provisioner_aws_idc_config" {
+  description = <<EOF
+  Configuration for AWS IDC. The following keys are expected:
+  - role_arn: The ARN of the IAM role for the provisioner to assume which hass permissions to provision access in an AWS organization.
+  - idc_region: The AWS IDC Region.
+  - idc_instance_arn: The AWS Identity Center instance ARN.
+  - idc_identity_store_id: The AWS IAM Identity Center Identity Store ID.
+  EOF
+  type = object({
+    role_arn              = string
+    idc_region            = string
+    idc_instance_arn      = string
+    idc_identity_store_id = string
+  })
+  default = null
+}
+
+variable "provisioner_gcp_config" {
+  description = <<EOF
+  Configuration for GCP. The following keys are expected:
+  - service_account_client_json_ps_arn: (Optional) when using service account credentials, this is ARN of the secret credentials.
+  - workload_identity_config_json: (Optional) using Workload Identity Federation, this is the config file.
+
+  Either `workload_identity_config_json` or `service_account_client_json_ps_arn` must be provided (not both).
+  EOF
+  type = object({
+    service_account_client_json_ps_arn = optional(string)
+    workload_identity_config_json      = optional(string)
+  })
+  default = null
+}
+
+
+variable "provisioner_entra_config" {
+  description = <<EOF
+  Configuration for GCP. The following keys are expected:
+  - tenant_id: The Entra tenant ID.
+  - client_id: The client ID for the Entra App Registration.
+  - client_secret_secret_path: The SSM Parameter store secret path for the client secret for the Entra App Registration.
+  EOF
+  type = object({
+    tenant_id                 = string
+    client_id                 = string
+    client_secret_secret_path = string
+  })
+  default = null
+}
+
+
+variable "provisioner_aws_rds_config" {
+  description = <<EOF
+  Configuration for AWS RDS. The following keys are expected:
+  - role_arn: The ARN of the IAM role for the provisioner to assume which hass permissions to provision access in an AWS organization.
+  - idc_region: The AWS IDC Region.
+  - idc_instance_arn: The AWS Identity Center instance ARN.
+  - infra_role_name: The name of the IAM role which is deployed each each account containing databases.
+  - should_provision_security_groups: (Optional) Whether or not the provisioner should attempt to provision security groups. Set this to true if you are not using pre deployed security groups.
+  EOF
+  type = object({
+    idc_role_arn                     = string
+    idc_region                       = string
+    idc_instance_arn                 = string
+    infra_role_name                  = string
+    should_provision_security_groups = optional(bool)
+  })
+  default = null
 }

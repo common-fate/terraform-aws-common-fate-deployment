@@ -32,6 +32,7 @@ output "outputs" {
     event_bus_log_group_name         = module.events.event_bus_log_group_name
     cognito_user_pool_id             = module.cognito.user_pool_id
     cognito_identity_provider_name   = module.cognito.identity_provider_name
+    provisioner_task_role_arn        = module.provisioner.task_role_arn
   }
 }
 
@@ -43,6 +44,11 @@ output "sensitive_outputs" {
     terraform_client_secret   = module.cognito.terraform_client_secret
     provisioner_client_secret = module.cognito.provisioner_client_secret
   }
+}
+
+output "provisioner_task_role_arn" {
+  description = "The task role arn of the builtin provisioner module"
+  value       = module.provisioner.task_role_arn
 }
 
 output "cognito_saml_entity_id" {
