@@ -33,7 +33,7 @@ output "outputs" {
     cognito_user_pool_id             = module.cognito.user_pool_id
     cognito_identity_provider_name   = module.cognito.identity_provider_name
     provisioner_task_role_arn        = module.provisioner.task_role_arn
-     provisioner_task_role_name        = module.provisioner.task_role_name
+    provisioner_task_role_name       = module.provisioner.task_role_name
     provisioner_url                  = module.provisioner.provisioner_url
   }
 }
