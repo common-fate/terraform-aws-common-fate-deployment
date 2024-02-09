@@ -33,6 +33,7 @@ output "outputs" {
     cognito_user_pool_id             = module.cognito.user_pool_id
     cognito_identity_provider_name   = module.cognito.identity_provider_name
     provisioner_task_role_arn        = module.provisioner.task_role_arn
+     provisioner_task_role_name        = module.provisioner.task_role_name
     provisioner_url                  = module.provisioner.provisioner_url
   }
 }
@@ -50,6 +51,11 @@ output "sensitive_outputs" {
 output "provisioner_task_role_arn" {
   description = "The task role arn of the builtin provisioner module"
   value       = module.provisioner.task_role_arn
+}
+
+output "provisioner_task_role_name" {
+  description = "The task role name of the builtin provisioner module"
+  value       = module.provisioner.task_role_name
 }
 
 output "provisioner_url" {
