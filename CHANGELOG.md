@@ -1,5 +1,16 @@
 # @common-fate/terraform-aws-common-fate-deployment
 
+## 1.12.0
+
+### Minor Changes
+
+- c9d5291: Deploy a provisioner as part of the main stack
+
+### Patch Changes
+
+- c9d5291: Add https:// prefix back to cognito outputs after custom domain change
+- c9d5291: Fix the cognito module typo for the random_pet module
+
 ## 1.11.0
 
 ### Minor Changes
