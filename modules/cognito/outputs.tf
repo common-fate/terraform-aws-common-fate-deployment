@@ -9,12 +9,12 @@ output "saml_entity_id" {
 
 output "saml_acs_url" {
   description = "The Cognito Assertion Consumer Service (ACS) URL required for SAML configuration."
-  value       = "${aws_cognito_user_pool_domain.custom_domain.domain}/saml2/idpresponse"
+  value       = "https://${aws_cognito_user_pool_domain.custom_domain.domain}/saml2/idpresponse"
 }
 
 output "auth_url" {
   description = "The Cognito Auth URL will be either the custom domain if configured or a generated cognito domain."
-  value       = aws_cognito_user_pool_domain.custom_domain.domain
+  value       = "https://${aws_cognito_user_pool_domain.custom_domain.domain}"
 }
 
 
