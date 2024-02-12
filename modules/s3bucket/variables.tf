@@ -70,11 +70,6 @@ variable "policy_documents" {
   default     = []
 }
 
-variable "acl" {
-  type        = string
-  description = "ACL to set on the bucket. Defaults to private"
-  default     = "private"
-}
 
 variable "lifecycle_rules" {
   type = object({
