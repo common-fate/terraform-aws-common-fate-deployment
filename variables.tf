@@ -231,3 +231,21 @@ variable "provisioner_aws_rds_config" {
   })
   default = null
 }
+
+variable "unstable_enable_feature_least_privilege" {
+  type        = bool
+  default     = false
+  description = "Opt-in to enable Least Privilege Analytics (in early access). This variable will be removed once the feature is released."
+}
+
+variable "unstable_sync_idc_cloudtrail_schedule" {
+  type        = string
+  default     = "0 13 0 * * *"
+  description = "Least Privilege Analytics: the schedule to sync AWS CloudTrail events on"
+}
+
+variable "unstable_least_privilege_analysis_schedule" {
+  type        = string
+  default     = "0 13 5 * * *"
+  description = "Least Privilege Analytics: the schedule to build least privilege reports on"
+}
