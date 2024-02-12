@@ -418,7 +418,7 @@ resource "aws_ecs_task_definition" "control_plane_task" {
         },
         {
           name  = "CF_FEATURE_LEAST_PRIVILEGE_ENABLED",
-          value = "${var.unstable_enable_feature_least_privilege}"
+          value = var.unstable_enable_feature_least_privilege ? "true" : "false"
         },
         {
           name  = "CF_SYNC_IDC_CLOUDTRAIL_CRON_SCHEDULE",
