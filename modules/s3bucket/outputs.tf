@@ -1,7 +1,3 @@
-output "acl" {
-  value = aws_s3_bucket_acl.main.acl
-}
-
 output "arn" {
   value = aws_s3_bucket.main.arn
 }
