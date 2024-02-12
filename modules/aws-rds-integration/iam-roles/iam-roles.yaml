@@ -75,7 +75,5 @@ Resources:
                   StringEquals: #Only instances that are correctly tagged can be terminated
                     "aws:ResourceTag/common-fate-jit-rds-managed": "true"
       Tags:
-        - Key: common-fate-managed
-          Value: "true"
         - Key: common-fate-aws-integration-provision-role
           Value: "true"

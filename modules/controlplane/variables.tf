@@ -171,11 +171,6 @@ variable "desired_task_count" {
   default     = 1
 }
 
-variable "grant_assume_on_role_arns" {
-  description = "The ARNs of the IAM roles which the controlplane should be able to assume."
-  type        = list(string)
-  default     = []
-}
 variable "scim_source" {
   description = "The name of the SCIM identity provider (e.g., 'Entra')"
   default     = ""

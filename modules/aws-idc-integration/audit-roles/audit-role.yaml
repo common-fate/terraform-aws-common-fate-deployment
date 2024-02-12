@@ -34,7 +34,5 @@ Resources:
       ManagedPolicyArns:
         - "arn:aws:iam::aws:policy/SecurityAudit"
       Tags:
-        - Key: common-fate-managed
-          Value: "true"
         - Key: common-fate-aws-integration-read-role
           Value: "true"
