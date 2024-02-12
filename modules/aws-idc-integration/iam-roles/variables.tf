@@ -29,4 +29,9 @@ variable "permit_group_assignment" {
   type        = bool
   default     = false
 }
+variable "permit_provision_permission_sets" {
+  description = "By default, the AWS IAM role for the provisioner does not have the required permissions to create and delete Permission Sets. You can enable that feature with this flag set to true"
+  type        = bool
+  default     = false
+}
 
