@@ -234,7 +234,7 @@ resource "aws_iam_role_policy_attachment" "control_plane_sqs_subscribe_attach" {
 data "aws_iam_policy_document" "assume_roles_policy" {
   statement {
     actions   = ["sts:AssumeRole"]
-    resources = var.grant_assume_on_role_arns
+    resources = ["*"] // NOTE: needs to be rescoped down once tag conditions are added
   }
 }
 resource "aws_iam_policy" "assume_role" {
