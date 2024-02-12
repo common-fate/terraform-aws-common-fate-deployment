@@ -554,7 +554,7 @@ resource "aws_lb_listener_rule" "service_rule" {
   }
   condition {
     path_pattern {
-      values = ["/commonfate.control*", "/api/*"]
+      values = ["/commonfate.control*", "/api/*", "/commonfate.leastprivilege*"]
     }
   }
 }
