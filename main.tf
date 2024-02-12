@@ -120,8 +120,13 @@ module "control_plane" {
 }
 
 module "report_bucket" {
-  source        = "./modules/report-bucket"
-  bucket_prefix = "${var.namespace}-${var.stage}-reports"
+  source         = "./modules/s3bucket"
+  bucket_prefix  = "${var.namespace}-${var.stage}-reports"
+  aws_account_id = data.aws_caller_identity.current.account_id
+  region         = var.aws_region
+  namespace      = var.namespace
+  stage          = var.stage
+  component      = "reports"
 }
 
 
