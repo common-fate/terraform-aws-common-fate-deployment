@@ -1,0 +1,40 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "Deploys an IAM role allowing Common Fate to audit the AWS account"
+Parameters:
+  RoleName:
+    Type: String
+    Description: Name for the IAM role
+    Default: common-fate-audit
+  ExternalID:
+    Type: String
+    Description: The ExternalID to be used in the trust relationship (this should match the 'assume_role_external_id' parameter in your Common Fate deployment)
+  CommonFateAccount:
+    Type: String
+    Description: The AWS account ID that your Common Fate deployment is running in
+
+Metadata:
+  CF::Template: AWSAudit
+  CF::Version: 1
+
+Resources:
+  AuditRole:
+    Type: "AWS::IAM::Role"
+    Properties:
+      RoleName: !Ref RoleName
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              AWS: !Sub "arn:aws:iam::${CommonFateAccount}:root"
+            Action: "sts:AssumeRole"
+            Condition:
+              StringEquals:
+                "sts:ExternalId": !Ref ExternalID
+      ManagedPolicyArns:
+        - "arn:aws:iam::aws:policy/SecurityAudit"
+      Tags:
+        - Key: common-fate-managed
+          Value: "true"
+        - Key: common-fate-aws-integration-read-role
+          Value: "true"
