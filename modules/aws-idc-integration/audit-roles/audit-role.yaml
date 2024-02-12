@@ -7,7 +7,7 @@ Parameters:
     Default: common-fate-audit
   ExternalID:
     Type: String
-    Description: The ExternalID to be used in the trust relationship (this should match the 'assume_role_external_id' parameter in your Common Fate deployment)
+    Description: The ExternalID to be used in the trust relationship
   CommonFateAccount:
     Type: String
     Description: The AWS account ID that your Common Fate deployment is running in

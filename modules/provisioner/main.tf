@@ -290,6 +290,10 @@ resource "aws_ecs_task_definition" "provisioner_task" {
         name  = "CF_OIDC_ISSUER"
         value = var.auth_issuer
       },
+      {
+        name  = "CF_ASSUME_ROLE_EXTERNAL_ID"
+        value = var.assume_role_external_id
+      },
     ], local.combined_env_vars),
 
     secrets = local.combined_secrets

@@ -214,3 +214,9 @@ variable "additional_cors_allowed_origins" {
   default     = []
   description = "Additional origins to add to the CORS allowlist. By default, the app URL is automatically added."
 }
+
+variable "assume_role_external_id" {
+  description = "(Optional) The external id to be used when assuming IAM roles"
+  type        = string
+  default     = ""
+}

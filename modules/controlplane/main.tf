@@ -389,6 +389,10 @@ resource "aws_ecs_task_definition" "control_plane_task" {
           name  = "CF_SYNC_AWSRDS_CRON_SCHEDULE",
           value = "0 */5 * * * *"
         },
+        {
+          name  = "CF_ASSUME_ROLE_EXTERNAL_ID"
+          value = var.assume_role_external_id
+        },
       ],
 
       // Only add these secrets if their values are provided

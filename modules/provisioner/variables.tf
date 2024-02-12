@@ -176,3 +176,10 @@ variable "aws_rds_config" {
   })
   default = null
 }
+
+
+variable "assume_role_external_id" {
+  description = "(Optional) The external id to be used when assuming IAM roles"
+  type        = string
+  default     = ""
+}

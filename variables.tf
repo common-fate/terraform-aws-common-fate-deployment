@@ -131,12 +131,6 @@ variable "licence_key_ps_arn" {
 }
 
 
-variable "control_plane_grant_assume_on_role_arns" {
-  description = "The ARNs of the IAM roles which the controlplane should be able to assume."
-  type        = list(string)
-  default     = []
-}
-
 
 variable "access_handler_log_level" {
   description = "Log level for Access Handler service"
@@ -230,4 +224,12 @@ variable "provisioner_aws_rds_config" {
     should_provision_security_groups = optional(bool)
   })
   default = null
+}
+
+
+
+variable "assume_role_external_id" {
+  description = "(Optional) The external id to be used when assuming IAM roles"
+  type        = string
+  default     = ""
 }
