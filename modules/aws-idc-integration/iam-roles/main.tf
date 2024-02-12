@@ -45,6 +45,7 @@ resource "aws_iam_policy" "idc_read" {
           "sso:ListAccountAssignments",
           "sso:ListPermissionSets",
           "sso:ListTagsForResource",
+          "sso:ListAccountsForProvisionedPermissionSet"
 
         ],
         "Resource" : "*"
