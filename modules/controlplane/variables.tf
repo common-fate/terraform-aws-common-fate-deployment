@@ -248,3 +248,9 @@ variable "report_bucket_name" {
   type        = string
   description = "Name of report bucket"
 }
+
+variable "assume_role_external_id" {
+  type        = string
+  nullable    = true
+  description = "External ID to use when assuming cross-account AWS roles for auditing and provisioning."
+}

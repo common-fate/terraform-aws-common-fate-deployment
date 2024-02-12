@@ -429,8 +429,12 @@ resource "aws_ecs_task_definition" "control_plane_task" {
           value = var.unstable_least_privilege_analysis_schedule
         },
         {
-          name  = "CF_REPORT_S3_BUCKET"
+          name  = "CF_REPORT_S3_BUCKET",
           value = var.report_bucket_name
+        },
+        {
+          name  = "CF_ASSUME_ROLE_EXTERNAL_ID",
+          value = var.assume_role_external_id
         }
       ],
 

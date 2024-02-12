@@ -117,6 +117,7 @@ module "control_plane" {
   unstable_sync_idc_cloudtrail_schedule      = var.unstable_sync_idc_cloudtrail_schedule
   report_bucket_arn                          = module.report_bucket.arn
   report_bucket_name                         = module.report_bucket.id
+  assume_role_external_id                    = var.assume_role_external_id
 }
 
 module "report_bucket" {
