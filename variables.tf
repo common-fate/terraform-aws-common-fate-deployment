@@ -249,3 +249,9 @@ variable "unstable_least_privilege_analysis_schedule" {
   default     = "0 13 5 * * *"
   description = "Least Privilege Analytics: the schedule to build least privilege reports on"
 }
+
+variable "assume_role_external_id" {
+  type        = string
+  nullable    = true
+  description = "External ID to use when assuming cross-account AWS roles for auditing and provisioning."
+}
