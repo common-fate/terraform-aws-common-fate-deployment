@@ -25,11 +25,9 @@ resource "aws_cloudformation_stack_set" "audit_roles" {
 
 
 resource "aws_cloudformation_stack_set_instance" "audit_role_stackset_instance" {
-  for_each = toset(var.regions)
   deployment_targets {
     organizational_unit_ids = var.organizational_unit_ids
   }
-  region         = each.key
   stack_set_name = aws_cloudformation_stack_set.audit_roles.name
 }
 

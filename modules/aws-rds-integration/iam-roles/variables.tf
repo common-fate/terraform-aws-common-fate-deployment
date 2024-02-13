@@ -20,13 +20,6 @@ variable "assume_role_external_id" {
   type        = string
 }
 
-
-variable "regions" {
-  description = "The AWS regions to deploy rds provisioning roles into."
-  type        = list(string)
-}
-
-
 variable "organizational_unit_ids" {
   description = "The organization root ID or organizational unit (OU) IDs to which StackSets deploys the rds provisioning role into"
   type        = list(string)

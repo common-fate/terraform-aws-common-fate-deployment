@@ -21,12 +21,6 @@ variable "assume_role_external_id" {
 }
 
 
-variable "regions" {
-  description = "The AWS regions to deploy audit roles into."
-  type        = list(string)
-}
-
-
 variable "organizational_unit_ids" {
   description = "The organization root ID or organizational unit (OU) IDs to which StackSets deploys the audit role into"
   type        = list(string)
