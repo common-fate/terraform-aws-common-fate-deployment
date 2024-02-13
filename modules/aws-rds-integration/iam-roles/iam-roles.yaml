@@ -13,7 +13,7 @@ Parameters:
     Description: The AWS account ID that your Common Fate deployment is running in
 
 Metadata:
-  CF::Template: AWSAudit
+  CF::Template: AWSRDSProvisioner
   CF::Version: 1
 
 Resources:
