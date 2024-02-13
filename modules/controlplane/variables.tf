@@ -220,3 +220,9 @@ variable "assume_role_external_id" {
   type        = string
   default     = ""
 }
+
+variable "grant_assume_on_role_arns" {
+  description = "(Deprecated) The ARNs of the IAM roles which the controlplane should be able to assume."
+  type        = list(string)
+  default     = []
+}

@@ -201,6 +201,8 @@ resource "aws_iam_role_policy_attachment" "control_plane_sqs_subscribe_attach" {
   policy_arn = aws_iam_policy.sqs_subscribe.arn
 }
 
+
+
 data "aws_iam_policy_document" "assume_roles_policy" {
   statement {
     actions   = ["sts:AssumeRole"]
@@ -210,6 +212,10 @@ data "aws_iam_policy_document" "assume_roles_policy" {
       variable = "aws:RequestTag/common-fate-aws-integration-read-role"
       values   = ["true"]
     }
+  }
+  statement {
+    actions   = ["sts:AssumeRole"]
+    resources = var.grant_assume_on_role_arns
   }
 }
 resource "aws_iam_policy" "assume_role" {
