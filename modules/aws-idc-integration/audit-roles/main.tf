@@ -1,12 +1,6 @@
 locals {
   role_name = "${var.namespace}-${var.stage}-audit-role"
 }
-
-
-data "template_file" "audit_role_yaml" {
-  template = file("${path.module}/audit-role.yaml")
-}
-
 resource "aws_cloudformation_stack_set" "audit_roles" {
   name = "${var.namespace}-${var.stage}-audit-role-stack"
   auto_deployment {
@@ -22,7 +16,46 @@ resource "aws_cloudformation_stack_set" "audit_roles" {
     RoleName          = local.role_name
   }
 
-  template_body = data.template_file.audit_role_yaml.rendered
+  template_body = <<-EOT
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "Deploys an IAM role allowing Common Fate to audit the AWS account"
+Parameters:
+  RoleName:
+    Type: String
+    Description: Name for the IAM role
+    Default: common-fate-audit
+  ExternalID:
+    Type: String
+    Description: The ExternalID to be used in the trust relationship
+  CommonFateAccount:
+    Type: String
+    Description: The AWS account ID that your Common Fate deployment is running in
+
+Metadata:
+  CF::Template: AWSAudit
+  CF::Version: 1
+
+Resources:
+  AuditRole:
+    Type: "AWS::IAM::Role"
+    Properties:
+      RoleName: !Ref RoleName
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              AWS: !Sub "arn:aws:iam::$${CommonFateAccount}:root"
+            Action: "sts:AssumeRole"
+            Condition:
+              StringEquals:
+                "sts:ExternalId": !Ref ExternalID
+      ManagedPolicyArns:
+        - "arn:aws:iam::aws:policy/SecurityAudit"
+      Tags:
+        - Key: common-fate-aws-integration-read-role
+          Value: "true"
+  EOT
   lifecycle {
     ignore_changes = [parameters.RoleName]
   }
