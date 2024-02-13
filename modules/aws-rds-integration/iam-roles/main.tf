@@ -15,7 +15,7 @@ resource "aws_cloudformation_stack_set" "rds_provision_roles" {
   capabilities     = ["CAPABILITY_IAM", "CAPABILITY_NAMED_IAM"]
   parameters = {
     ExternalID        = var.assume_role_external_id
-    TrustedPrincipals = var.common_fate_aws_account_id
+    CommonFateAccount = var.common_fate_aws_account_id
     RoleName          = local.role_name
   }
 
