@@ -7,7 +7,11 @@ resource "aws_cloudformation_stack_set" "audit_roles" {
     enabled                          = true
     retain_stacks_on_account_removal = false
   }
-
+  // deploy everything in parallel
+  operation_preferences {
+    max_concurrent_percentage = 100
+    region_concurrency_type   = "PARALLEL"
+  }
   permission_model = "SERVICE_MANAGED"
   capabilities     = ["CAPABILITY_IAM", "CAPABILITY_NAMED_IAM"]
   parameters = {

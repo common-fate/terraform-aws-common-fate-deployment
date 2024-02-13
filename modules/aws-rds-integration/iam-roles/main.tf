@@ -11,6 +11,7 @@ resource "aws_cloudformation_stack_set" "rds_provision_roles" {
     retain_stacks_on_account_removal = false
   }
 
+
   permission_model = "SERVICE_MANAGED"
   capabilities     = ["CAPABILITY_IAM", "CAPABILITY_NAMED_IAM"]
   parameters = {
@@ -19,6 +20,11 @@ resource "aws_cloudformation_stack_set" "rds_provision_roles" {
     RoleName          = local.role_name
   }
 
+  // deploy everything in parallel
+  operation_preferences {
+    max_concurrent_percentage = 100
+    region_concurrency_type   = "PARALLEL"
+  }
   template_body = <<-EOT
 AWSTemplateFormatVersion: "2010-09-09"
 Description: "Deploys an IAM role allowing Common Fate to provision access to an RDS instance in the AWS account"
