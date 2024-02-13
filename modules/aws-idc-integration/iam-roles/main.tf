@@ -15,8 +15,7 @@ resource "aws_iam_role" "read_role" {
     ]
   })
   tags = {
-    "common-fate-managed"                        = "true",
-    "common-fate-aws-integration-provision-role" = "true"
+    "common-fate-aws-integration-read-role" = "true"
   }
 }
 
@@ -77,6 +76,9 @@ resource "aws_iam_role" "provision_role" {
       }
     ]
   })
+  tags = {
+    "common-fate-aws-integration-provision-role" = "true"
+  }
 }
 
 resource "aws_iam_policy" "idc_provision" {
