@@ -22,8 +22,9 @@ resource "aws_cloudformation_stack_set" "rds_provision_roles" {
 
   // deploy everything in parallel
   operation_preferences {
-    max_concurrent_percentage = 100
-    region_concurrency_type   = "PARALLEL"
+    max_concurrent_percentage    = 100
+    failure_tolerance_percentage = 100
+    region_concurrency_type      = "PARALLEL"
   }
   template_body = <<-EOT
 AWSTemplateFormatVersion: "2010-09-09"
@@ -118,5 +119,10 @@ resource "aws_cloudformation_stack_set_instance" "rds_provision_role_stackset_in
     organizational_unit_ids = var.organizational_unit_ids
   }
   stack_set_name = aws_cloudformation_stack_set.rds_provision_roles.name
+  operation_preferences {
+    max_concurrent_percentage    = 100
+    failure_tolerance_percentage = 100
+    region_concurrency_type      = "PARALLEL"
+  }
 }
 

@@ -9,8 +9,9 @@ resource "aws_cloudformation_stack_set" "audit_roles" {
   }
   // deploy everything in parallel
   operation_preferences {
-    max_concurrent_percentage = 100
-    region_concurrency_type   = "PARALLEL"
+    max_concurrent_percentage    = 100
+    failure_tolerance_percentage = 100
+    region_concurrency_type      = "PARALLEL"
   }
   permission_model = "SERVICE_MANAGED"
   capabilities     = ["CAPABILITY_IAM", "CAPABILITY_NAMED_IAM"]
@@ -71,5 +72,11 @@ resource "aws_cloudformation_stack_set_instance" "audit_role_stackset_instance" 
     organizational_unit_ids = var.organizational_unit_ids
   }
   stack_set_name = aws_cloudformation_stack_set.audit_roles.name
+
+  operation_preferences {
+    max_concurrent_percentage    = 100
+    failure_tolerance_percentage = 100
+    region_concurrency_type      = "PARALLEL"
+  }
 }
 
