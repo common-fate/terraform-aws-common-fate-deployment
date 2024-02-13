@@ -2,6 +2,11 @@ locals {
   role_name = "${var.namespace}-${var.stage}-audit-role"
 }
 
+
+data "template_file" "audit_role_yaml" {
+  template = file("${path.module}/audit-role.yaml")
+}
+
 resource "aws_cloudformation_stack_set" "audit_roles" {
   name = "${var.namespace}-${var.stage}-audit-role-stack"
   auto_deployment {
@@ -17,7 +22,7 @@ resource "aws_cloudformation_stack_set" "audit_roles" {
     RoleName          = local.role_name
   }
 
-  template_body = file("${path.module}/audit-role.yaml")
+  template_body = data.template_file.audit_role_yaml.rendered
   lifecycle {
     ignore_changes = [parameters.RoleName]
   }

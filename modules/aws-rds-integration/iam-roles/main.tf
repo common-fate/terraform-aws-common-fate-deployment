@@ -1,9 +1,13 @@
 locals {
-  role_name = "${var.namespace}-${var.stage}-audit-role"
+  role_name = "${var.namespace}-${var.stage}-rds-provision-role"
 }
 
-resource "aws_cloudformation_stack_set" "audit_roles" {
-  name = "${var.namespace}-${var.stage}-audit-role-stack"
+
+data "template_file" "provision_role_yaml" {
+  template = file("${path.module}/iam-roles.yaml")
+}
+resource "aws_cloudformation_stack_set" "rds_provision_roles" {
+  name = "${var.namespace}-${var.stage}-rds-provision-role-stack"
   auto_deployment {
     enabled                          = true
     retain_stacks_on_account_removal = false
@@ -17,17 +21,17 @@ resource "aws_cloudformation_stack_set" "audit_roles" {
     RoleName          = local.role_name
   }
 
-  template_body = file("${path.module}/audit-role.yaml")
+  template_body = data.template_file.provision_role_yaml.rendered
   lifecycle {
     ignore_changes = [parameters.RoleName]
   }
 }
 
 
-resource "aws_cloudformation_stack_set_instance" "audit_role_stackset_instance" {
+resource "aws_cloudformation_stack_set_instance" "rds_provision_role_stackset_instance" {
   deployment_targets {
     organizational_unit_ids = var.organizational_unit_ids
   }
-  stack_set_name = aws_cloudformation_stack_set.audit_roles.name
+  stack_set_name = aws_cloudformation_stack_set.rds-provision_roles.name
 }
 
