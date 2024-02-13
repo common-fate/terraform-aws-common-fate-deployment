@@ -26,7 +26,7 @@ Resources:
         Statement:
           - Effect: Allow
             Principal:
-              AWS: !Sub "arn:aws:iam::${CommonFateAccount}:root"
+              AWS: !Sub "arn:aws:iam::${{CommonFateAccount}}:root"
             Action: "sts:AssumeRole"
             Condition:
               StringEquals:
