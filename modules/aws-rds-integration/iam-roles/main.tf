@@ -32,6 +32,6 @@ resource "aws_cloudformation_stack_set_instance" "rds_provision_role_stackset_in
   deployment_targets {
     organizational_unit_ids = var.organizational_unit_ids
   }
-  stack_set_name = aws_cloudformation_stack_set.rds-provision_roles.name
+  stack_set_name = aws_cloudformation_stack_set.rds_provision_roles.name
 }
 
