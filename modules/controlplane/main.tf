@@ -232,31 +232,46 @@ resource "aws_iam_role_policy_attachment" "control_plane_sqs_subscribe_attach" {
 }
 
 
-
 data "aws_iam_policy_document" "assume_roles_policy" {
-  statement {
-    actions   = ["sts:AssumeRole"]
-    resources = "*"
-    condition {
-      test     = "StringEquals"
-      variable = "iam:ResourceTag/common-fate-aws-integration-read-role"
-      values   = ["true"]
-    }
-  }
+  count = length(var.grant_assume_on_role_arns) > 0 ? 1 : 0
   statement {
     actions   = ["sts:AssumeRole"]
     resources = var.grant_assume_on_role_arns
   }
 }
 resource "aws_iam_policy" "assume_role" {
+  count       = length(var.grant_assume_on_role_arns) > 0 ? 1 : 0
   name        = "${var.namespace}-${var.stage}-access-handler-ars"
-  description = "A policy allowing sts:AssumeRole on roles tagged with common-fate-aws-integration-read-role"
-  policy      = data.aws_iam_policy_document.assume_roles_policy.json
+  description = "A policy allowing sts:AssumeRole on specific roles roles"
+  policy      = data.aws_iam_policy_document.assume_roles_policy[0].json
 }
 
 resource "aws_iam_role_policy_attachment" "assume_roles_policy_attach" {
+  count      = length(var.grant_assume_on_role_arns) > 0 ? 1 : 0
   role       = aws_iam_role.control_plane_ecs_task_role.name
-  policy_arn = aws_iam_policy.assume_role.arn
+  policy_arn = aws_iam_policy.assume_role[0].arn
+}
+
+data "aws_iam_policy_document" "assume_roles_policy_tagged" {
+  statement {
+    actions   = ["sts:AssumeRole"]
+    resources = ["*"]
+    condition {
+      test     = "StringEquals"
+      variable = "iam:ResourceTag/common-fate-aws-integration-read-role"
+      values   = ["true"]
+    }
+  }
+}
+resource "aws_iam_policy" "assume_role_tagged" {
+  name        = "${var.namespace}-${var.stage}-access-handler-ars-tagged"
+  description = "A policy allowing sts:AssumeRole on roles tagged with common-fate-aws-integration-read-role"
+  policy      = data.aws_iam_policy_document.assume_roles_policy_tagged.json
+}
+
+resource "aws_iam_role_policy_attachment" "assume_roles_policy_attach_tagged" {
+  role       = aws_iam_role.control_plane_ecs_task_role.name
+  policy_arn = aws_iam_policy.assume_role_tagged.arn
 }
 
 resource "aws_ecs_task_definition" "control_plane_task" {
