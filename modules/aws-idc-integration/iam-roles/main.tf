@@ -196,6 +196,7 @@ resource "aws_iam_policy" "idc_provision_permission_sets" {
           "sso:DeletePermissionSet",
           "sso:TagResource"
         ],
+        "Resource" : "*"
       }
 
     ]
