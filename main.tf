@@ -112,6 +112,7 @@ module "control_plane" {
   otel_writer_iam_policy_arn          = module.ecs_base.otel_writer_iam_policy_arn
   alb_security_group_id               = module.alb.alb_security_group_id
   additional_cors_allowed_origins     = var.additional_cors_allowed_origins
+  assume_role_external_id             = var.assume_role_external_id
 }
 
 
@@ -201,9 +202,12 @@ module "provisioner" {
   provisioner_service_client_secret = module.cognito.provisioner_client_secret
   auth_issuer                       = module.cognito.auth_issuer
   app_url                           = var.app_url
+  assume_role_external_id           = var.assume_role_external_id
 
   gcp_config     = var.provisioner_gcp_config
   aws_idc_config = var.provisioner_aws_idc_config
   entra_config   = var.provisioner_entra_config
   aws_rds_config = var.provisioner_aws_rds_config
+
+
 }

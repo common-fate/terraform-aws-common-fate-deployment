@@ -201,23 +201,32 @@ resource "aws_iam_role_policy_attachment" "control_plane_sqs_subscribe_attach" {
   policy_arn = aws_iam_policy.sqs_subscribe.arn
 }
 
+
+
 data "aws_iam_policy_document" "assume_roles_policy" {
+  statement {
+    actions   = ["sts:AssumeRole"]
+    resources = "*"
+    condition {
+      test     = "StringEquals"
+      variable = "iam:ResourceTag/common-fate-aws-integration-read-role"
+      values   = ["true"]
+    }
+  }
   statement {
     actions   = ["sts:AssumeRole"]
     resources = var.grant_assume_on_role_arns
   }
 }
 resource "aws_iam_policy" "assume_role" {
-  count       = length(var.grant_assume_on_role_arns) > 0 ? 1 : 0
   name        = "${var.namespace}-${var.stage}-access-handler-ars"
-  description = "A policy allowing sts:AssumeRole on selected roles"
+  description = "A policy allowing sts:AssumeRole on roles tagged with common-fate-aws-integration-read-role"
   policy      = data.aws_iam_policy_document.assume_roles_policy.json
 }
 
 resource "aws_iam_role_policy_attachment" "assume_roles_policy_attach" {
-  count      = length(var.grant_assume_on_role_arns) > 0 ? 1 : 0
   role       = aws_iam_role.control_plane_ecs_task_role.name
-  policy_arn = aws_iam_policy.assume_role[0].arn
+  policy_arn = aws_iam_policy.assume_role.arn
 }
 
 resource "aws_ecs_task_definition" "control_plane_task" {
@@ -385,6 +394,10 @@ resource "aws_ecs_task_definition" "control_plane_task" {
         {
           name  = "CF_SYNC_AWSRDS_CRON_SCHEDULE",
           value = "0 */5 * * * *"
+        },
+        {
+          name  = "CF_ASSUME_ROLE_EXTERNAL_ID"
+          value = var.assume_role_external_id
         },
       ],
 

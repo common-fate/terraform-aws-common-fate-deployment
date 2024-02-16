@@ -105,8 +105,6 @@ locals {
     }
   ] : []
 
-
-
   grant_assume_roles = compact([
     var.aws_idc_config != null ? var.aws_idc_config.role_arn : "",
     var.aws_rds_config != null ? var.aws_rds_config.idc_role_arn : "",
@@ -232,23 +230,30 @@ resource "aws_iam_role_policy_attachment" "provisioner_ecs_task_parameter_store_
 }
 
 data "aws_iam_policy_document" "assume_roles_policy" {
-  count = length(local.grant_assume_roles) == 0 ? 0 : 1
+  statement {
+    actions   = ["sts:AssumeRole"]
+    resources = "*"
+    condition {
+      test     = "StringEquals"
+      variable = "iam:ResourceTag/common-fate-aws-integration-provision-role"
+      values   = ["true"]
+    }
+  }
   statement {
     actions   = ["sts:AssumeRole"]
     resources = local.grant_assume_roles
   }
 }
+
 resource "aws_iam_policy" "assume_provisioner_role" {
-  count       = length(local.grant_assume_roles) == 0 ? 0 : 1
   name        = "${local.name_prefix}-provisioner-ar"
-  description = "A policy allowing sts:AssumeRole on selected roles"
-  policy      = data.aws_iam_policy_document.assume_roles_policy[0].json
+  description = "A policy allowing sts:AssumeRole on roles tagged with common-fate-aws-integration-provision-role"
+  policy      = data.aws_iam_policy_document.assume_roles_policy.json
 }
 
 resource "aws_iam_role_policy_attachment" "assume_roles_policy_attach" {
-  count      = length(local.grant_assume_roles) == 0 ? 0 : 1
   role       = aws_iam_role.provisioner_ecs_task_role.name
-  policy_arn = aws_iam_policy.assume_provisioner_role[0].arn
+  policy_arn = aws_iam_policy.assume_provisioner_role.arn
 }
 
 resource "aws_ecs_task_definition" "provisioner_task" {
@@ -292,6 +297,10 @@ resource "aws_ecs_task_definition" "provisioner_task" {
       {
         name  = "CF_OIDC_ISSUER"
         value = var.auth_issuer
+      },
+      {
+        name  = "CF_ASSUME_ROLE_EXTERNAL_ID"
+        value = var.assume_role_external_id
       },
     ], local.combined_env_vars),
 
