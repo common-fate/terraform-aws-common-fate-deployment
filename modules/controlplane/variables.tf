@@ -171,11 +171,6 @@ variable "desired_task_count" {
   default     = 1
 }
 
-variable "grant_assume_on_role_arns" {
-  description = "The ARNs of the IAM roles which the controlplane should be able to assume."
-  type        = list(string)
-  default     = []
-}
 variable "scim_source" {
   description = "The name of the SCIM identity provider (e.g., 'Entra')"
   default     = ""
@@ -249,8 +244,15 @@ variable "report_bucket_name" {
   description = "Name of report bucket"
 }
 
+
 variable "assume_role_external_id" {
+  description = "(Optional) External ID to use when assuming cross-account AWS roles for auditing and provisioning."
   type        = string
-  nullable    = true
-  description = "External ID to use when assuming cross-account AWS roles for auditing and provisioning."
+  default     = ""
+}
+
+variable "grant_assume_on_role_arns" {
+  description = "(Deprecated) The ARNs of the IAM roles which the controlplane should be able to assume."
+  type        = list(string)
+  default     = []
 }

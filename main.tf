@@ -217,9 +217,12 @@ module "provisioner" {
   provisioner_service_client_secret = module.cognito.provisioner_client_secret
   auth_issuer                       = module.cognito.auth_issuer
   app_url                           = var.app_url
+  assume_role_external_id           = var.assume_role_external_id
 
   gcp_config     = var.provisioner_gcp_config
   aws_idc_config = var.provisioner_aws_idc_config
   entra_config   = var.provisioner_entra_config
   aws_rds_config = var.provisioner_aws_rds_config
+
+
 }

@@ -14,6 +14,9 @@ resource "aws_iam_role" "read_role" {
       }
     ]
   })
+  tags = {
+    "common-fate-aws-integration-read-role" = "true"
+  }
 }
 
 resource "aws_iam_policy" "idc_read" {
@@ -74,6 +77,9 @@ resource "aws_iam_role" "provision_role" {
       }
     ]
   })
+  tags = {
+    "common-fate-aws-integration-provision-role" = "true"
+  }
 }
 
 resource "aws_iam_policy" "idc_provision" {
@@ -172,3 +178,32 @@ resource "aws_iam_role_policy_attachment" "idc_provision_idc_provision_group_mem
 }
 
 
+// an optional additional policy allowing management of permission sets
+resource "aws_iam_policy" "idc_provision_permission_sets" {
+  count       = var.permit_provision_permission_sets ? 1 : 0
+  name        = "${var.namespace}-${var.stage}-idc-provision-permission-sets"
+  description = "Allows Common Fate to create and delete permission sets"
+
+  policy = jsonencode({
+    "Version" : "2012-10-17",
+    "Statement" : [
+      {
+        "Sid" : "CreatePermissionSet",
+        "Effect" : "Allow",
+        "Action" : [
+          "sso:CreatePermissionSet",
+          "sso:PutInlinePolicyToPermissionSet",
+          "sso:DeletePermissionSet",
+          "sso:TagResource"
+        ],
+      }
+
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "idc_provision_permission_sets_policy_attach" {
+  count      = var.permit_provision_permission_sets ? 1 : 0
+  role       = aws_iam_role.provision_role.name
+  policy_arn = aws_iam_policy.idc_provision_permission_sets[0].arn
+}
