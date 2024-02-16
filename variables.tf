@@ -250,12 +250,6 @@ variable "assume_role_external_id" {
   description = "External ID to use when assuming cross-account AWS roles for auditing and provisioning."
 
 }
-variable "assume_role_external_id" {
-  description = "(Optional) The external id to be used when assuming IAM roles"
-  type        = string
-  default     = ""
-}
-
 
 variable "control_plane_grant_assume_on_role_arns" {
   description = "(Deprecated) The ARNs of the IAM roles which the controlplane should be able to assume."
