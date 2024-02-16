@@ -65,7 +65,7 @@ Resources:
           Value: "true"
   EOT
   lifecycle {
-    ignore_changes = [parameters.RoleName]
+    ignore_changes = [administration_role_arn]
   }
 }
 
