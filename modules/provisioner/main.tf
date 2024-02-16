@@ -105,11 +105,11 @@ locals {
     }
   ] : []
 
+  // @TODO remove this eventually as it has been replaced with a tag condition key
   grant_assume_roles = compact([
     var.aws_idc_config != null ? var.aws_idc_config.role_arn : "",
-    var.aws_rds_config != null ? var.aws_rds_config.idc_role_arn : "",
-    var.aws_rds_config != null ? "arn:aws:iam::*:role/${var.aws_rds_config.infra_role_name}" : ""
   ])
+
   grant_read_secret_arns = compact([
     var.gcp_config != null ? var.gcp_config.service_account_client_json_ps_arn : "",
     var.entra_config != null ? local.entra_client_secret_path_arn : "",
@@ -229,31 +229,48 @@ resource "aws_iam_role_policy_attachment" "provisioner_ecs_task_parameter_store_
   policy_arn = aws_iam_policy.parameter_store_secrets_read_access[0].arn
 }
 
+
 data "aws_iam_policy_document" "assume_roles_policy" {
+  count = length(local.grant_assume_roles) == 0 ? 0 : 1
   statement {
     actions   = ["sts:AssumeRole"]
-    resources = "*"
+    resources = local.grant_assume_roles
+  }
+}
+resource "aws_iam_policy" "assume_provisioner_role" {
+  count       = length(local.grant_assume_roles) == 0 ? 0 : 1
+  name        = "${local.name_prefix}-provisioner-ar"
+  description = "A policy allowing sts:AssumeRole on selected roles"
+  policy      = data.aws_iam_policy_document.assume_roles_policy[0].json
+}
+
+resource "aws_iam_role_policy_attachment" "assume_roles_policy_attach" {
+  count      = length(local.grant_assume_roles) == 0 ? 0 : 1
+  role       = aws_iam_role.provisioner_ecs_task_role.name
+  policy_arn = aws_iam_policy.assume_provisioner_role[0].arn
+
+}
+data "aws_iam_policy_document" "assume_roles_policy_tagged" {
+  statement {
+    actions   = ["sts:AssumeRole"]
+    resources = ["*"]
     condition {
       test     = "StringEquals"
       variable = "iam:ResourceTag/common-fate-aws-integration-provision-role"
       values   = ["true"]
     }
   }
-  statement {
-    actions   = ["sts:AssumeRole"]
-    resources = local.grant_assume_roles
-  }
 }
 
-resource "aws_iam_policy" "assume_provisioner_role" {
-  name        = "${local.name_prefix}-provisioner-ar"
+resource "aws_iam_policy" "assume_provisioner_role_tagged" {
+  name        = "${local.name_prefix}-provisioner-ar-tagged"
   description = "A policy allowing sts:AssumeRole on roles tagged with common-fate-aws-integration-provision-role"
-  policy      = data.aws_iam_policy_document.assume_roles_policy.json
+  policy      = data.aws_iam_policy_document.assume_roles_policy_tagged.json
 }
 
-resource "aws_iam_role_policy_attachment" "assume_roles_policy_attach" {
+resource "aws_iam_role_policy_attachment" "assume_roles_policy_attach_tagged" {
   role       = aws_iam_role.provisioner_ecs_task_role.name
-  policy_arn = aws_iam_policy.assume_provisioner_role.arn
+  policy_arn = aws_iam_policy.assume_provisioner_role_tagged.arn
 }
 
 resource "aws_ecs_task_definition" "provisioner_task" {
