@@ -250,7 +250,7 @@ resource "aws_iam_role_policy_attachment" "assume_roles_policy_attach" {
   policy_arn = aws_iam_policy.assume_provisioner_role[0].arn
 
 }
-data "aws_iam_policy_document" "assume_roles_policy" {
+data "aws_iam_policy_document" "assume_roles_policy_tagged" {
   statement {
     actions   = ["sts:AssumeRole"]
     resources = ["*"]
@@ -262,15 +262,15 @@ data "aws_iam_policy_document" "assume_roles_policy" {
   }
 }
 
-resource "aws_iam_policy" "assume_provisioner_role" {
+resource "aws_iam_policy" "assume_provisioner_role_tagged" {
   name        = "${local.name_prefix}-provisioner-ar-tagged"
   description = "A policy allowing sts:AssumeRole on roles tagged with common-fate-aws-integration-provision-role"
-  policy      = data.aws_iam_policy_document.assume_roles_policy.json
+  policy      = data.aws_iam_policy_document.assume_roles_policy_tagged.json
 }
 
-resource "aws_iam_role_policy_attachment" "assume_roles_policy_attach" {
+resource "aws_iam_role_policy_attachment" "assume_roles_policy_attach_tagged" {
   role       = aws_iam_role.provisioner_ecs_task_role.name
-  policy_arn = aws_iam_policy.assume_provisioner_role.arn
+  policy_arn = aws_iam_policy.assume_provisioner_role_tagged.arn
 }
 
 resource "aws_ecs_task_definition" "provisioner_task" {
