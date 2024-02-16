@@ -112,10 +112,9 @@ Resources:
 
   EOT
   lifecycle {
-    ignore_changes = [parameters.RoleName]
+    ignore_changes = [administration_role_arn]
   }
 }
-
 
 resource "aws_cloudformation_stack_set_instance" "rds_provision_role_stackset_instance" {
   deployment_targets {
