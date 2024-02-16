@@ -45,6 +45,9 @@ Metadata:
   CF::Template: AWSRDSProvisioner
   CF::Version: 1
 
+Conditions:
+  HasExternalID: !Not [!Equals [!Ref ExternalID, ""]]
+
 Resources:
   AuditRole:
     Type: "AWS::IAM::Role"
@@ -57,9 +60,9 @@ Resources:
             Principal:
               AWS: !Sub "arn:aws:iam::$${CommonFateAccount}:root"
             Action: "sts:AssumeRole"
-            Condition:
-              StringEquals:
-                "sts:ExternalId": !Ref ExternalID
+            Condition: !If [HasExternalID, 
+                          {StringEquals: {"sts:ExternalId": !Ref ExternalID}},
+                          !Ref "AWS::NoValue"]
       Policies:
         - PolicyName: EC2RDSPermissions
           PolicyDocument:

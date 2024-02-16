@@ -18,6 +18,7 @@ variable "common_fate_aws_account_id" {
 variable "assume_role_external_id" {
   description = "The external id to be used for the IAM policy trust relation"
   type        = string
+  default     = ""
 }
 
 
