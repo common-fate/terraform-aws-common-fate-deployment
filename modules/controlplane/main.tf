@@ -209,7 +209,7 @@ data "aws_iam_policy_document" "assume_roles_policy" {
     resources = "*"
     condition {
       test     = "StringEquals"
-      variable = "aws:RequestTag/common-fate-aws-integration-read-role"
+      variable = "iam:ResourceTag/common-fate-aws-integration-read-role"
       values   = ["true"]
     }
   }
