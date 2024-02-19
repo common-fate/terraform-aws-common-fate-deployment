@@ -141,3 +141,10 @@ variable "alb_listener_rule_priority" {
   description = "Listener priority for the ALB rule to route traffic to the service."
   default     = 100
 }
+
+
+variable "unstable_enable_feature_least_privilege" {
+  type        = bool
+  default     = false
+  description = "Opt-in to enable Least Privilege Analytics (in early access). This variable will be removed once the feature is released."
+}

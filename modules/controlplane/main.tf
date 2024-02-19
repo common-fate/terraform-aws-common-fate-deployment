@@ -155,6 +155,34 @@ resource "aws_iam_role_policy_attachment" "otel" {
   policy_arn = var.otel_writer_iam_policy_arn
 }
 
+resource "aws_iam_policy" "report_bucket" {
+  name        = "${var.namespace}-${var.stage}-control-plane-reports"
+  description = "Allows the Control Plane to read and write from the Report S3 bucket"
+
+  policy = jsonencode({
+    "Version" : "2012-10-17",
+    "Statement" : [
+      {
+        "Sid" : "ListObjectsInBucket",
+        "Effect" : "Allow",
+        "Action" : ["s3:ListBucket"],
+        "Resource" : [var.report_bucket_arn]
+      },
+      {
+        "Sid" : "AllObjectActions",
+        "Effect" : "Allow",
+        "Action" : "s3:*Object",
+        "Resource" : ["${var.report_bucket_arn}/*"]
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "control_plane_report_bucket_attach" {
+  role       = aws_iam_role.control_plane_ecs_task_role.name
+  policy_arn = aws_iam_policy.report_bucket.arn
+}
+
 resource "aws_iam_policy" "eventbus_put_events" {
   name        = "${var.namespace}-${var.stage}-control-plane-eb"
   description = "Allows ECS tasks to put events to the event bus"
@@ -170,10 +198,12 @@ resource "aws_iam_policy" "eventbus_put_events" {
     ]
   })
 }
+
 resource "aws_iam_role_policy_attachment" "control_plane_eventbus_put_events_attach" {
   role       = aws_iam_role.control_plane_ecs_task_role.name
   policy_arn = aws_iam_policy.eventbus_put_events.arn
 }
+
 resource "aws_iam_policy" "sqs_subscribe" {
   name        = "${var.namespace}-${var.stage}-control-plane-sqs"
   description = "Allows access to read sqs queue and delete messages"
@@ -411,9 +441,25 @@ resource "aws_ecs_task_definition" "control_plane_task" {
           value = "0 */5 * * * *"
         },
         {
-          name  = "CF_ASSUME_ROLE_EXTERNAL_ID"
-          value = var.assume_role_external_id
+          name  = "CF_FEATURE_LEAST_PRIVILEGE_ENABLED",
+          value = var.unstable_enable_feature_least_privilege ? "true" : "false"
         },
+        {
+          name  = "CF_SYNC_IDC_CLOUDTRAIL_CRON_SCHEDULE",
+          value = var.unstable_sync_idc_cloudtrail_schedule
+        },
+        {
+          name  = "CF_LEAST_PRIVILEGE_ANALYSIS_CRON_SCHEDULE",
+          value = var.unstable_least_privilege_analysis_schedule
+        },
+        {
+          name  = "CF_REPORT_S3_BUCKET",
+          value = var.report_bucket_name
+        },
+        {
+          name  = "CF_ASSUME_ROLE_EXTERNAL_ID",
+          value = var.assume_role_external_id
+        }
       ],
 
       // Only add these secrets if their values are provided
@@ -536,7 +582,7 @@ resource "aws_lb_listener_rule" "service_rule" {
   }
   condition {
     path_pattern {
-      values = ["/commonfate.control*", "/api/*"]
+      values = ["/commonfate.control*", "/api/*", "/commonfate.leastprivilege*"]
     }
   }
 }
