@@ -141,7 +141,7 @@ module "web" {
   vpc_id                                  = module.vpc.vpc_id
   auth_authority_url                      = module.cognito.auth_authority_url
   auth_cli_client_id                      = module.cognito.cli_client_id
-  auth_url                                = var.auth_url
+  auth_url                                = module.cognito.auth_url
   auth_web_client_id                      = module.cognito.web_client_id
   logo_url                                = var.logo_url
   team_name                               = var.team_name
