@@ -249,7 +249,7 @@ variable "assume_role_external_id" {
   type        = string
   nullable    = true
   description = "External ID to use when assuming cross-account AWS roles for auditing and provisioning."
-
+  default     = null
 }
 
 variable "control_plane_grant_assume_on_role_arns" {
