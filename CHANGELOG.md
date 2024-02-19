@@ -1,5 +1,21 @@
 # @common-fate/terraform-aws-common-fate-deployment
 
+## 1.13.0
+
+### Minor Changes
+
+- 7a609e6: Introduce stacksets for deploying audit and rds roles, migrate to using tag based assume role policy conditions for control plane and provisioner.
+- eefebfb: A default application release tag is now specified as part of the Terraform module. If you've been using the `release_tag` parameter, you should now remove this parameter from the stack to use the application versions bundled with the Terraform module.
+
+  The initial bundled application release is v1.3.1.
+
+- 47d06e6: Adds modules required for Least Privilege Analysis. This module adds an S3 bucket used to store analysis reports.
+
+### Patch Changes
+
+- 713855f: Relax the AWS RDS database version constraint to be '15' rather than '15.4'. This fixes an issue where deployment updates could fail due to automatic minor version updates.
+- 714a2c3: Add lifecycle ignore_changes blocks for uncontrolled values on cognito saml_idp and stacksets to prevent update warnings that don't make any changes
+
 ## 1.12.0
 
 ### Minor Changes
