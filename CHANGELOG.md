@@ -1,5 +1,11 @@
 # @common-fate/terraform-aws-common-fate-deployment
 
+## 1.13.1
+
+### Patch Changes
+
+- 2ec15ec: The Assume Role External ID is now set to `null` by default, rather than being a required (but nullable) variable.
+
 ## 1.13.0
 
 ### Minor Changes
