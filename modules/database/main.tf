@@ -21,7 +21,7 @@ resource "aws_db_instance" "pg_db" {
   identifier                   = "${var.namespace}-${var.stage}-pg-db"
   allocated_storage            = 20
   engine                       = "postgres"
-  engine_version               = "15.4"
+  engine_version               = "15"
   instance_class               = "db.t3.micro"
   db_name                      = "postgres"
   username                     = "postgres"
