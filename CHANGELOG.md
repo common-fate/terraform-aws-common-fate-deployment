@@ -1,5 +1,15 @@
 # @common-fate/terraform-aws-common-fate-deployment
 
+## 1.14.0
+
+### Minor Changes
+
+- 7194206: Updates the bundled Common Fate application release to be v2.0.0. Common Fate v2.0.0 contains an updated web console UI with an easier access request workflow and built-in dark mode support.
+
+### Patch Changes
+
+- 6a921e3: Fix the auth_url variable being incorrectly propagated to the web console module in the case where the default Cognito sign in URL is used.
+
 ## 1.13.1
 
 ### Patch Changes
