@@ -197,6 +197,18 @@ resource "aws_iam_policy" "idc_provision_permission_sets" {
           "sso:TagResource"
         ],
         "Resource" : "*"
+      },
+      {
+        "Sid" : "ReadIDC",
+        "Effect" : "Allow",
+        "Action" : [
+          "sso:DescribePermissionSet",
+          "sso:ListAccountAssignments",
+          "sso:ListPermissionSets",
+          "sso:ListTagsForResource",
+          "sso:ListAccountsForProvisionedPermissionSet"
+        ],
+        "Resource" : "*"
       }
 
     ]
