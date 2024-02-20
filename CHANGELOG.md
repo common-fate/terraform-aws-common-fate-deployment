@@ -1,5 +1,12 @@
 # @common-fate/terraform-aws-common-fate-deployment
 
+## 1.14.1
+
+### Patch Changes
+
+- 0de75fe: Fix auth_url and acs_url output for cognito module which was incorrectly formed when a custom domain was not configured.
+- 10a3609: Add additional missing Read policies to the optional AWS IDC Provisioner role
+
 ## 1.14.0
 
 ### Minor Changes
