@@ -2,19 +2,25 @@
 # Outputs
 ######################################################
 
+output "all" {
+  value = aws_cognito_user_pool_domain.custom_domain
+}
 output "saml_entity_id" {
   description = "The Cognito entity ID required for SAML configuration."
   value       = "urn:amazon:cognito:sp:${aws_cognito_user_pool.cognito_user_pool.id}"
 }
 
+locals {
+  final_auth_url = local.has_custom_domain ? "https://${aws_cognito_user_pool_domain.custom_domain.domain}" : "https://${aws_cognito_user_pool_domain.custom_domain.domain}.auth.${var.aws_region}.amazoncognito.com"
+}
 output "saml_acs_url" {
   description = "The Cognito Assertion Consumer Service (ACS) URL required for SAML configuration."
-  value       = "https://${aws_cognito_user_pool_domain.custom_domain.domain}/saml2/idpresponse"
+  value       = "${local.final_auth_url}/saml2/idpresponse"
 }
 
 output "auth_url" {
   description = "The Cognito Auth URL will be either the custom domain if configured or a generated cognito domain."
-  value       = "https://${aws_cognito_user_pool_domain.custom_domain.domain}"
+  value       = local.final_auth_url
 }
 
 
