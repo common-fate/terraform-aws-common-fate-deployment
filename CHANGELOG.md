@@ -1,5 +1,11 @@
 # @common-fate/terraform-aws-common-fate-deployment
 
+## 1.16.0
+
+### Minor Changes
+
+- ab38e22: Update the AWS IDC Roles module to support an AWS account principal and external ID
+
 ## 1.15.0
 
 ### Minor Changes
