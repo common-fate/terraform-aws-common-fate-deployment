@@ -1,6 +1,6 @@
 
 locals {
-  trusted_principals = compact([var.common_fate_aws_account_id, var.common_fate_aws_reader_role_arn])
+  trusted_principals = compact([var.common_fate_aws_account_id, var.common_fate_aws_reader_role_arn, var.common_fate_aws_provisioner_role_arn])
 }
 
 # This policy allows the trusted principlas if one or more are specified else explicit deny
