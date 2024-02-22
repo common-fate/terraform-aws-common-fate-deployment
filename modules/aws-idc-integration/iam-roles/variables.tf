@@ -10,12 +10,18 @@ variable "stage" {
   type        = string
 }
 
+// This has been deprecated in favour of using tag based assume role policies
 variable "common_fate_aws_reader_role_arn" {
+  description = "Deprecated: Use common_fate_aws_account_id instead"
   type = string
+  default = ""
 }
 
+// This has been deprecated in favour of using tag based assume role policies
 variable "common_fate_aws_provisioner_role_arn" {
+  description = "Deprecated: Use common_fate_aws_account_id instead"
   type = string
+  default = ""
 }
 
 variable "permit_management_account_assignments" {
@@ -35,3 +41,14 @@ variable "permit_provision_permission_sets" {
   default     = false
 }
 
+variable "common_fate_aws_account_id" {
+  description = "The ID or the account where Common Fate is deployed"
+  type        = string
+  default     = "" // Optional to avoid breaking changes, in future we can make this required
+}
+
+variable "assume_role_external_id" {
+  description = "The external id to be used for the IAM policy trust relation"
+  type        = string
+  default     = ""
+}

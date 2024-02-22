@@ -1,19 +1,35 @@
 
+locals {
+  trusted_principals = compact([var.common_fate_aws_account_id, var.common_fate_aws_reader_role_arn])
+}
+
+# This policy allows the trusted principlas if one or more are specified else explicit deny
+data "aws_iam_policy_document" "assume_roles_policy" {
+  statement {
+    actions = ["sts:AssumeRole"]
+    effect = length(local.trusted_principals) > 0 ? "Allow":"Deny"
+    
+    principals {
+      type = length(local.trusted_principals) > 0 ? "AWS":"*"
+      identifiers = length(local.trusted_principals) > 0 ? local.trusted_principals:"*"
+    }
+    
+
+    # Optionally apply the external ID to the policy if it is supplied
+    dynamic "condition" {
+      for_each = var.assume_role_external_id != "" ? [1] : []
+      content {
+        test     = "StringEquals"
+        variable = "sts:ExternalId"
+        values   = [var.assume_role_external_id]
+      }
+    }
+  }
+}
 resource "aws_iam_role" "read_role" {
   name        = "${var.namespace}-${var.stage}-idc-reader-role"
   description = "A role used by Common Fate to read AWS IDC resources"
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17",
-    Statement = [
-      {
-        Action = "sts:AssumeRole",
-        Effect = "Allow",
-        Principal = {
-          AWS = var.common_fate_aws_reader_role_arn
-        }
-      }
-    ]
-  })
+  assume_role_policy = data.aws_iam_policy_document.assume_roles_policy.json
   tags = {
     "common-fate-aws-integration-read-role" = "true"
   }
@@ -65,18 +81,7 @@ resource "aws_iam_role_policy_attachment" "read_role_policy_attach" {
 resource "aws_iam_role" "provision_role" {
   name        = "${var.namespace}-${var.stage}-idc-provisioner-role"
   description = "A role used by Common Fate to provision access in AWS IDC"
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17",
-    Statement = [
-      {
-        Action = "sts:AssumeRole",
-        Effect = "Allow",
-        Principal = {
-          AWS = var.common_fate_aws_provisioner_role_arn
-        }
-      }
-    ]
-  })
+  assume_role_policy = data.aws_iam_policy_document.assume_roles_policy.json
   tags = {
     "common-fate-aws-integration-provision-role" = "true"
   }
