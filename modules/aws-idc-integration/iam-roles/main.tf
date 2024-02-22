@@ -11,7 +11,7 @@ data "aws_iam_policy_document" "assume_roles_policy" {
     
     principals {
       type = length(local.trusted_principals) > 0 ? "AWS":"*"
-      identifiers = length(local.trusted_principals) > 0 ? local.trusted_principals:"*"
+      identifiers = length(local.trusted_principals) > 0 ? local.trusted_principals:["*"]
     }
     
 
