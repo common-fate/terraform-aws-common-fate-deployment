@@ -165,8 +165,14 @@ resource "aws_iam_policy" "idc_provision_management_account" {
         "Sid" : "AssignManagementAccountIDC",
         "Effect" : "Allow",
         "Action" : [
-          "iam:CreateRole",
           "iam:AttachRolePolicy",
+          "iam:CreateRole",
+          "iam:PutRolePolicy",
+          "iam:UpdateRole",
+          "iam:UpdateRoleDescription",
+          "iam:UpdateAssumeRolePolicy",
+          "iam:PutRolePermissionsBoundary",
+          "iam:DeleteRolePermissionsBoundary"
         ],
         "Resource" : "arn:aws:iam::*:role/aws-reserved/sso.amazonaws.com/*",
         "Condition" : {
