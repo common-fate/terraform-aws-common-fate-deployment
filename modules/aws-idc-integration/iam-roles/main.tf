@@ -134,6 +134,18 @@ resource "aws_iam_policy" "idc_provision_management_account" {
         ]
       },
       {
+        # this snippet is taken from the AWSSSOServiceRolePolicy managed policy
+        "Sid" : "IAMSAMLProviderCleanupActions",
+        "Effect" : "Allow",
+        "Action" : [
+          # "iam:DeleteSAMLProvider", - removed here out of an abundance of caution, shouldn't be required for provisioning JIT access to the management account.
+          "iam:GetSAMLProvider"
+        ],
+        "Resource" : [
+          "arn:aws:iam::*:saml-provider/AWSSSO_*"
+        ]
+      },
+      {
         "Sid" : "AssignManagementAccountIDC",
         "Effect" : "Allow",
         "Action" : [
