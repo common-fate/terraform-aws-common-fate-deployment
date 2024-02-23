@@ -136,30 +136,6 @@ resource "aws_iam_policy" "idc_provision_management_account" {
       },
       {
         # this statement is taken from the AWSSSOServiceRolePolicy managed policy
-        "Sid" : "IAMRoleProvisioningActions",
-        "Effect" : "Allow",
-        "Action" : [
-          "iam:AttachRolePolicy",
-          "iam:CreateRole",
-          "iam:PutRolePolicy",
-          "iam:UpdateRole",
-          "iam:UpdateRoleDescription",
-          "iam:UpdateAssumeRolePolicy",
-          "iam:PutRolePermissionsBoundary",
-          "iam:DeleteRolePermissionsBoundary"
-        ],
-        "Resource" : [
-          "arn:aws:iam::*:role/aws-reserved/sso.amazonaws.com/*"
-        ],
-        "Condition" : {
-          "StringNotEquals" : {
-            // note that an $$ escape is used here so that terraform doesn't try to interpolate this string
-            "aws:PrincipalOrgMasterAccountId" : "$${aws:PrincipalAccount}"
-          }
-        }
-      },
-      {
-        # this statement is taken from the AWSSSOServiceRolePolicy managed policy
         "Sid" : "IAMSAMLProviderCleanupActions",
         "Effect" : "Allow",
         "Action" : [
@@ -185,6 +161,20 @@ resource "aws_iam_policy" "idc_provision_management_account" {
           "arn:aws:iam::*:role/aws-reserved/sso.amazonaws.com/*"
         ]
       },
+      {
+        "Sid" : "AssignManagementAccountIDC",
+        "Effect" : "Allow",
+        "Action" : [
+          "iam:CreateRole",
+          "iam:AttachRolePolicy",
+        ],
+        "Resource" : "arn:aws:iam::*:role/aws-reserved/sso.amazonaws.com/*",
+        "Condition" : {
+          "StringEquals" : { // note that an $$ escape is used here so that terraform doesn't try to interpolate this string
+            "aws:PrincipalOrgMasterAccountId" : "$${aws:PrincipalAccount}"
+          }
+        }
+      }
     ]
   })
 }
