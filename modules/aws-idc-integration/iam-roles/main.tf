@@ -7,13 +7,13 @@ locals {
 data "aws_iam_policy_document" "assume_roles_policy" {
   statement {
     actions = ["sts:AssumeRole"]
-    effect = length(local.trusted_principals) > 0 ? "Allow":"Deny"
-    
+    effect  = length(local.trusted_principals) > 0 ? "Allow" : "Deny"
+
     principals {
-      type = length(local.trusted_principals) > 0 ? "AWS":"*"
-      identifiers = length(local.trusted_principals) > 0 ? local.trusted_principals:["*"]
+      type        = length(local.trusted_principals) > 0 ? "AWS" : "*"
+      identifiers = length(local.trusted_principals) > 0 ? local.trusted_principals : ["*"]
     }
-    
+
 
     # Optionally apply the external ID to the policy if it is supplied
     dynamic "condition" {
@@ -27,8 +27,8 @@ data "aws_iam_policy_document" "assume_roles_policy" {
   }
 }
 resource "aws_iam_role" "read_role" {
-  name        = "${var.namespace}-${var.stage}-idc-reader-role"
-  description = "A role used by Common Fate to read AWS IDC resources"
+  name               = "${var.namespace}-${var.stage}-idc-reader-role"
+  description        = "A role used by Common Fate to read AWS IDC resources"
   assume_role_policy = data.aws_iam_policy_document.assume_roles_policy.json
   tags = {
     "common-fate-aws-integration-read-role" = "true"
@@ -79,8 +79,8 @@ resource "aws_iam_role_policy_attachment" "read_role_policy_attach" {
 }
 
 resource "aws_iam_role" "provision_role" {
-  name        = "${var.namespace}-${var.stage}-idc-provisioner-role"
-  description = "A role used by Common Fate to provision access in AWS IDC"
+  name               = "${var.namespace}-${var.stage}-idc-provisioner-role"
+  description        = "A role used by Common Fate to provision access in AWS IDC"
   assume_role_policy = data.aws_iam_policy_document.assume_roles_policy.json
   tags = {
     "common-fate-aws-integration-provision-role" = "true"
@@ -98,7 +98,6 @@ resource "aws_iam_policy" "idc_provision" {
         "Sid" : "AssignIDC",
         "Effect" : "Allow",
         "Action" : [
-          "iam:UpdateSAMLProvider",
           "sso:CreateAccountAssignment",
           "sso:DeleteAccountAssignment",
           "sso:DescribeAccountAssignmentCreationStatus",
@@ -125,11 +124,55 @@ resource "aws_iam_policy" "idc_provision_management_account" {
     "Version" : "2012-10-17",
     "Statement" : [
       {
+        # this statement is taken from the AWSSSOServiceRolePolicy managed policy
+        "Sid" : "IAMSAMLProviderUpdateAction",
+        "Effect" : "Allow",
+        "Action" : [
+          "iam:UpdateSAMLProvider"
+        ],
+        "Resource" : [
+          "arn:aws:iam::*:saml-provider/AWSSSO_*"
+        ]
+      },
+      {
+        # this statement is taken from the AWSSSOServiceRolePolicy managed policy
+        "Sid" : "IAMSAMLProviderCleanupActions",
+        "Effect" : "Allow",
+        "Action" : [
+          # "iam:DeleteSAMLProvider", - removed here out of an abundance of caution, shouldn't be required for provisioning JIT access to the management account.
+          "iam:GetSAMLProvider"
+        ],
+        "Resource" : [
+          "arn:aws:iam::*:saml-provider/AWSSSO_*"
+        ]
+      },
+      {
+        # this statement is taken from the AWSSSOServiceRolePolicy managed policy
+        "Sid" : "IAMRoleCleanupActions",
+        "Effect" : "Allow",
+        "Action" : [
+          "iam:DeleteRole",
+          "iam:DeleteRolePolicy",
+          "iam:DetachRolePolicy",
+          "iam:ListRolePolicies",
+          "iam:ListAttachedRolePolicies"
+        ],
+        "Resource" : [
+          "arn:aws:iam::*:role/aws-reserved/sso.amazonaws.com/*"
+        ]
+      },
+      {
         "Sid" : "AssignManagementAccountIDC",
         "Effect" : "Allow",
         "Action" : [
-          "iam:CreateRole",
           "iam:AttachRolePolicy",
+          "iam:CreateRole",
+          "iam:PutRolePolicy",
+          "iam:UpdateRole",
+          "iam:UpdateRoleDescription",
+          "iam:UpdateAssumeRolePolicy",
+          "iam:PutRolePermissionsBoundary",
+          "iam:DeleteRolePermissionsBoundary"
         ],
         "Resource" : "arn:aws:iam::*:role/aws-reserved/sso.amazonaws.com/*",
         "Condition" : {
@@ -138,7 +181,6 @@ resource "aws_iam_policy" "idc_provision_management_account" {
           }
         }
       }
-
     ]
   })
 }
