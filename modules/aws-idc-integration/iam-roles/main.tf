@@ -124,12 +124,14 @@ resource "aws_iam_policy" "idc_provision_management_account" {
     "Version" : "2012-10-17",
     "Statement" : [
       {
-        "Sid" : "UpdateIDCSAMLProviderInMgmtAcc",
+        "Sid" : "IAMSAMLProviderUpdateAction",
         "Effect" : "Allow",
         "Action" : [
-          "iam:UpdateSAMLProvider",
+          "iam:UpdateSAMLProvider"
         ],
-        "Resource" : "*",
+        "Resource" : [
+          "arn:aws:iam::*:saml-provider/AWSSSO_*"
+        ]
       },
       {
         "Sid" : "AssignManagementAccountIDC",
