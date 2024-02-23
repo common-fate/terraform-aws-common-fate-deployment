@@ -168,6 +168,7 @@ resource "aws_iam_policy" "idc_provision_management_account" {
           "iam:AttachRolePolicy",
           "iam:CreateRole",
           "iam:PutRolePolicy",
+          "iam:GetRole",
           "iam:UpdateRole",
           "iam:UpdateRoleDescription",
           "iam:UpdateAssumeRolePolicy",
