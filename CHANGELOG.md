@@ -1,5 +1,11 @@
 # @common-fate/terraform-aws-common-fate-deployment
 
+## 1.16.2
+
+### Patch Changes
+
+- a75d182: - 1c4757d: Add iam:GetRole to provisioner for AWS IAM IDC org root account access
+
 ## 1.16.1
 
 ### Patch Changes
