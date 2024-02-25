@@ -257,3 +257,14 @@ variable "control_plane_grant_assume_on_role_arns" {
   type        = list(string)
   default     = []
 }
+
+variable "single_nat_gateway" {
+  default     = false
+  description = "Should be true if you want to provision a single shared NAT Gateway for the deployment."
+}
+
+
+variable "one_nat_gateway_per_az" {
+  default     = true
+  description = "Should be false if you want to provision a single shared NAT Gateway for the deployment."
+}
