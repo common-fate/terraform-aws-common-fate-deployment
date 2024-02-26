@@ -27,11 +27,12 @@ module "alb" {
 }
 
 module "control_plane_db" {
-  source          = "./modules/database"
-  namespace       = var.namespace
-  stage           = var.stage
-  vpc_id          = module.vpc.vpc_id
-  subnet_group_id = module.vpc.database_subnet_group_id
+  source              = "./modules/database"
+  namespace           = var.namespace
+  stage               = var.stage
+  vpc_id              = module.vpc.vpc_id
+  subnet_group_id     = module.vpc.database_subnet_group_id
+  deletion_protection = var.database_deletion_protection
 }
 
 module "authz_db" {

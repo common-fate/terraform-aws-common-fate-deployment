@@ -282,3 +282,9 @@ variable "one_nat_gateway_per_az" {
   default     = true
   description = "Should be false if you want to provision a single shared NAT Gateway for the deployment."
 }
+
+variable "database_deletion_protection" {
+  description = "Enables deletion protection for the RDS database. For production deployments this should be set to 'true'."
+  default     = true
+  type        = bool
+}
