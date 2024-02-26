@@ -7,10 +7,12 @@ data "aws_caller_identity" "current" {}
 
 
 module "vpc" {
-  source     = "./modules/vpc"
-  namespace  = var.namespace
-  stage      = var.stage
-  aws_region = var.aws_region
+  source                 = "./modules/vpc"
+  namespace              = var.namespace
+  stage                  = var.stage
+  aws_region             = var.aws_region
+  one_nat_gateway_per_az = var.one_nat_gateway_per_az
+  single_nat_gateway     = var.single_nat_gateway
 }
 
 module "alb" {
