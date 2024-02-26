@@ -211,7 +211,7 @@ variable "provisioner_entra_config" {
 variable "provisioner_aws_rds_config" {
   description = <<EOF
   Configuration for AWS RDS. The following keys are expected:
-  - role_arn: The ARN of the IAM role for the provisioner to assume which hass permissions to provision access in an AWS organization.
+  - idc_role_arn: The ARN of the IAM role for the provisioner to assume which hass permissions to provision access in an AWS organization.
   - idc_region: The AWS IDC Region.
   - idc_instance_arn: The AWS Identity Center instance ARN.
   - infra_role_name: The name of the IAM role which is deployed each each account containing databases.
@@ -226,6 +226,20 @@ variable "provisioner_aws_rds_config" {
   })
   default = null
 }
+
+variable "provisioner_okta_config" {
+  description = <<EOF
+  Configuration for Okta. The following keys are expected:
+  - organization_id: The ID of your Okta organization.
+  - api_key_secret_path: The SSM Parameter store secret path for the api key for the Okta organization.
+  EOF
+  type = object({
+    organization_id     = string
+    api_key_secret_path = string
+  })
+  default = null
+}
+
 
 variable "unstable_enable_feature_least_privilege" {
   type        = bool

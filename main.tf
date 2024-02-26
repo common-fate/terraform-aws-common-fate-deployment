@@ -223,6 +223,7 @@ module "provisioner" {
   aws_idc_config = var.provisioner_aws_idc_config
   entra_config   = var.provisioner_entra_config
   aws_rds_config = var.provisioner_aws_rds_config
+  okta_config    = var.provisioner_okta_config
 
 
 }

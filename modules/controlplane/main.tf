@@ -441,6 +441,14 @@ resource "aws_ecs_task_definition" "control_plane_task" {
           value = "0 */5 * * * *"
         },
         {
+          name  = "CF_SYNC_OKTA_ENABLED",
+          value = "true"
+        },
+        {
+          name  = "CF_SYNC_OKTA_CRON_SCHEDULE",
+          value = "0 */5 * * * *"
+        },
+        {
           name  = "CF_FEATURE_LEAST_PRIVILEGE_ENABLED",
           value = var.unstable_enable_feature_least_privilege ? "true" : "false"
         },
