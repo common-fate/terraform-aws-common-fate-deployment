@@ -15,6 +15,6 @@ module "vpc" {
   create_database_subnet_group = true
   enable_dns_hostnames         = true
   enable_nat_gateway           = true
-  single_nat_gateway           = false
-  one_nat_gateway_per_az       = true
+  single_nat_gateway           = var.single_nat_gateway
+  one_nat_gateway_per_az       = var.one_nat_gateway_per_az
 }
