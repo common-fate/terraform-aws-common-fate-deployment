@@ -1,5 +1,11 @@
 # @common-fate/terraform-aws-common-fate-deployment
 
+## 1.17.1
+
+### Patch Changes
+
+- 6938182: Add additional missing external ID environment variables for aws provisioners
+
 ## 1.17.0
 
 ### Minor Changes
