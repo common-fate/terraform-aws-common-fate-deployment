@@ -29,6 +29,7 @@ locals {
     },
   ]
 
+
   # Add AWS and GCP specific environment variables if their configurations are provided
   aws_env_vars = var.aws_idc_config != null ? [
     {
@@ -46,6 +47,10 @@ locals {
     {
       name  = "CF_AWS_IDC_IDENTITY_STORE_ID"
       value = local.aws_idc_config.idc_identity_store_id
+    },
+    {
+      name  = "CF_AWS_IDC_ASSUME_ROLE_EXTERNAL_ID"
+      value = var.assume_role_external_id
     }
   ] : []
 
@@ -105,6 +110,10 @@ locals {
     {
       name  = "CF_AWS_RDS_SHOULD_PROVISION_SG"
       value = var.aws_rds_config.should_provision_security_groups == null ? false : var.aws_rds_config.should_provision_security_groups
+    },
+    {
+      name  = "CF_AWS_RDS_ASSUME_ROLE_EXTERNAL_ID"
+      value = var.assume_role_external_id
     }
   ] : []
 
