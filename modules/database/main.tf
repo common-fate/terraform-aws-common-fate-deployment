@@ -30,6 +30,6 @@ resource "aws_db_instance" "pg_db" {
   skip_final_snapshot          = true
   db_subnet_group_name         = var.subnet_group_id
   vpc_security_group_ids       = [aws_security_group.rds_sg.id]
-  deletion_protection          = true
+  deletion_protection          = var.deletion_protection
   performance_insights_enabled = true
 }

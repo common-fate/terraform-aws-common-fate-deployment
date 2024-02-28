@@ -20,3 +20,9 @@ variable "subnet_group_id" {
   description = "Specifies the ID of the subnet group for deployment."
   type        = string
 }
+
+variable "deletion_protection" {
+  description = "Enables deletion protection for the RDS database."
+  type        = bool
+  default     = true
+}
