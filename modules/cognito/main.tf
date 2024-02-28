@@ -60,7 +60,7 @@ resource "aws_cognito_user_pool_client" "web-app-client" {
   generate_secret                      = false
   allowed_oauth_scopes                 = ["openid", "profile", "email"]
   callback_urls                        = ["${var.app_url}/auth/callback"]
-  logout_urls                          = ["${var.app_url}/logout"]
+  logout_urls                          = ["${var.app_url}/access"]
   depends_on                           = [aws_cognito_identity_provider.saml_idp]
 }
 
