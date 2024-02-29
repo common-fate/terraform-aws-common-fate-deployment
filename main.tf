@@ -213,6 +213,7 @@ module "provisioner" {
   aws_region                        = var.aws_region
   release_tag                       = var.release_tag
   access_handler_sg_id              = module.access_handler.security_group_id
+  allow_ingress_from_sg_ids         = [module.control_plane.security_group_id]
   subnet_ids                        = module.vpc.private_subnet_ids
   vpc_id                            = module.vpc.vpc_id
   ecs_cluster_id                    = module.ecs.cluster_id
