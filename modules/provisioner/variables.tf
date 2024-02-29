@@ -90,6 +90,14 @@ variable "access_handler_sg_id" {
   type        = string
 }
 
+
+variable "allow_ingress_from_sg_ids" {
+  description = "The security group IDs which will be allowed to make API calls to this provisioner."
+  type        = list(string)
+  default     = []
+}
+
+
 variable "provisioner_service_client_id" {
   description = "Specifies the client ID for the provisioner service."
   type        = string

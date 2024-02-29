@@ -168,8 +168,8 @@ resource "aws_security_group" "ecs_provisioner_sg_v2" {
     from_port = 9999
     to_port   = 9999
     protocol  = "tcp"
-    // Only allow incoming traffic from the access handler
-    security_groups = [var.access_handler_sg_id]
+    // Only allow incoming traffic from the provided security group IDs
+    security_groups = concat(var.allow_ingress_from_sg_ids, [var.access_handler_sg_id])
   }
 
   lifecycle {
