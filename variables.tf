@@ -288,3 +288,39 @@ variable "database_deletion_protection" {
   default     = true
   type        = bool
 }
+
+variable "vpc_id" {
+  description = "For BYO VPC deployments: specifies the ID of the Virtual Private Cloud (VPC) for deployment."
+  type        = string
+  default     = null
+  nullable    = true
+}
+
+
+variable "database_subnet_group_id" {
+  description = "For BYO VPC deployments: specifies the ID of the database subnet group for deployment."
+  type        = string
+  default     = null
+  nullable    = true
+}
+
+variable "public_subnet_ids" {
+  description = "For BYO VPC deployments: specifies the IDs of the VPC public subnets."
+  type        = list(string)
+  default     = null
+  nullable    = true
+}
+
+variable "private_subnet_ids" {
+  description = "For BYO VPC deployments: specifies the IDs of the VPC private subnets."
+  type        = list(string)
+  default     = null
+  nullable    = true
+}
+
+variable "ecs_cluster_id" {
+  description = "For BYO VPC deployments: specifies the ID of an existing ECS cluster to deploy to."
+  type        = string
+  default     = null
+  nullable    = true
+}

@@ -25,9 +25,9 @@ output "outputs" {
     provisioner_client_id            = module.cognito.provisioner_client_id
     control_plane_task_role_arn      = module.control_plane.task_role_arn
     access_handler_security_group_id = module.access_handler.security_group_id
-    vpc_id                           = module.vpc.vpc_id
-    private_subnet_ids               = module.vpc.private_subnet_ids
-    ecs_cluster_id                   = module.ecs.cluster_id
+    vpc_id                           = local.vpc_id
+    private_subnet_ids               = local.private_subnet_ids
+    ecs_cluster_id                   = local.ecs_cluster_id
     auth_issuer                      = module.cognito.auth_issuer
     event_bus_log_group_name         = module.events.event_bus_log_group_name
     cognito_user_pool_id             = module.cognito.user_pool_id
@@ -129,19 +129,19 @@ output "access_handler_security_group_id" {
 
 output "vpc_id" {
   description = "The vpc id."
-  value       = module.vpc.vpc_id
+  value       = local.vpc_id
 }
 
 
 output "private_subnet_ids" {
   description = "The private subnet id."
-  value       = module.vpc.private_subnet_ids
+  value       = local.private_subnet_ids
 }
 
 
 output "ecs_cluster_id" {
   description = "The ecs id."
-  value       = module.ecs.cluster_id
+  value       = local.ecs_cluster_id
 }
 output "auth_issuer" {
   description = "The auth issuer."
