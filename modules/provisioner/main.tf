@@ -156,7 +156,7 @@ locals {
   ])
 
   combined_env_vars = concat(local.env_vars, local.aws_env_vars, local.gcp_env_vars, local.entra_env_vars, local.aws_rds_env_vars, local.okta_env_vars)
-  combined_secrets  = concat(local.gcp_secrets, local.entra_secrets, local.okta_secrets)
+  combined_secrets  = concat(local.gcp_secrets, local.entra_secrets, local.okta_secrets, local.datastax_secrets)
   name_prefix       = join("-", compact([var.namespace, var.stage, var.name_prefix]))
 }
 
