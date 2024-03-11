@@ -18,7 +18,7 @@ variable "aws_region" {
 variable "release_tag" {
   description = "Override the application release tag to be used in the deployment. As of module version v1.13.0, application versions are bundled into the Terraform module, and so in most cases you should not override this."
   type        = string
-  default     = "v2.2.0"
+  default     = "v2.3.2"
 }
 
 variable "app_certificate_arn" {
@@ -239,6 +239,19 @@ variable "provisioner_okta_config" {
   })
   default = null
 }
+
+
+variable "provisioner_datastax_config" {
+  description = <<EOF
+  Configuration for DataStax. The following keys are expected:
+  - api_key_secret_path: The SSM Parameter store secret path for the api key for the DataStax organization.
+  EOF
+  type = object({
+    api_key_secret_path = string
+  })
+  default = null
+}
+
 
 
 variable "unstable_enable_feature_least_privilege" {

@@ -434,6 +434,14 @@ locals {
       value = "*/5 * * * *"
     },
     {
+      name  = "CF_SYNC_DATASTAX_ENABLED",
+      value = "true"
+    },
+    {
+      name  = "CF_SYNC_DATASTAX_CRON_SCHEDULE",
+      value = "*/5 * * * *"
+    },
+    {
       name  = "CF_FEATURE_LEAST_PRIVILEGE_ENABLED",
       value = var.unstable_enable_feature_least_privilege ? "true" : "false"
     },

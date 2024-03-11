@@ -223,11 +223,11 @@ module "provisioner" {
   app_url                           = var.app_url
   assume_role_external_id           = var.assume_role_external_id
 
-  gcp_config     = var.provisioner_gcp_config
-  aws_idc_config = var.provisioner_aws_idc_config
-  entra_config   = var.provisioner_entra_config
-  aws_rds_config = var.provisioner_aws_rds_config
-  okta_config    = var.provisioner_okta_config
-
+  gcp_config      = var.provisioner_gcp_config
+  aws_idc_config  = var.provisioner_aws_idc_config
+  entra_config    = var.provisioner_entra_config
+  aws_rds_config  = var.provisioner_aws_rds_config
+  okta_config     = var.provisioner_okta_config
+  datastax_config = var.provisioner_datastax_config
 
 }
