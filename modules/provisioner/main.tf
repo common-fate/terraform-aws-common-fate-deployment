@@ -153,6 +153,7 @@ locals {
     var.gcp_config != null ? var.gcp_config.service_account_client_json_ps_arn : "",
     var.entra_config != null ? local.entra_client_secret_path_arn : "",
     var.okta_config != null ? local.okta_api_key_secret_path_arn : "",
+    var.datastax_config != null ? local.datastax_api_key_secret_path_arn : "",
   ])
 
   combined_env_vars = concat(local.env_vars, local.aws_env_vars, local.gcp_env_vars, local.entra_env_vars, local.aws_rds_env_vars, local.okta_env_vars)
