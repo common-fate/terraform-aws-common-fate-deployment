@@ -241,6 +241,19 @@ variable "provisioner_okta_config" {
 }
 
 
+variable "provisioner_datastax_config" {
+  description = <<EOF
+  Configuration for DataStax. The following keys are expected:
+  - api_key_secret_path: The SSM Parameter store secret path for the api key for the DataStax organization.
+  EOF
+  type = object({
+    api_key_secret_path = string
+  })
+  default = null
+}
+
+
+
 variable "unstable_enable_feature_least_privilege" {
   type        = bool
   default     = false
