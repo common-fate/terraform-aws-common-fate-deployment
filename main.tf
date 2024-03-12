@@ -123,6 +123,8 @@ module "control_plane" {
   assume_role_external_id                    = var.assume_role_external_id
 }
 
+
+
 module "report_bucket" {
   source         = "./modules/s3bucket"
   bucket_prefix  = "${var.namespace}-${var.stage}-reports"
