@@ -551,27 +551,6 @@ resource "aws_ecs_task_definition" "control_plane_task" {
         "startPeriod" = 1
       }
     },
-    {
-      name  = "worker-container",
-      image = "commonfate/common-fate-cloud-worker:${var.release_tag}",
-
-      environment = local.control_plane_environment
-      secrets     = local.control_plane_secrets
-
-      logConfiguration = {
-        logDriver = "awslogs",
-        options = {
-          "awslogs-group"         = aws_cloudwatch_log_group.control_plane_log_group.name,
-          "awslogs-region"        = var.aws_region,
-          "awslogs-stream-prefix" = "control-plane"
-        }
-      },
-
-      # Link to the security group
-      linuxParameters = {
-        securityGroupIds = [aws_security_group.ecs_control_plane_sg_v2.id]
-      }
-    },
   ])
 }
 
