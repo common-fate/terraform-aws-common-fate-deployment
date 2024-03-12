@@ -77,6 +77,12 @@ resource "aws_cloudwatch_log_group" "control_plane_log_group" {
   retention_in_days = var.log_retention_in_days
 }
 
+resource "aws_cloudwatch_log_group" "worker_log_group" {
+  name              = "${var.namespace}-${var.stage}-worker"
+  retention_in_days = var.log_retention_in_days
+}
+
+
 
 # EXECUTION ROLE
 resource "aws_iam_role" "control_plane_ecs_execution_role" {
@@ -606,7 +612,7 @@ resource "aws_ecs_task_definition" "worker_task" {
         options = {
           "awslogs-group"         = aws_cloudwatch_log_group.control_plane_log_group.name,
           "awslogs-region"        = var.aws_region,
-          "awslogs-stream-prefix" = "control-plane"
+          "awslogs-stream-prefix" = "worker"
         }
       },
 
@@ -625,7 +631,7 @@ resource "aws_ecs_task_definition" "worker_task" {
         options = {
           "awslogs-group"         = var.otel_log_group_name,
           "awslogs-region"        = var.aws_region,
-          "awslogs-stream-prefix" = "control-plane"
+          "awslogs-stream-prefix" = "worker"
         }
       },
       healthCheck = {
