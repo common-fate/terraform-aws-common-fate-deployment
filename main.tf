@@ -123,50 +123,7 @@ module "control_plane" {
   assume_role_external_id                    = var.assume_role_external_id
 }
 
-module "worker" {
-  source    = "./modules/worker"
-  namespace = var.namespace
-  stage     = var.stage
 
-  aws_region                                 = var.aws_region
-  aws_account_id                             = data.aws_caller_identity.current.account_id
-  aws_partition                              = data.aws_partition.current.id
-  database_secret_sm_arn                     = module.control_plane_db.secret_arn
-  database_security_group_id                 = module.control_plane_db.security_group_id
-  eventbus_arn                               = module.events.event_bus_arn
-  sqs_queue_arn                              = module.events.sqs_queue_arn
-  app_url                                    = var.app_url
-  pager_duty_client_id                       = var.pager_duty_client_id
-  pager_duty_client_secret_ps_arn            = var.pager_duty_client_secret_ps_arn
-  release_tag                                = var.release_tag
-  scim_source                                = var.scim_source
-  scim_token_ps_arn                          = var.scim_token_ps_arn
-  slack_client_id                            = var.slack_client_id
-  slack_client_secret_ps_arn                 = var.slack_client_secret_ps_arn
-  slack_signing_secret_ps_arn                = var.slack_signing_secret_ps_arn
-  subnet_ids                                 = module.vpc.private_subnet_ids
-  vpc_id                                     = module.vpc.vpc_id
-  ecs_cluster_id                             = module.ecs.cluster_id
-  auth_authority_url                         = module.cognito.auth_authority_url
-  database_host                              = module.control_plane_db.endpoint
-  database_user                              = module.control_plane_db.username
-  sqs_queue_name                             = module.events.sqs_queue_name
-  auth_issuer                                = module.cognito.auth_issuer
-  control_plane_service_client_id            = module.cognito.control_plane_service_client_id
-  control_plane_service_client_secret        = module.cognito.control_plane_service_client_secret
-  licence_key_ps_arn                         = var.licence_key_ps_arn
-  log_level                                  = var.control_plane_log_level
-  grant_assume_on_role_arns                  = var.control_plane_grant_assume_on_role_arns
-  oidc_control_plane_issuer                  = module.cognito.auth_issuer
-  otel_log_group_name                        = module.ecs_base.otel_log_group_name
-  otel_writer_iam_policy_arn                 = module.ecs_base.otel_writer_iam_policy_arn
-  unstable_enable_feature_least_privilege    = var.unstable_enable_feature_least_privilege
-  unstable_least_privilege_analysis_schedule = var.unstable_least_privilege_analysis_schedule
-  unstable_sync_idc_cloudtrail_schedule      = var.unstable_sync_idc_cloudtrail_schedule
-  report_bucket_arn                          = module.report_bucket.arn
-  report_bucket_name                         = module.report_bucket.id
-  assume_role_external_id                    = var.assume_role_external_id
-}
 
 module "report_bucket" {
   source         = "./modules/s3bucket"

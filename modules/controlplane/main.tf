@@ -30,6 +30,36 @@ resource "aws_security_group" "ecs_control_plane_sg_v2" {
 
 }
 
+#trivy:ignore:AVD-AWS-0104
+resource "aws_security_group" "ecs_worker_sg" {
+  name        = "${var.namespace}-${var.stage}-worker"
+  description = "Common Fate Worker networking"
+
+  vpc_id = var.vpc_id
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  lifecycle {
+    create_before_destroy = true
+  }
+
+}
+
+# Update the RDS security group to allow connections from the ECS worker service
+resource "aws_security_group_rule" "rds_access_from_worker" {
+  type                     = "ingress"
+  from_port                = 5432
+  to_port                  = 5432
+  protocol                 = "tcp"
+  security_group_id        = var.database_security_group_id
+  source_security_group_id = aws_security_group.ecs_worker_sg.id
+}
+
 
 # Update the RDS security group to allow connections from the ECS control-plane service
 resource "aws_security_group_rule" "rds_access_from_control_plane" {
@@ -554,6 +584,60 @@ resource "aws_ecs_task_definition" "control_plane_task" {
   ])
 }
 
+resource "aws_ecs_task_definition" "worker_task" {
+  family                   = "${var.namespace}-${var.stage}-worker"
+  network_mode             = "awsvpc"
+  requires_compatibilities = ["FARGATE"]
+  cpu                      = var.ecs_worker_task_cpu
+  memory                   = var.ecs_worker_task_memory
+  execution_role_arn       = aws_iam_role.control_plane_ecs_execution_role.arn
+  task_role_arn            = aws_iam_role.control_plane_ecs_task_role.arn
+
+  container_definitions = jsonencode([
+    {
+      name  = "worker-container",
+      image = "commonfate/common-fate-cloud-worker:${var.release_tag}",
+
+      environment = local.control_plane_environment
+      secrets     = local.control_plane_secrets
+
+      logConfiguration = {
+        logDriver = "awslogs",
+        options = {
+          "awslogs-group"         = aws_cloudwatch_log_group.control_plane_log_group.name,
+          "awslogs-region"        = var.aws_region,
+          "awslogs-stream-prefix" = "control-plane"
+        }
+      },
+
+      # Link to the security group
+      linuxParameters = {
+        securityGroupIds = [aws_security_group.ecs_worker_sg.id]
+      }
+    },
+    {
+      name      = "aws-otel-collector",
+      image     = "amazon/aws-otel-collector",
+      command   = ["--config=/etc/ecs/ecs-default-config.yaml"],
+      essential = true,
+      logConfiguration = {
+        logDriver = "awslogs",
+        options = {
+          "awslogs-group"         = var.otel_log_group_name,
+          "awslogs-region"        = var.aws_region,
+          "awslogs-stream-prefix" = "control-plane"
+        }
+      },
+      healthCheck = {
+        "command"     = ["/healthcheck"],
+        "interval"    = 5,
+        "timeout"     = 6,
+        "retries"     = 5,
+        "startPeriod" = 1
+      }
+    },
+  ])
+}
 
 resource "aws_lb_target_group" "control_plane_tg" {
   name        = "${var.namespace}-${var.stage}-control-plane"
@@ -565,7 +649,6 @@ resource "aws_lb_target_group" "control_plane_tg" {
     enabled = true
     path    = "/health"
   }
-
 }
 resource "aws_ecs_service" "control_plane_service" {
   name            = "${var.namespace}-${var.stage}-control-plane"
@@ -605,5 +688,21 @@ resource "aws_lb_listener_rule" "service_rule" {
     path_pattern {
       values = ["/commonfate.control*", "/api/*", "/commonfate.leastprivilege*"]
     }
+  }
+}
+
+
+
+resource "aws_ecs_service" "worker_service" {
+  name            = "${var.namespace}-${var.stage}-worker"
+  cluster         = var.ecs_cluster_id
+  task_definition = aws_ecs_task_definition.worker_task.arn
+  launch_type     = "FARGATE"
+
+  desired_count = var.desired_worker_task_count
+
+  network_configuration {
+    subnets         = var.subnet_ids
+    security_groups = [aws_security_group.ecs_worker_sg.id]
   }
 }
