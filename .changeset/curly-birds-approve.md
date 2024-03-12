@@ -1,5 +1,5 @@
 ---
-"@common-fate/terraform-aws-common-fate-deployment": major
+"@common-fate/terraform-aws-common-fate-deployment": minor
 ---
 
 Update the bundled Common Fate application release to be v3.0.0
