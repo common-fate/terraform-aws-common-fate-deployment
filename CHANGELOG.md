@@ -1,5 +1,12 @@
 # @common-fate/terraform-aws-common-fate-deployment
 
+## 1.23.0
+
+### Minor Changes
+
+- 733ce45: Adds `use_internal_load_balancer` variable, which can be used to make the Common Fate load balancer internal.
+- 733ce45: Adds support for top-level BYOVPC variables, making it easier to deploy Common Fate into an existing AWS VPC.
+
 ## 1.22.0
 
 ### Minor Changes
