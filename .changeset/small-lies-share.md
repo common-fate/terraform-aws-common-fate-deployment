@@ -1,5 +1,5 @@
 ---
-"@common-fate/terraform-aws-common-fate-deployment": major
+"@common-fate/terraform-aws-common-fate-deployment": minor
 ---
 
 Minor Changes
