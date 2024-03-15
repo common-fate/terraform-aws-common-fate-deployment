@@ -301,3 +301,10 @@ variable "database_deletion_protection" {
   default     = true
   type        = bool
 }
+
+variable "web_access_token_validity_duration" {
+  description = "Specifies how long the access token in the web cognito client will be valid for. Unit is in minutes"
+  default     = 10
+  type        = number
+}
+
