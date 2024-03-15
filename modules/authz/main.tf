@@ -206,6 +206,10 @@ resource "aws_ecs_task_definition" "authz_task" {
         name  = "CF_OIDC_PROVISIONER_SERVICE_CLIENT_ID",
         value = var.oidc_provisioner_service_client_id
       },
+      {
+        name  = "CF_OIDC_SLACK_SERVICE_CLIENT_ID",
+        value = var.oidc_slack_service_client_id
+      },
 
 
     ],

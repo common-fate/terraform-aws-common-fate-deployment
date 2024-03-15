@@ -203,6 +203,7 @@ module "authz" {
   oidc_access_handler_service_client_id = module.cognito.access_handler_service_client_id
   oidc_control_plane_client_id          = module.cognito.control_plane_service_client_id
   oidc_provisioner_service_client_id    = module.cognito.provisioner_client_id
+  oidc_slack_service_client_id          = module.cognito.slack_service_client_id
   alb_security_group_id                 = module.alb.alb_security_group_id
   additional_cors_allowed_origins       = var.additional_cors_allowed_origins
 }
