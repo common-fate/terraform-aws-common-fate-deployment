@@ -13,7 +13,10 @@ locals {
   ecs_cluster_id           = var.ecs_cluster_id != null ? var.ecs_cluster_id : module.ecs[0].cluster_id
 }
 
-
+moved {
+  from = module.vpc
+  to   = module.vpc[0]
+}
 
 module "vpc" {
   count                  = var.vpc_id != null ? 0 : 1
@@ -57,6 +60,11 @@ module "events" {
   source    = "./modules/events"
   namespace = var.namespace
   stage     = var.stage
+}
+
+moved {
+  from = module.ecs
+  to   = module.ecs[0]
 }
 
 module "ecs" {
