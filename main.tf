@@ -5,8 +5,21 @@ provider "aws" {
 data "aws_partition" "current" {}
 data "aws_caller_identity" "current" {}
 
+locals {
+  vpc_id                   = var.vpc_id != null ? var.vpc_id : module.vpc[0].vpc_id
+  public_subnet_ids        = var.vpc_id != null ? var.public_subnet_ids : module.vpc[0].public_subnet_ids
+  private_subnet_ids       = var.vpc_id != null ? var.private_subnet_ids : module.vpc[0].private_subnet_ids
+  database_subnet_group_id = var.vpc_id != null ? var.database_subnet_group_id : module.vpc[0].database_subnet_group_id
+  ecs_cluster_id           = var.ecs_cluster_id != null ? var.ecs_cluster_id : module.ecs[0].cluster_id
+}
+
+moved {
+  from = module.vpc
+  to   = module.vpc[0]
+}
 
 module "vpc" {
+  count                  = var.vpc_id != null ? 0 : 1
   source                 = "./modules/vpc"
   namespace              = var.namespace
   stage                  = var.stage
@@ -22,16 +35,17 @@ module "alb" {
   certificate_arns = [
     var.app_certificate_arn
   ]
-  public_subnet_ids = module.vpc.public_subnet_ids
-  vpc_id            = module.vpc.vpc_id
+  public_subnet_ids          = local.public_subnet_ids
+  vpc_id                     = local.vpc_id
+  use_internal_load_balancer = var.use_internal_load_balancer
 }
 
 module "control_plane_db" {
   source              = "./modules/database"
   namespace           = var.namespace
   stage               = var.stage
-  vpc_id              = module.vpc.vpc_id
-  subnet_group_id     = module.vpc.database_subnet_group_id
+  vpc_id              = local.vpc_id
+  subnet_group_id     = local.database_subnet_group_id
   deletion_protection = var.database_deletion_protection
 }
 
@@ -48,7 +62,13 @@ module "events" {
   stage     = var.stage
 }
 
+moved {
+  from = module.ecs
+  to   = module.ecs[0]
+}
+
 module "ecs" {
+  count                                 = var.ecs_cluster_id != null ? 0 : 1
   source                                = "terraform-aws-modules/ecs/aws"
   version                               = "~> 4.1.3"
   cluster_name                          = "${var.namespace}-${var.stage}-cluster"
@@ -61,16 +81,16 @@ module "ecs_base" {
 
 
 module "cognito" {
-  source                = "./modules/cognito"
-  namespace             = var.namespace
-  stage                 = var.stage
-  aws_region            = var.aws_region
-  app_url               = var.app_url
-  auth_url              = var.auth_url
-  auth_certificate_arn  = var.auth_certificate_arn
-  saml_metadata_is_file = var.saml_metadata_is_file
-  saml_metadata_source  = var.saml_metadata_source
-  saml_provider_name    = var.saml_provider_name
+  source                             = "./modules/cognito"
+  namespace                          = var.namespace
+  stage                              = var.stage
+  aws_region                         = var.aws_region
+  app_url                            = var.app_url
+  auth_url                           = var.auth_url
+  auth_certificate_arn               = var.auth_certificate_arn
+  saml_metadata_is_file              = var.saml_metadata_is_file
+  saml_metadata_source               = var.saml_metadata_source
+  saml_provider_name                 = var.saml_provider_name
   web_access_token_validity_duration = var.web_access_token_validity_duration
 }
 
@@ -97,9 +117,9 @@ module "control_plane" {
   slack_client_id                            = var.slack_client_id
   slack_client_secret_ps_arn                 = var.slack_client_secret_ps_arn
   slack_signing_secret_ps_arn                = var.slack_signing_secret_ps_arn
-  subnet_ids                                 = module.vpc.private_subnet_ids
-  vpc_id                                     = module.vpc.vpc_id
-  ecs_cluster_id                             = module.ecs.cluster_id
+  subnet_ids                                 = local.private_subnet_ids
+  vpc_id                                     = local.vpc_id
+  ecs_cluster_id                             = local.ecs_cluster_id
   auth_authority_url                         = module.cognito.auth_authority_url
   database_host                              = module.control_plane_db.endpoint
   database_user                              = module.control_plane_db.username
@@ -143,15 +163,15 @@ module "web" {
   stage                                   = var.stage
   aws_region                              = var.aws_region
   release_tag                             = var.release_tag
-  subnet_ids                              = module.vpc.private_subnet_ids
-  vpc_id                                  = module.vpc.vpc_id
+  subnet_ids                              = local.private_subnet_ids
+  vpc_id                                  = local.vpc_id
   auth_authority_url                      = module.cognito.auth_authority_url
   auth_cli_client_id                      = module.cognito.cli_client_id
   auth_url                                = module.cognito.auth_url
   auth_web_client_id                      = module.cognito.web_client_id
   logo_url                                = var.logo_url
   team_name                               = var.team_name
-  ecs_cluster_id                          = module.ecs.cluster_id
+  ecs_cluster_id                          = local.ecs_cluster_id
   alb_listener_arn                        = module.alb.listener_arn
   app_url                                 = var.app_url
   auth_issuer                             = module.cognito.auth_issuer
@@ -166,10 +186,10 @@ module "access_handler" {
   aws_region                                = var.aws_region
   eventbus_arn                              = module.events.event_bus_arn
   release_tag                               = var.release_tag
-  subnet_ids                                = module.vpc.private_subnet_ids
-  vpc_id                                    = module.vpc.vpc_id
+  subnet_ids                                = local.private_subnet_ids
+  vpc_id                                    = local.vpc_id
   auth_authority_url                        = module.cognito.auth_authority_url
-  ecs_cluster_id                            = module.ecs.cluster_id
+  ecs_cluster_id                            = local.ecs_cluster_id
   alb_listener_arn                          = module.alb.listener_arn
   auth_issuer                               = module.cognito.auth_issuer
   log_level                                 = var.access_handler_log_level
@@ -190,9 +210,9 @@ module "authz" {
   aws_region                            = var.aws_region
   eventbus_arn                          = module.events.event_bus_arn
   release_tag                           = var.release_tag
-  subnet_ids                            = module.vpc.private_subnet_ids
-  vpc_id                                = module.vpc.vpc_id
-  ecs_cluster_id                        = module.ecs.cluster_id
+  subnet_ids                            = local.private_subnet_ids
+  vpc_id                                = local.vpc_id
+  ecs_cluster_id                        = local.ecs_cluster_id
   alb_listener_arn                      = module.alb.listener_arn
   dynamodb_table_name                   = module.authz_db.dynamodb_table_name
   log_level                             = var.authz_log_level
@@ -217,9 +237,9 @@ module "provisioner" {
   release_tag                       = var.release_tag
   access_handler_sg_id              = module.access_handler.security_group_id
   allow_ingress_from_sg_ids         = [module.control_plane.security_group_id]
-  subnet_ids                        = module.vpc.private_subnet_ids
-  vpc_id                            = module.vpc.vpc_id
-  ecs_cluster_id                    = module.ecs.cluster_id
+  subnet_ids                        = local.private_subnet_ids
+  vpc_id                            = local.vpc_id
+  ecs_cluster_id                    = local.ecs_cluster_id
   provisioner_service_client_id     = module.cognito.provisioner_client_id
   provisioner_service_client_secret = module.cognito.provisioner_client_secret
   auth_issuer                       = module.cognito.auth_issuer

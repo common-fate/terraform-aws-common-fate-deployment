@@ -302,6 +302,46 @@ variable "database_deletion_protection" {
   type        = bool
 }
 
+variable "vpc_id" {
+  description = "For BYO VPC deployments: specifies the ID of the Virtual Private Cloud (VPC) for deployment."
+  type        = string
+  default     = null
+  nullable    = true
+}
+
+
+variable "database_subnet_group_id" {
+  description = "For BYO VPC deployments: specifies the ID of the database subnet group for deployment."
+  type        = string
+  default     = null
+  nullable    = true
+}
+
+variable "public_subnet_ids" {
+  description = "For BYO VPC deployments: specifies the IDs of the VPC public subnets."
+  type        = list(string)
+  default     = null
+  nullable    = true
+}
+
+variable "private_subnet_ids" {
+  description = "For BYO VPC deployments: specifies the IDs of the VPC private subnets."
+  type        = list(string)
+  default     = null
+  nullable    = true
+}
+
+variable "ecs_cluster_id" {
+  description = "For BYO VPC deployments: specifies the ID of an existing ECS cluster to deploy to."
+  type        = string
+  default     = null
+  nullable    = true
+}
+
+variable "use_internal_load_balancer" {
+  description = "If 'true', the provisioned load balancer will be internal rather than external. Use this when you want to restrict network access to Common Fate to be behind a VPN only."
+  default     = false
+}
 variable "web_access_token_validity_duration" {
   description = "Specifies how long the access token in the web cognito client will be valid for. Unit is in minutes"
   default     = 10
