@@ -73,16 +73,17 @@ module "ecs_base" {
 
 
 module "cognito" {
-  source                = "./modules/cognito"
-  namespace             = var.namespace
-  stage                 = var.stage
-  aws_region            = var.aws_region
-  app_url               = var.app_url
-  auth_url              = var.auth_url
-  auth_certificate_arn  = var.auth_certificate_arn
-  saml_metadata_is_file = var.saml_metadata_is_file
-  saml_metadata_source  = var.saml_metadata_source
-  saml_provider_name    = var.saml_provider_name
+  source                             = "./modules/cognito"
+  namespace                          = var.namespace
+  stage                              = var.stage
+  aws_region                         = var.aws_region
+  app_url                            = var.app_url
+  auth_url                           = var.auth_url
+  auth_certificate_arn               = var.auth_certificate_arn
+  saml_metadata_is_file              = var.saml_metadata_is_file
+  saml_metadata_source               = var.saml_metadata_source
+  saml_provider_name                 = var.saml_provider_name
+  web_access_token_validity_duration = var.web_access_token_validity_duration
 }
 
 
@@ -134,6 +135,8 @@ module "control_plane" {
   report_bucket_name                         = module.report_bucket.id
   assume_role_external_id                    = var.assume_role_external_id
 }
+
+
 
 module "report_bucket" {
   source         = "./modules/s3bucket"
@@ -235,9 +238,11 @@ module "provisioner" {
   app_url                           = var.app_url
   assume_role_external_id           = var.assume_role_external_id
 
-  gcp_config     = var.provisioner_gcp_config
-  aws_idc_config = var.provisioner_aws_idc_config
-  entra_config   = var.provisioner_entra_config
-  aws_rds_config = var.provisioner_aws_rds_config
-  okta_config    = var.provisioner_okta_config
+  gcp_config      = var.provisioner_gcp_config
+  aws_idc_config  = var.provisioner_aws_idc_config
+  entra_config    = var.provisioner_entra_config
+  aws_rds_config  = var.provisioner_aws_rds_config
+  okta_config     = var.provisioner_okta_config
+  datastax_config = var.provisioner_datastax_config
+
 }

@@ -1,5 +1,108 @@
 # @common-fate/terraform-aws-common-fate-deployment
 
+## 1.22.0
+
+### Minor Changes
+
+- c0c341d: Minor Changes
+  51db74c: Adds the ability to add multiple slack clients for different slack tenancies. As well as sending slack messages to different channels
+  7329afa: Updates the SCIM implementation to fix an issue which would cause users to be created with their first name repeated.
+  Adds support for resetting the Entra users which were created via SCIM, so that they can be reset in the event that the SCIM configuration was incorrect.
+  5c7014b: Adds additional metadata to authorization evaluations, including authorization duration.
+  Patch Changes
+  cd3d1e4: Improve the target field of slack messages by including the target tye
+  aaf54f7: Fix an infinite rerender bug on the resources pages that could be triggered by using the breadcrumb navigation
+  cd3d1e4: Fix an issue which caused auto approved requests to have approval buttons in slack channel messages
+  cd3d1e4: Fix an issue where activating a request from the CLI would not update the slack DM
+  51db74c: When a slack integration is removed from terraform it will be uninstalled from the slack workspace and tokens will be removed.
+  f511e30: Use a background task to update availabilities on demand when selectors or availability specs are updated in terraform configuration. Ensuring access is made unavailable shortly after the update.
+
+### Patch Changes
+
+- 0d92cca: Reduces the web app access token validity to 10 minutes by default.
+
+## 1.21.0
+
+### Minor Changes
+
+- 89f9d84: Add an additional worker container to the controlplane task which runs background tasks.
+- 0d3831d: Update the bundled Common Fate application release to be v3.0.0
+
+  ### Major Changes
+
+  e128940: Splits background workflows out into database backed work queue.
+
+  ### Minor Changes
+
+  d1e6cf7: Adds deployment diagnostics. You can fetch diagnostic information about your Common Fate deployment by running the `cf deployment diagnostics` command.This command requires the caller to have permissions to execute `CF::Control::DiagnosticService::Action::"GetOAuthTokenMetadata"`.
+  44dfad5: Added DataStax integration
+
+  ### Patch Changes
+
+  45a493e: Adds additional rate limit handling to OpsGenie resource syncing.
+  3e9e52d: Fix issue causing access request flow to get stuck in broken state.Fix issue causing some attributes not to show for resources.
+  0914d4e: Fixes an issue which caused the grants to show the message "Error Processing Grant" after a preflight in the Web App when the grant was already active or pending in another request.
+  c449aa7: Fixes and issue which prevented using keyboard navigation correctly in the access request UI in the web app when selecting an entitlement
+  cfc0974: Update Slack Oauth scopes to match the app definition, fixes an issue causing slack commands not to show for SaaS customers
+  080018a: Adds retry handle to accommodate opsgenie ratelimit errors in OpsGenie integration
+  387c99d: Requesting access in the UI will now display the duration of the request in the preflight
+  0914d4e: Encode the reason into the URL query params for the access request form
+  b3d8785: Adds DataStax integration icons to the web console UI.
+  5f5e582: Fixes an issue which may have caused PagerDuty sync to fail for some teams
+
+## 1.20.0
+
+### Minor Changes
+
+- d8e94f7: Updates the bundled Common Fate application release to be v2.3.2:
+
+  ### Minor Changes
+
+  d1e6cf7: Adds deployment diagnostics. You can fetch diagnostic information about your Common Fate deployment by running the cf deployment diagnostics command.
+  This command requires the caller to have permissions to execute CF::Control::DiagnosticService::Action::"GetOAuthTokenMetadata".
+
+  0261674: Added DataStax integration.
+
+  ### Patch Changes
+
+  6f463a9: Fix issue causing access request flow to get stuck in broken state.
+  Fix issue causing some attributes not to show for resources.
+
+  5ad3a57: Fixes and issue which prevented using keyboard navigation correctly in the access request UI in the web app when selecting an entitlement
+
+  cfc0974: Update Slack Oauth scopes to match the app definition, fixes an issue causing slack commands not to show for SaaS customers
+
+  e9841a4: Requesting access in the UI will now display the duration of the request in the preflight
+
+  99d9b55: Fixes an issue which may have caused PagerDuty sync to fail for some teams
+
+  f9e9b4c: Adds DataStax integration icons to the web console UI.
+
+- 799ccf5: Adds environment variables and provisioner configuration for Common Fate's DataStax integration.
+
+## 1.19.0
+
+### Minor Changes
+
+- 5bdb669: Fixed task_role_name output for provisioner module
+- f1bda70: Add additional input to the provisioner module allowing additional security groups to have ingress. Permit the control plane ingress on the builtin provisioner.
+- fa55bb2: Updates the bundled Common Fate application release to be v2.2.0
+
+  Minor Changes
+
+  - Adds slack DM to the requestor when their request is approved, permits the activate and close request methods from withing Slack.
+
+  Patch Changes
+
+  - Fixes an issue where the web console would redirect to an invalid page after the Slack app install is complete.
+  - Improve grant state stepper so that Activated and Approved steps are correctly shown as skipped when a grant is closed before activation or appoval. Adds activatedAt and closedAt timestamps.
+  - Improves the UI of the 'integrations' section in the Settings page to indicate when integrations are loading, or when no integrations have been installed.
+  - Fixed issue causing closed requests to appear in in progress columns
+  - Improves the state management for Grants so that provisioning attempts are tracked. Previously, a provisioning or network error would lead to a grant being incorrectly marked as active when the user may not actually have the access they requested. Failures in provisioning will now result in grants ending in the pending state, allowing the use to retry activating.
+  - Handle cases in the AWS IDC provisioner where the entitlement has been removed outside of Common Fate, return successfully to prevent requests failing to close forever
+  - Fixed an error that occured when logging out
+  - fix audit logs not sorting chronologically
+
 ## 1.18.0
 
 ### Minor Changes

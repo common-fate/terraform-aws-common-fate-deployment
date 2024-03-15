@@ -18,7 +18,7 @@ variable "aws_region" {
 variable "release_tag" {
   description = "Override the application release tag to be used in the deployment. As of module version v1.13.0, application versions are bundled into the Terraform module, and so in most cases you should not override this."
   type        = string
-  default     = "v2.1.1"
+  default     = "v3.1.3"
 }
 
 variable "app_certificate_arn" {
@@ -241,6 +241,19 @@ variable "provisioner_okta_config" {
 }
 
 
+variable "provisioner_datastax_config" {
+  description = <<EOF
+  Configuration for DataStax. The following keys are expected:
+  - api_key_secret_path: The SSM Parameter store secret path for the api key for the DataStax organization.
+  EOF
+  type = object({
+    api_key_secret_path = string
+  })
+  default = null
+}
+
+
+
 variable "unstable_enable_feature_least_privilege" {
   type        = bool
   default     = false
@@ -329,3 +342,9 @@ variable "use_internal_load_balancer" {
   description = "If 'true', the provisioned load balancer will be internal rather than external. Use this when you want to restrict network access to Common Fate to be behind a VPN only."
   default     = false
 }
+variable "web_access_token_validity_duration" {
+  description = "Specifies how long the access token in the web cognito client will be valid for. Unit is in minutes"
+  default     = 10
+  type        = number
+}
+
