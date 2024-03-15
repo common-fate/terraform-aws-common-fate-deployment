@@ -101,12 +101,12 @@ output "identity_provider_name" {
   value       = local.identity_provider_name
 }
 
-output "slack_service_client_service_client_id" {
+output "slack_service_client_id" {
   description = "The client ID for the slack service."
-  value       = aws_cognito_user_pool_client.slack_service_client_service_client.id
+  value       = aws_cognito_user_pool_client.slack_service_client.id
 }
 
-output "slack_service_client_service_client_secret" {
+output "slack_service_client_secret" {
   description = "The client secret for the slack service."
-  value       = aws_cognito_user_pool_client.slack_service_client_service_client.client_secret
+  value       = aws_cognito_user_pool_client.slack_service_client.client_secret
 }
