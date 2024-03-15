@@ -99,7 +99,6 @@ module "control_plane" {
   subnet_ids                                 = module.vpc.private_subnet_ids
   vpc_id                                     = module.vpc.vpc_id
   ecs_cluster_id                             = module.ecs.cluster_id
-  auth_authority_url                         = module.cognito.auth_authority_url
   database_host                              = module.control_plane_db.endpoint
   database_user                              = module.control_plane_db.username
   alb_listener_arn                           = module.alb.listener_arn
@@ -107,6 +106,9 @@ module "control_plane" {
   auth_issuer                                = module.cognito.auth_issuer
   control_plane_service_client_id            = module.cognito.control_plane_service_client_id
   control_plane_service_client_secret        = module.cognito.control_plane_service_client_secret
+  slack_service_client_id                    = module.cognito.slack_service_client_id
+  slack_service_client_secret                = module.cognito.slack_service_client_secret
+  oidc_slack_issuer                          = module.cognito.auth_issuer
   licence_key_ps_arn                         = var.licence_key_ps_arn
   log_level                                  = var.control_plane_log_level
   grant_assume_on_role_arns                  = var.control_plane_grant_assume_on_role_arns
@@ -167,7 +169,6 @@ module "access_handler" {
   release_tag                               = var.release_tag
   subnet_ids                                = module.vpc.private_subnet_ids
   vpc_id                                    = module.vpc.vpc_id
-  auth_authority_url                        = module.cognito.auth_authority_url
   ecs_cluster_id                            = module.ecs.cluster_id
   alb_listener_arn                          = module.alb.listener_arn
   auth_issuer                               = module.cognito.auth_issuer

@@ -317,15 +317,6 @@ locals {
       name  = "CF_SCIM_SOURCE",
       value = var.scim_source
     },
-    {
-      name  = "CF_OIDC_AUTHORITY_URL",
-      value = var.auth_authority_url
-    },
-    // used for client credentials
-    {
-      name  = "CF_CONTROL_PLANE_SERVICE_OIDC_ISSUER",
-      value = var.auth_issuer
-    },
     // used for auth middleware
     {
       name  = "CF_OIDC_TRUSTED_ISSUER_COGNITO",
@@ -397,6 +388,18 @@ locals {
     {
       name  = "CF_CONTROL_PLANE_SERVICE_OIDC_ISSUER",
       value = var.oidc_control_plane_issuer
+    },
+    {
+      name  = "CF_SLACK_SERVICE_OIDC_CLIENT_ID",
+      value = var.slack_service_client_id
+    },
+    {
+      name  = "CF_SLACK_SERVICE_OIDC_CLIENT_SECRET",
+      value = var.slack_service_client_secret
+    },
+    {
+      name  = "CF_SLACK_SERVICE_OIDC_ISSUER",
+      value = var.oidc_slack_issuer
     },
     { name  = "CF_CORS_ALLOWED_ORIGINS"
       value = join(",", concat([var.app_url], var.additional_cors_allowed_origins))

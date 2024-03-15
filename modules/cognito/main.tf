@@ -149,6 +149,23 @@ resource "aws_cognito_user_pool_client" "control_plane_service_client" {
   generate_secret                      = true
 }
 
+resource "aws_cognito_user_pool_client" "slack_service_client" {
+  name         = "${var.namespace}-${var.stage}-slack-client"
+  user_pool_id = aws_cognito_user_pool.cognito_user_pool.id
+
+  explicit_auth_flows = [
+    "ALLOW_USER_SRP_AUTH",
+    "ALLOW_REFRESH_TOKEN_AUTH"
+  ]
+
+  access_token_validity                = 8
+  allowed_oauth_flows                  = ["client_credentials"]
+  allowed_oauth_scopes                 = aws_cognito_resource_server.resource_server.scope_identifiers
+  allowed_oauth_flows_user_pool_client = true
+  generate_secret                      = true
+}
+
+
 
 resource "aws_cognito_user_pool_client" "access_handler_service_client" {
   name         = "${var.namespace}-${var.stage}-access-handler-client"
