@@ -32,8 +32,9 @@ module "alb" {
   certificate_arns = [
     var.app_certificate_arn
   ]
-  public_subnet_ids = local.public_subnet_ids
-  vpc_id            = local.vpc_id
+  public_subnet_ids          = local.public_subnet_ids
+  vpc_id                     = local.vpc_id
+  use_internal_load_balancer = var.use_internal_load_balancer
 }
 
 module "control_plane_db" {

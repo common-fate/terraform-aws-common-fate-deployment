@@ -31,3 +31,8 @@ variable "public_subnet_ids" {
   description = "Lists the subnet IDs for public subnets."
   type        = list(string)
 }
+
+variable "use_internal_load_balancer" {
+  description = "If 'true', the provisioned load balancer will be internal rather than external. Use this when you want to restrict network access to Common Fate to be behind a VPN only."
+  default     = false
+}

@@ -324,3 +324,8 @@ variable "ecs_cluster_id" {
   default     = null
   nullable    = true
 }
+
+variable "use_internal_load_balancer" {
+  description = "If 'true', the provisioned load balancer will be internal rather than external. Use this when you want to restrict network access to Common Fate to be behind a VPN only."
+  default     = false
+}
