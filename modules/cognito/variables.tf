@@ -51,7 +51,7 @@ variable "saml_metadata_source" {
   type        = string
 }
 
-variable "token_validity_duration" {
+variable "web_access_token_validity_duration" {
   description = "Specifies how long the access token in the web cognito client will be valid for. Unit is in minutes"
   default     = 10
   type        = number

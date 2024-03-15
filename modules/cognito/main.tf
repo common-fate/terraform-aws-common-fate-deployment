@@ -62,7 +62,7 @@ resource "aws_cognito_user_pool_client" "web-app-client" {
   callback_urls                        = ["${var.app_url}/auth/callback"]
   logout_urls                          = ["${var.app_url}/logout"]
   depends_on                           = [aws_cognito_identity_provider.saml_idp]
-  access_token_validity                = var.token_validity_duration
+  access_token_validity                = var.web_access_token_validity_duration
   token_validity_units {
     access_token = "minutes"
   }

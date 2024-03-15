@@ -71,6 +71,7 @@ module "cognito" {
   saml_metadata_is_file = var.saml_metadata_is_file
   saml_metadata_source  = var.saml_metadata_source
   saml_provider_name    = var.saml_provider_name
+  web_access_token_validity_duration = var.web_access_token_validity_duration
 }
 
 
