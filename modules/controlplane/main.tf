@@ -727,7 +727,7 @@ resource "aws_lb_listener_rule" "service_rule" {
         "/commonfate.control*",
         "/api/*",
         "/commonfate.leastprivilege*",
-        "/commonfate.authz.EvaluationService/*" // authz evaluation service is handled by Control Plane.
+        "/commonfate.authz.v1alpha1.EvaluationService/*" // authz evaluation service is handled by Control Plane.
       ]
     }
   }
