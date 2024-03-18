@@ -142,6 +142,8 @@ module "control_plane" {
   report_bucket_arn                          = module.report_bucket.arn
   report_bucket_name                         = module.report_bucket.id
   assume_role_external_id                    = var.assume_role_external_id
+  authz_eval_bucket_name                     = module.authz_eval_bucket.id
+  authz_eval_bucket_arn                      = module.authz_eval_bucket.arn
 }
 
 
@@ -154,6 +156,16 @@ module "report_bucket" {
   namespace      = var.namespace
   stage          = var.stage
   component      = "reports"
+}
+
+module "authz_eval_bucket" {
+  source         = "./modules/s3bucket"
+  bucket_prefix  = "${var.namespace}-${var.stage}-evals"
+  aws_account_id = data.aws_caller_identity.current.account_id
+  region         = var.aws_region
+  namespace      = var.namespace
+  stage          = var.stage
+  component      = "evals"
 }
 
 
@@ -225,6 +237,8 @@ module "authz" {
   oidc_provisioner_service_client_id    = module.cognito.provisioner_client_id
   alb_security_group_id                 = module.alb.alb_security_group_id
   additional_cors_allowed_origins       = var.additional_cors_allowed_origins
+  authz_eval_bucket_arn                 = module.authz_eval_bucket.arn
+  authz_eval_bucket_name                = module.authz_eval_bucket.id
 }
 
 module "provisioner" {

@@ -150,6 +150,50 @@ resource "aws_iam_role_policy_attachment" "authz_dynamodb_write_attach" {
   policy_arn = aws_iam_policy.dynamodb_write.arn
 }
 
+resource "aws_iam_policy" "authz_eval_bucket" {
+  name        = "${var.namespace}-${var.stage}-authz-eval-bucket"
+  description = "Allows the Authz service to write to the authorization evaluation S3 bucket"
+
+  policy = jsonencode({
+    "Version" : "2012-10-17",
+    "Statement" : [
+      {
+        "Sid" : "AllObjectActions",
+        "Effect" : "Allow",
+        "Action" : "s3:PutObject",
+        "Resource" : ["${var.authz_eval_bucket_arn}/*"]
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "eval_bucket_attach" {
+  role       = aws_iam_role.authz_ecs_task_role.name
+  policy_arn = aws_iam_policy.authz_eval_bucket.arn
+}
+
+resource "aws_iam_policy" "eventbus_put_events" {
+  name        = "${var.namespace}-${var.stage}-authz-eb"
+  description = "Allows ECS tasks to put events to the event bus"
+
+  policy = jsonencode({
+    "Version" : "2012-10-17",
+    "Statement" : [
+      {
+        "Effect" : "Allow",
+        "Action" : "events:PutEvents",
+        "Resource" : var.eventbus_arn
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "eventbus_put_events_attach" {
+  role       = aws_iam_role.authz_ecs_task_role.name
+  policy_arn = aws_iam_policy.eventbus_put_events.arn
+}
+
+
 resource "aws_ecs_task_definition" "authz_task" {
   family                   = "${var.namespace}-${var.stage}-authz"
   network_mode             = "awsvpc"
@@ -205,6 +249,18 @@ resource "aws_ecs_task_definition" "authz_task" {
       {
         name  = "CF_OIDC_PROVISIONER_SERVICE_CLIENT_ID",
         value = var.oidc_provisioner_service_client_id
+      },
+      {
+        name  = "CF_EVAL_SINK_TYPE",
+        value = "aws"
+      },
+      {
+        name  = "CF_EVAL_SINK_AWS_EVENT_BRIDGE_ARN",
+        value = var.eventbus_arn
+      },
+      {
+        name  = "CF_EVAL_SINK_AWS_S3_BUCKET",
+        value = var.authz_eval_bucket_name
       },
 
 

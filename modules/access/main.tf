@@ -135,6 +135,10 @@ resource "aws_ecs_task_definition" "access_handler_task" {
           value = var.app_url
         },
         {
+          name  = "CF_FRONTEND_URL",
+          value = var.app_url
+        },
+        {
           name  = "CF_OIDC_TRUSTED_ISSUER_COGNITO",
           value = var.auth_issuer
         },

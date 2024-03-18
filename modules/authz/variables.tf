@@ -127,3 +127,13 @@ variable "additional_cors_allowed_origins" {
   default     = []
   description = "Additional origins to add to the CORS allowlist. By default, the app URL is automatically added."
 }
+
+variable "authz_eval_bucket_name" {
+  type        = string
+  description = "Name of authorization evaluation bucket"
+}
+
+variable "authz_eval_bucket_arn" {
+  type        = string
+  description = "ARN of authorization evaluation bucket"
+}

@@ -273,3 +273,13 @@ variable "grant_assume_on_role_arns" {
   type        = list(string)
   default     = []
 }
+
+variable "authz_eval_bucket_name" {
+  type        = string
+  description = "Name of authorization evaluation bucket"
+}
+
+variable "authz_eval_bucket_arn" {
+  type        = string
+  description = "ARN of authorization evaluation bucket"
+}
