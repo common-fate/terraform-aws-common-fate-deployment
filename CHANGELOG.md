@@ -1,5 +1,11 @@
 # @common-fate/terraform-aws-common-fate-deployment
 
+## 1.23.1
+
+### Patch Changes
+
+- a2aa9d0: Fixed incorrect default values for cloudtrail sync feature which would cause the Worker task to panic
+
 ## 1.23.0
 
 ### Minor Changes
