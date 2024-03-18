@@ -123,10 +123,6 @@ resource "aws_ecs_task_definition" "access_handler_task" {
       }],
       environment = [
         {
-          name  = "CF_OIDC_AUTHORITY_URL",
-          value = var.auth_authority_url
-        },
-        {
           name  = "CF_EVENT_BRIDGE_ARN",
           value = var.eventbus_arn
         },

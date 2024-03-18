@@ -110,6 +110,10 @@ variable "oidc_provisioner_service_client_id" {
   description = "Provisioner Service Account OIDC Client ID"
   type        = string
 }
+variable "oidc_slack_service_client_id" {
+  description = "Slack Service Account OIDC Client ID"
+  type        = string
+}
 
 variable "log_level" {
   description = "Log level for ECS service"
