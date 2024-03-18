@@ -18,7 +18,7 @@ variable "aws_region" {
 variable "release_tag" {
   description = "Override the application release tag to be used in the deployment. As of module version v1.13.0, application versions are bundled into the Terraform module, and so in most cases you should not override this."
   type        = string
-  default     = "v3.0.0"
+  default     = "v3.1.3"
 }
 
 variable "app_certificate_arn" {
@@ -262,13 +262,13 @@ variable "unstable_enable_feature_least_privilege" {
 
 variable "unstable_sync_idc_cloudtrail_schedule" {
   type        = string
-  default     = "0 13 0 * * *"
+  default     = "13 0 * * *"
   description = "Least Privilege Analytics: the schedule to sync AWS CloudTrail events on"
 }
 
 variable "unstable_least_privilege_analysis_schedule" {
   type        = string
-  default     = "0 13 5 * * *"
+  default     = "13 5 * * *"
   description = "Least Privilege Analytics: the schedule to build least privilege reports on"
 }
 
@@ -301,3 +301,50 @@ variable "database_deletion_protection" {
   default     = true
   type        = bool
 }
+
+variable "vpc_id" {
+  description = "For BYO VPC deployments: specifies the ID of the Virtual Private Cloud (VPC) for deployment."
+  type        = string
+  default     = null
+  nullable    = true
+}
+
+
+variable "database_subnet_group_id" {
+  description = "For BYO VPC deployments: specifies the ID of the database subnet group for deployment."
+  type        = string
+  default     = null
+  nullable    = true
+}
+
+variable "public_subnet_ids" {
+  description = "For BYO VPC deployments: specifies the IDs of the VPC public subnets."
+  type        = list(string)
+  default     = null
+  nullable    = true
+}
+
+variable "private_subnet_ids" {
+  description = "For BYO VPC deployments: specifies the IDs of the VPC private subnets."
+  type        = list(string)
+  default     = null
+  nullable    = true
+}
+
+variable "ecs_cluster_id" {
+  description = "For BYO VPC deployments: specifies the ID of an existing ECS cluster to deploy to."
+  type        = string
+  default     = null
+  nullable    = true
+}
+
+variable "use_internal_load_balancer" {
+  description = "If 'true', the provisioned load balancer will be internal rather than external. Use this when you want to restrict network access to Common Fate to be behind a VPN only."
+  default     = false
+}
+variable "web_access_token_validity_duration" {
+  description = "Specifies how long the access token in the web cognito client will be valid for. Unit is in minutes"
+  default     = 10
+  type        = number
+}
+
