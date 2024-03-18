@@ -262,13 +262,13 @@ variable "unstable_enable_feature_least_privilege" {
 
 variable "unstable_sync_idc_cloudtrail_schedule" {
   type        = string
-  default     = "0 13 0 * * *"
+  default     = "13 0 * * *"
   description = "Least Privilege Analytics: the schedule to sync AWS CloudTrail events on"
 }
 
 variable "unstable_least_privilege_analysis_schedule" {
   type        = string
-  default     = "0 13 5 * * *"
+  default     = "13 5 * * *"
   description = "Least Privilege Analytics: the schedule to build least privilege reports on"
 }
 
