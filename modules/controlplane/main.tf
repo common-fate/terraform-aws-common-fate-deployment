@@ -723,12 +723,7 @@ resource "aws_lb_listener_rule" "service_rule" {
   }
   condition {
     path_pattern {
-      values = [
-        "/commonfate.control*",
-        "/api/*",
-        "/commonfate.leastprivilege*",
-        "/commonfate.authz.v1alpha1.EvaluationService/*" // authz evaluation service is handled by Control Plane.
-      ]
+      values = ["/commonfate.control*", "/api/*", "/commonfate.leastprivilege*"]
     }
   }
 }
