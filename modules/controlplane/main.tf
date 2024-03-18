@@ -527,7 +527,11 @@ locals {
     {
       name  = "CF_ASSUME_ROLE_EXTERNAL_ID",
       value = var.assume_role_external_id
-    }
+    },
+    {
+      name  = "CF_EVAL_SINK_AWS_S3_BUCKET",
+      value = var.authz_eval_bucket_name
+    },
   ]
 
   // Only add these secrets if their values are provided
