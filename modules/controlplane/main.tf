@@ -219,6 +219,37 @@ resource "aws_iam_role_policy_attachment" "control_plane_report_bucket_attach" {
   policy_arn = aws_iam_policy.report_bucket.arn
 }
 
+
+resource "aws_iam_policy" "authz_eval_bucket" {
+  name        = "${var.namespace}-${var.stage}-control-plane-eval-bucket"
+  description = "Allows the Control Plane to read from the authorization evaluation S3 bucket"
+
+  policy = jsonencode({
+    "Version" : "2012-10-17",
+    "Statement" : [
+      {
+        "Sid" : "ListObjectsInBucket",
+        "Effect" : "Allow",
+        "Action" : ["s3:ListBucket"],
+        "Resource" : [var.authz_eval_bucket_arn]
+      },
+      {
+        "Sid" : "AllObjectActions",
+        "Effect" : "Allow",
+        "Action" : "s3:GetObject",
+        "Resource" : ["${var.authz_eval_bucket_arn}/*"]
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "control_plane_authz_eval_bucket_attach" {
+  role       = aws_iam_role.control_plane_ecs_task_role.name
+  policy_arn = aws_iam_policy.authz_eval_bucket.arn
+}
+
+
+
 resource "aws_iam_policy" "eventbus_put_events" {
   name        = "${var.namespace}-${var.stage}-control-plane-eb"
   description = "Allows ECS tasks to put events to the event bus"
@@ -499,7 +530,11 @@ locals {
     {
       name  = "CF_ASSUME_ROLE_EXTERNAL_ID",
       value = var.assume_role_external_id
-    }
+    },
+    {
+      name  = "CF_EVAL_SINK_AWS_S3_BUCKET",
+      value = var.authz_eval_bucket_name
+    },
   ]
 
   // Only add these secrets if their values are provided
