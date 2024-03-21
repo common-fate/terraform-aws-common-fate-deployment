@@ -2,7 +2,7 @@
 "@common-fate/terraform-aws-common-fate-deployment": minor
 ---
 
-Updates the bundled Common Fate application version to v3.3.0, including the following changes:
+Updates the bundled Common Fate application version to v3.3.2, including the following changes:
 
 - Minor Changes
 
