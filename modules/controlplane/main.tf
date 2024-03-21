@@ -613,7 +613,7 @@ resource "aws_ecs_task_definition" "worker_task" {
       logConfiguration = {
         logDriver = "awslogs",
         options = {
-          "awslogs-group"         = aws_cloudwatch_log_group.control_plane_log_group.name,
+          "awslogs-group"         = aws_cloudwatch_log_group.worker_log_group.name,
           "awslogs-region"        = var.aws_region,
           "awslogs-stream-prefix" = "worker"
         }
