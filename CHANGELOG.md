@@ -1,5 +1,11 @@
 # @common-fate/terraform-aws-common-fate-deployment
 
+## 1.24.1
+
+### Patch Changes
+
+- 60b1cd9: Use the correct cloudwatch log group for the Worker service
+
 ## 1.24.0
 
 ### Minor Changes
