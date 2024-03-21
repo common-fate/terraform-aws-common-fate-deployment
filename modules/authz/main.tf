@@ -262,8 +262,10 @@ resource "aws_ecs_task_definition" "authz_task" {
         name  = "CF_EVAL_SINK_AWS_S3_BUCKET",
         value = var.authz_eval_bucket_name
       },
-
-
+      {
+        name  = "CF_OIDC_SLACK_SERVICE_CLIENT_ID",
+        value = var.oidc_slack_service_client_id
+      },
     ],
     secrets = []
 

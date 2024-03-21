@@ -44,10 +44,6 @@ variable "app_url" {
   }
 }
 
-variable "auth_authority_url" {
-  description = "Specifies the URL used for authentication."
-  type        = string
-}
 
 variable "ecs_cluster_id" {
   description = "Identifies the Amazon Elastic Container Service (ECS) cluster for deployment."

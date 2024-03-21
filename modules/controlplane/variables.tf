@@ -115,11 +115,6 @@ variable "ecs_cluster_id" {
   type        = string
 }
 
-variable "auth_authority_url" {
-  description = "Specifies the URL used for authentication."
-  type        = string
-}
-
 variable "auth_issuer" {
   description = "Specifies the issuer for authentication."
   type        = string
@@ -135,9 +130,22 @@ variable "control_plane_service_client_secret" {
   type        = string
   sensitive   = true
 }
-
 variable "oidc_control_plane_issuer" {
   description = "OIDC issuer for the Control Plane service"
+  type        = string
+}
+variable "slack_service_client_id" {
+  description = "Specifies the client ID for the slack service."
+  type        = string
+}
+
+variable "slack_service_client_secret" {
+  description = "Specifies the client secret for the slack service."
+  type        = string
+  sensitive   = true
+}
+variable "oidc_slack_issuer" {
+  description = "OIDC issuer for the Slack service"
   type        = string
 }
 
