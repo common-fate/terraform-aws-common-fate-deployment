@@ -217,3 +217,10 @@ variable "assume_role_external_id" {
   type        = string
   default     = ""
 }
+
+
+variable "provisioner_image_repository" {
+  type        = string
+  description = "Docker image repository to use for the Provisioner image"
+  default     = "public.ecr.aws/z2x0a3a1/common-fate-deployment/provisioner"
+}

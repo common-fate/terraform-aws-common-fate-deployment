@@ -581,7 +581,7 @@ resource "aws_ecs_task_definition" "control_plane_task" {
   container_definitions = jsonencode([
     {
       name  = "control-plane-container",
-      image = "commonfate/common-fate-cloud-api:${var.release_tag}",
+      image = "${var.control_image_repository}:${var.release_tag}",
 
       portMappings = [{
         containerPort = 8080,
@@ -640,7 +640,7 @@ resource "aws_ecs_task_definition" "worker_task" {
   container_definitions = jsonencode([
     {
       name  = "worker-container",
-      image = "commonfate/common-fate-cloud-worker:${var.release_tag}",
+      image = "${var.worker_image_repository}:${var.release_tag}",
 
       environment = local.control_plane_environment
       secrets     = local.control_plane_secrets

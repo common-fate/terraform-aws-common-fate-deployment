@@ -116,7 +116,7 @@ resource "aws_ecs_task_definition" "access_handler_task" {
   container_definitions = jsonencode([
     {
       name  = "access-handler-container",
-      image = "commonfate/common-fate-cloud-access-handler:${var.release_tag}",
+      image = "${var.access_image_repository}:${var.release_tag}",
 
       portMappings = [{
         containerPort = 9090,

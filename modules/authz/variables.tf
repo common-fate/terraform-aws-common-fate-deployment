@@ -141,3 +141,9 @@ variable "authz_eval_bucket_arn" {
   type        = string
   description = "ARN of authorization evaluation bucket"
 }
+
+variable "authz_image_repository" {
+  type        = string
+  description = "Docker image repository to use for the Authz image"
+  default     = "public.ecr.aws/z2x0a3a1/common-fate-deployment/authz"
+}
