@@ -1,5 +1,17 @@
 # @common-fate/terraform-aws-common-fate-deployment
 
+## 1.27.0
+
+### Minor Changes
+
+- deb75fa: Adds support for configuring the web console refresh token validity, using the 'web_refresh_token_validity_duration' and 'web_refresh_token_validity_units' variables.
+
+### Patch Changes
+
+- 57eb90e: Adds additional 'Condition' keys to the IAM roles used by ECS to protect against confused deputy issues.
+- efccdca: The AWS RDS instance is now encrypted by default for new Common Fate deployments.
+- 132f8ab: Adds release tag environment variable to the control plane and access services.
+
 ## 1.26.0
 
 ### Minor Changes
