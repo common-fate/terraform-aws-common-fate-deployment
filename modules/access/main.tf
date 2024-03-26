@@ -156,7 +156,11 @@ resource "aws_ecs_task_definition" "access_handler_task" {
         {
           name  = "CF_ACCESS_SERVICE_OIDC_ISSUER",
           value = var.oidc_access_handler_service_issuer
-        }
+        },
+        {
+          name  = "CF_RELEASE_TAG",
+          value = var.release_tag
+        },
       ],
       secrets = [
 

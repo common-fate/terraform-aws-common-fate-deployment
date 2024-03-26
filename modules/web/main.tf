@@ -126,6 +126,10 @@ resource "aws_ecs_task_definition" "web_task" {
         name  = "CF_FEATURE_LEAST_PRIVILEGE_ENABLED",
         value = var.unstable_enable_feature_least_privilege ? "true" : "false"
       },
+      {
+        name  = "CF_RELEASE_TAG",
+        value = var.release_tag
+      },
     ]
 
     logConfiguration = {
