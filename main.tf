@@ -146,6 +146,8 @@ module "control_plane" {
   assume_role_external_id                    = var.assume_role_external_id
   authz_eval_bucket_name                     = module.authz_eval_bucket.id
   authz_eval_bucket_arn                      = module.authz_eval_bucket.arn
+  control_image_repository                   = var.control_image_repository
+  worker_image_repository                    = var.worker_image_repository
 }
 
 
@@ -191,6 +193,7 @@ module "web" {
   auth_issuer                             = module.cognito.auth_issuer
   alb_security_group_id                   = module.alb.alb_security_group_id
   unstable_enable_feature_least_privilege = var.unstable_enable_feature_least_privilege
+  web_image_repository                    = var.web_image_repository
 }
 
 module "access_handler" {
@@ -214,6 +217,7 @@ module "access_handler" {
   otel_writer_iam_policy_arn                = module.ecs_base.otel_writer_iam_policy_arn
   alb_security_group_id                     = module.alb.alb_security_group_id
   additional_cors_allowed_origins           = var.additional_cors_allowed_origins
+  access_image_repository                   = var.access_image_repository
 }
 
 module "authz" {
@@ -241,6 +245,7 @@ module "authz" {
   additional_cors_allowed_origins       = var.additional_cors_allowed_origins
   authz_eval_bucket_arn                 = module.authz_eval_bucket.arn
   authz_eval_bucket_name                = module.authz_eval_bucket.id
+  authz_image_repository                = var.authz_image_repository
 }
 
 module "provisioner" {
@@ -262,11 +267,11 @@ module "provisioner" {
   app_url                           = var.app_url
   assume_role_external_id           = var.assume_role_external_id
 
-  gcp_config      = var.provisioner_gcp_config
-  aws_idc_config  = var.provisioner_aws_idc_config
-  entra_config    = var.provisioner_entra_config
-  aws_rds_config  = var.provisioner_aws_rds_config
-  okta_config     = var.provisioner_okta_config
-  datastax_config = var.provisioner_datastax_config
-
+  gcp_config                   = var.provisioner_gcp_config
+  aws_idc_config               = var.provisioner_aws_idc_config
+  entra_config                 = var.provisioner_entra_config
+  aws_rds_config               = var.provisioner_aws_rds_config
+  okta_config                  = var.provisioner_okta_config
+  datastax_config              = var.provisioner_datastax_config
+  provisioner_image_repository = var.provisioner_image_repository
 }

@@ -148,3 +148,9 @@ variable "unstable_enable_feature_least_privilege" {
   default     = false
   description = "Opt-in to enable Least Privilege Analytics (in early access). This variable will be removed once the feature is released."
 }
+
+variable "web_image_repository" {
+  type        = string
+  description = "Docker image repository to use for the Web image"
+  default     = "public.ecr.aws/z2x0a3a1/common-fate-deployment/web"
+}

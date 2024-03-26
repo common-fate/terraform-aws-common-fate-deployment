@@ -122,3 +122,9 @@ variable "additional_cors_allowed_origins" {
   default     = []
   description = "Additional origins to add to the CORS allowlist. By default, the app URL is automatically added."
 }
+
+variable "access_image_repository" {
+  type        = string
+  description = "Docker image repository to use for the Access image"
+  default     = "public.ecr.aws/z2x0a3a1/common-fate-deployment/access"
+}

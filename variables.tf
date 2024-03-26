@@ -348,3 +348,39 @@ variable "web_access_token_validity_duration" {
   type        = number
 }
 
+variable "worker_image_repository" {
+  type        = string
+  description = "Docker image repository to use for the Worker image"
+  default     = "public.ecr.aws/z2x0a3a1/common-fate-deployment/worker"
+}
+
+variable "control_image_repository" {
+  type        = string
+  description = "Docker image repository to use for the Control image"
+  default     = "public.ecr.aws/z2x0a3a1/common-fate-deployment/control"
+}
+
+variable "access_image_repository" {
+  type        = string
+  description = "Docker image repository to use for the Access image"
+  default     = "public.ecr.aws/z2x0a3a1/common-fate-deployment/access"
+}
+
+variable "authz_image_repository" {
+  type        = string
+  description = "Docker image repository to use for the Authz image"
+  default     = "public.ecr.aws/z2x0a3a1/common-fate-deployment/authz"
+}
+
+variable "provisioner_image_repository" {
+  type        = string
+  description = "Docker image repository to use for the Provisioner image"
+  default     = "public.ecr.aws/z2x0a3a1/common-fate-deployment/provisioner"
+}
+
+variable "web_image_repository" {
+  type        = string
+  description = "Docker image repository to use for the Web image"
+  default     = "public.ecr.aws/z2x0a3a1/common-fate-deployment/web"
+}
+

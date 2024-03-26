@@ -65,7 +65,7 @@ resource "aws_ecs_task_definition" "web_task" {
 
   container_definitions = jsonencode([{
     name  = "web_container",
-    image = "commonfate/common-fate-cloud-web:${var.release_tag}",
+    image = "${var.web_image_repository}:${var.release_tag}",
 
     portMappings = [{
       containerPort = 80,

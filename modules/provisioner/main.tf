@@ -326,7 +326,7 @@ resource "aws_ecs_task_definition" "provisioner_task" {
 
   container_definitions = jsonencode([{
     name  = "provisioner-container",
-    image = "commonfate/common-fate-cloud-provisioner:${var.release_tag}",
+    image = "${var.provisioner_image_repository}:${var.release_tag}",
 
     portMappings = [{
       containerPort = 9999,
