@@ -178,6 +178,7 @@ module "web" {
   namespace                               = var.namespace
   stage                                   = var.stage
   aws_region                              = var.aws_region
+  aws_account_id                          = data.aws_caller_identity.current.account_id
   release_tag                             = var.release_tag
   subnet_ids                              = local.private_subnet_ids
   vpc_id                                  = local.vpc_id
@@ -201,6 +202,7 @@ module "access_handler" {
   namespace                                 = var.namespace
   stage                                     = var.stage
   aws_region                                = var.aws_region
+  aws_account_id                            = data.aws_caller_identity.current.account_id
   eventbus_arn                              = module.events.event_bus_arn
   release_tag                               = var.release_tag
   subnet_ids                                = local.private_subnet_ids
@@ -225,6 +227,7 @@ module "authz" {
   namespace                             = var.namespace
   stage                                 = var.stage
   aws_region                            = var.aws_region
+  aws_account_id                        = data.aws_caller_identity.current.account_id
   eventbus_arn                          = module.events.event_bus_arn
   release_tag                           = var.release_tag
   subnet_ids                            = local.private_subnet_ids
@@ -255,6 +258,7 @@ module "provisioner" {
   namespace                         = var.namespace
   stage                             = var.stage
   aws_region                        = var.aws_region
+  aws_account_id                    = data.aws_caller_identity.current.account_id
   release_tag                       = var.release_tag
   access_handler_sg_id              = module.access_handler.security_group_id
   allow_ingress_from_sg_ids         = [module.control_plane.security_group_id]

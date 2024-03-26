@@ -30,6 +30,11 @@ variable "aws_region" {
   type        = string
 }
 
+variable "aws_account_id" {
+  description = "Determines the AWS account ID for deployment."
+  type        = string
+}
+
 variable "release_tag" {
   description = "Defines the tag for the frontend and backend images, typically a git commit hash."
   type        = string

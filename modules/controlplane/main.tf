@@ -96,6 +96,14 @@ resource "aws_iam_role" "control_plane_ecs_execution_role" {
         Principal = {
           Service = "ecs-tasks.amazonaws.com"
         }
+        Condition = {
+          ArnLike = {
+            "aws:SourceArn" = "arn:aws:ecs:${var.aws_region}:${var.aws_account_id}:*"
+          }
+          StringEquals = {
+            "aws:SourceAccount" : "${var.aws_account_id}"
+          }
+        }
       }
     ]
   })
@@ -174,6 +182,14 @@ resource "aws_iam_role" "control_plane_ecs_task_role" {
         Effect = "Allow",
         Principal = {
           Service = "ecs-tasks.amazonaws.com"
+        }
+        Condition = {
+          ArnLike = {
+            "aws:SourceArn" = "arn:aws:ecs:${var.aws_region}:${var.aws_account_id}:*"
+          }
+          StringEquals = {
+            "aws:SourceAccount" : "${var.aws_account_id}"
+          }
         }
       }
     ]

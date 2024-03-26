@@ -61,6 +61,11 @@ variable "aws_region" {
   type        = string
 }
 
+variable "aws_account_id" {
+  description = "Determines the AWS account ID for deployment."
+  type        = string
+}
+
 variable "auth_url" {
   description = "Specifies the authentication domain (e.g., 'https://auth.mydomain.com')."
   type        = string
