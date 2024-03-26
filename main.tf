@@ -81,17 +81,20 @@ module "ecs_base" {
 
 
 module "cognito" {
-  source                             = "./modules/cognito"
-  namespace                          = var.namespace
-  stage                              = var.stage
-  aws_region                         = var.aws_region
-  app_url                            = var.app_url
-  auth_url                           = var.auth_url
-  auth_certificate_arn               = var.auth_certificate_arn
-  saml_metadata_is_file              = var.saml_metadata_is_file
-  saml_metadata_source               = var.saml_metadata_source
-  saml_provider_name                 = var.saml_provider_name
-  web_access_token_validity_duration = var.web_access_token_validity_duration
+  source                              = "./modules/cognito"
+  namespace                           = var.namespace
+  stage                               = var.stage
+  aws_region                          = var.aws_region
+  app_url                             = var.app_url
+  auth_url                            = var.auth_url
+  auth_certificate_arn                = var.auth_certificate_arn
+  saml_metadata_is_file               = var.saml_metadata_is_file
+  saml_metadata_source                = var.saml_metadata_source
+  saml_provider_name                  = var.saml_provider_name
+  web_access_token_validity_duration  = var.web_access_token_validity_duration
+  web_access_token_validity_units     = var.web_access_token_validity_units
+  web_refresh_token_validity_duration = var.web_refresh_token_validity_duration
+  web_refresh_token_validity_units    = var.web_refresh_token_validity_units
 }
 
 
