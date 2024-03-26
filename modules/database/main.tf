@@ -32,4 +32,9 @@ resource "aws_db_instance" "pg_db" {
   vpc_security_group_ids       = [aws_security_group.rds_sg.id]
   deletion_protection          = var.deletion_protection
   performance_insights_enabled = true
+  storage_encrypted            = true
+
+  lifecycle {
+    ignore_changes = [storage_encrypted]
+  }
 }
