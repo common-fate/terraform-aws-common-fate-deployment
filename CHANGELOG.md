@@ -1,5 +1,11 @@
 # @common-fate/terraform-aws-common-fate-deployment
 
+## 1.28.1
+
+### Patch Changes
+
+- de501fb: Minor UI improvements for the resources detail view page.
+
 ## 1.28.0
 
 ### Minor Changes
