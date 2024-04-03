@@ -223,6 +223,7 @@ module "access_handler" {
   alb_security_group_id                     = module.alb.alb_security_group_id
   additional_cors_allowed_origins           = var.additional_cors_allowed_origins
   access_image_repository                   = var.access_image_repository
+  unstable_enable_feature_access_simulation = var.unstable_enable_feature_access_simulation
 }
 
 module "authz" {
