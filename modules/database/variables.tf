@@ -26,3 +26,14 @@ variable "deletion_protection" {
   type        = bool
   default     = true
 }
+
+variable "enable_backup" {
+  description = "Override default behaviour and restore from a point in time backup. Must be used with restore_time"
+  type        = bool
+  default     = false
+}
+
+variable "restore_time" {
+  description = "he date and time to restore from. Value must be a time in Universal Coordinated Time (UTC) format and must be before the latest restorable time for the DB instance."
+  type        = string
+}
