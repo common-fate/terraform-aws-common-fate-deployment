@@ -33,16 +33,13 @@ resource "aws_db_instance" "pg_db" {
   deletion_protection          = var.deletion_protection
   performance_insights_enabled = true
   storage_encrypted            = true
-  backup_retention_period      = 7
+  backup_retention_period      = var.db_retention_period
 
 
   restore_to_point_in_time {
-    restore_time                  = var.enable_backup ? var.restore_time : null
-    source_db_instance_identifier = var.enable_backup ? aws_db_parameter_group.postgres_db.id : null
-    use_latest_restorable_time    = false
+    restore_time                  = var.apply_pitr_backup_rds ? var.pitr_restore_time : null
+    source_db_instance_identifier = var.apply_pitr_backup_rds ? aws_db_parameter_group.postgres_db.id : null
   }
-
-
 
   lifecycle {
     ignore_changes = [storage_encrypted]

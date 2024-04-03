@@ -400,3 +400,22 @@ variable "web_image_repository" {
   default     = "public.ecr.aws/z2x0a3a1/common-fate-deployment/web"
 }
 
+variable "apply_pitr_backup_rds" {
+  description = "Override default behaviour and restore from a point in time backup. Must be used with restore_time"
+  type        = bool
+  default     = false
+
+}
+
+variable "rds_pitr_restore_time" {
+  description = "The date and time to restore from. Value must be a time in Universal Coordinated Time (UTC) format and must be before the latest restorable time for the DB instance."
+  type        = string
+  default     = null
+}
+
+variable "rds_db_retention_period" {
+  description = "The time between backups for the rds instance, default is disabled"
+  type        = number
+  default     = 0
+}
+

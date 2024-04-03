@@ -47,7 +47,11 @@ module "control_plane_db" {
   vpc_id              = local.vpc_id
   subnet_group_id     = local.database_subnet_group_id
   deletion_protection = var.database_deletion_protection
+  enable_backup       = var.apply_pitr_backup_rds
+  pitr_restore_time   = var.rds_pitr_restore_time
+  db_retention_period = var.rds_db_retention_period
 }
+
 
 module "authz_db" {
   source    = "./modules/authz-database"

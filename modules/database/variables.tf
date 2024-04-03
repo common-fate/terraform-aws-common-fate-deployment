@@ -27,13 +27,22 @@ variable "deletion_protection" {
   default     = true
 }
 
-variable "enable_backup" {
+variable "apply_pitr_backup_rds" {
   description = "Override default behaviour and restore from a point in time backup. Must be used with restore_time"
   type        = bool
   default     = false
+
 }
 
-variable "restore_time" {
-  description = "he date and time to restore from. Value must be a time in Universal Coordinated Time (UTC) format and must be before the latest restorable time for the DB instance."
+variable "pitr_restore_time" {
+  description = "The date and time to restore from. Value must be a time in Universal Coordinated Time (UTC) format and must be before the latest restorable time for the DB instance."
   type        = string
+  default     = null
 }
+
+variable "db_retention_period" {
+  description = "The time between backups for the rds instance"
+  type        = number
+  default     = 0
+}
+
