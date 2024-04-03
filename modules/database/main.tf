@@ -42,6 +42,6 @@ resource "aws_db_instance" "pg_db" {
   }
 
   lifecycle {
-    ignore_changes = [storage_encrypted]
+    ignore_changes = [storage_encrypted, restore_to_point_in_time]
   }
 }
