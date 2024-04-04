@@ -1,5 +1,19 @@
 # @common-fate/terraform-aws-common-fate-deployment
 
+## 1.31.0
+
+### Minor Changes
+
+- e55113a: Adds a `unstable_enable_feature_access_simulation` variable to enable Access Simulation (a new feature, currently in beta)
+
+### Patch Changes
+
+- b914db0: Updates the built-in application version to v3.4.5, including the following changes:
+
+  ### Patch changes
+
+  cf4ba3c: Fix an issue where the Access::Action::"Close" action was not applicable to the CF::Service entity type in the Cedar schema.
+
 ## 1.30.0
 
 ### Minor Changes
