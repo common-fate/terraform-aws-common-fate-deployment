@@ -151,6 +151,7 @@ module "control_plane" {
   authz_eval_bucket_arn                      = module.authz_eval_bucket.arn
   control_image_repository                   = var.control_image_repository
   worker_image_repository                    = var.worker_image_repository
+  unstable_enable_feature_access_simulation  = var.unstable_enable_feature_access_simulation
 }
 
 
@@ -177,27 +178,26 @@ module "authz_eval_bucket" {
 
 
 module "web" {
-  source                                  = "./modules/web"
-  namespace                               = var.namespace
-  stage                                   = var.stage
-  aws_region                              = var.aws_region
-  aws_account_id                          = data.aws_caller_identity.current.account_id
-  release_tag                             = var.release_tag
-  subnet_ids                              = local.private_subnet_ids
-  vpc_id                                  = local.vpc_id
-  auth_authority_url                      = module.cognito.auth_authority_url
-  auth_cli_client_id                      = module.cognito.cli_client_id
-  auth_url                                = module.cognito.auth_url
-  auth_web_client_id                      = module.cognito.web_client_id
-  logo_url                                = var.logo_url
-  team_name                               = var.team_name
-  ecs_cluster_id                          = local.ecs_cluster_id
-  alb_listener_arn                        = module.alb.listener_arn
-  app_url                                 = var.app_url
-  auth_issuer                             = module.cognito.auth_issuer
-  alb_security_group_id                   = module.alb.alb_security_group_id
-  unstable_enable_feature_least_privilege = var.unstable_enable_feature_least_privilege
-  web_image_repository                    = var.web_image_repository
+  source                = "./modules/web"
+  namespace             = var.namespace
+  stage                 = var.stage
+  aws_region            = var.aws_region
+  aws_account_id        = data.aws_caller_identity.current.account_id
+  release_tag           = var.release_tag
+  subnet_ids            = local.private_subnet_ids
+  vpc_id                = local.vpc_id
+  auth_authority_url    = module.cognito.auth_authority_url
+  auth_cli_client_id    = module.cognito.cli_client_id
+  auth_url              = module.cognito.auth_url
+  auth_web_client_id    = module.cognito.web_client_id
+  logo_url              = var.logo_url
+  team_name             = var.team_name
+  ecs_cluster_id        = local.ecs_cluster_id
+  alb_listener_arn      = module.alb.listener_arn
+  app_url               = var.app_url
+  auth_issuer           = module.cognito.auth_issuer
+  alb_security_group_id = module.alb.alb_security_group_id
+  web_image_repository  = var.web_image_repository
 }
 
 module "access_handler" {

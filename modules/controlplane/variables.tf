@@ -303,3 +303,10 @@ variable "control_image_repository" {
   description = "Docker image repository to use for the Control image"
   default     = "public.ecr.aws/z2x0a3a1/common-fate-deployment/control"
 }
+
+
+variable "unstable_enable_feature_access_simulation" {
+  type        = bool
+  default     = false
+  description = "Opt-in to enable Access Simulation APIs (in early access). This variable will be removed once the feature is released."
+}

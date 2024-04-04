@@ -147,13 +147,6 @@ variable "alb_listener_rule_priority" {
   default     = 100
 }
 
-
-variable "unstable_enable_feature_least_privilege" {
-  type        = bool
-  default     = false
-  description = "Opt-in to enable Least Privilege Analytics (in early access). This variable will be removed once the feature is released."
-}
-
 variable "web_image_repository" {
   type        = string
   description = "Docker image repository to use for the Web image"
