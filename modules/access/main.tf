@@ -179,7 +179,7 @@ resource "aws_ecs_task_definition" "access_handler_task" {
         },
         {
           name  = "CF_FEATURE_ACCESS_SIMULATION_ENABLED",
-          value = var.unstable_enable_feature_access_simulation
+          value = var.unstable_enable_feature_access_simulation ? "true" : "false"
         }
       ],
       secrets = [
