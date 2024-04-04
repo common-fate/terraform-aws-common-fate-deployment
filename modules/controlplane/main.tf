@@ -555,6 +555,10 @@ locals {
       name  = "CF_RELEASE_TAG",
       value = var.release_tag
     },
+    {
+      name  = "CF_FEATURE_ACCESS_SIMULATION_ENABLED",
+      value = var.unstable_enable_feature_access_simulation ? "true" : "false"
+    }
 
 
   ]
