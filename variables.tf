@@ -400,34 +400,15 @@ variable "web_image_repository" {
   default     = "public.ecr.aws/z2x0a3a1/common-fate-deployment/web"
 }
 
-
-
-variable "rds_restore_to_point_in_time_restore_time" {
-  description = "The date and time to restore from. Value must be a time in Universal Coordinated Time (UTC) format and must be before the latest restorable time for the DB instance."
-  type        = string
-  default     = null
-}
-
-variable "rds_db_retention_period" {
-  description = "The time between backups for the rds instance, default is disabled"
-  type        = number
-  default     = 0
-}
-
-variable "rds_restore_to_point_in_time_source_db_instance_identifier" {
-  description = "The date and time to restore from. Value must be a time in Universal Coordinated Time (UTC) format and must be before the latest restorable time for the DB instance."
-  type        = string
-  default     = null
-}
-
 variable "restore_to_point_in_time" {
   description = "nested block: NestingList, min items: 0, max items: 1"
   type = set(object(
     {
-      restore_time                  = string
-      source_db_instance_identifier = string
-      source_dbi_resource_id        = string
-      use_latest_restorable_time    = bool
+      restore_time                             = string
+      source_db_instance_identifier            = string
+      source_dbi_resource_id                   = string
+      use_latest_restorable_time               = bool
+      source_db_instance_automated_backups_arn = string
     }
   ))
   default = []

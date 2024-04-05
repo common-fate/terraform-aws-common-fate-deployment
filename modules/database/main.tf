@@ -33,7 +33,7 @@ resource "aws_db_instance" "pg_db" {
   deletion_protection          = var.deletion_protection
   performance_insights_enabled = true
   storage_encrypted            = true
-  backup_retention_period      = var.db_retention_period
+  # backup_retention_period      = var.db_retention_period
 
 
   # dynamic "restore_to_point_in_time" {
@@ -47,10 +47,11 @@ resource "aws_db_instance" "pg_db" {
   dynamic "restore_to_point_in_time" {
     for_each = var.restore_to_point_in_time
     content {
-      restore_time                  = restore_to_point_in_time.value["restore_time"]
-      source_db_instance_identifier = restore_to_point_in_time.value["source_db_instance_identifier"]
-      source_dbi_resource_id        = restore_to_point_in_time.value["source_dbi_resource_id"]
-      use_latest_restorable_time    = restore_to_point_in_time.value["use_latest_restorable_time"]
+      restore_time                                = restore_to_point_in_time.value["restore_time"]
+      source_db_instance_identifier               = restore_to_point_in_time.value["source_db_instance_identifier"]
+      source_dbi_resource_id                      = restore_to_point_in_time.value["source_dbi_resource_id"]
+      use_latest_restorable_time                  = restore_to_point_in_time.value["use_latest_restorable_time"]
+      arnsource_db_instance_automated_backups_arn = restore_to_point_in_time.value["arnsource_db_instance_automated_backups_arn"]
     }
   }
 
