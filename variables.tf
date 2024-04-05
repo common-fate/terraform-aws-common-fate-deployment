@@ -18,7 +18,7 @@ variable "aws_region" {
 variable "release_tag" {
   description = "Override the application release tag to be used in the deployment. As of module version v1.13.0, application versions are bundled into the Terraform module, and so in most cases you should not override this."
   type        = string
-  default     = "v3.4.3"
+  default     = "v3.4.5"
 }
 
 variable "app_certificate_arn" {
@@ -423,4 +423,9 @@ variable "restore_to_point_in_time" {
     }
   ))
   default = []
+}
+variable "unstable_enable_feature_access_simulation" {
+  type        = bool
+  default     = false
+  description = "Opt-in to enable Access Simulation APIs (in early access). This variable will be removed once the feature is released."
 }
