@@ -400,14 +400,9 @@ variable "web_image_repository" {
   default     = "public.ecr.aws/z2x0a3a1/common-fate-deployment/web"
 }
 
-variable "apply_pitr_backup_rds" {
-  description = "Override default behaviour and restore from a point in time backup. Must be used with restore_time"
-  type        = bool
-  default     = false
 
-}
 
-variable "rds_pitr_restore_time" {
+variable "rds_restore_to_point_in_time_restore_time" {
   description = "The date and time to restore from. Value must be a time in Universal Coordinated Time (UTC) format and must be before the latest restorable time for the DB instance."
   type        = string
   default     = null
@@ -419,3 +414,21 @@ variable "rds_db_retention_period" {
   default     = 0
 }
 
+variable "rds_restore_to_point_in_time_source_db_instance_identifier" {
+  description = "The date and time to restore from. Value must be a time in Universal Coordinated Time (UTC) format and must be before the latest restorable time for the DB instance."
+  type        = string
+  default     = null
+}
+
+variable "restore_to_point_in_time" {
+  description = "nested block: NestingList, min items: 0, max items: 1"
+  type = set(object(
+    {
+      restore_time                  = string
+      source_db_instance_identifier = string
+      source_dbi_resource_id        = string
+      use_latest_restorable_time    = bool
+    }
+  ))
+  default = []
+}

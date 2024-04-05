@@ -36,12 +36,27 @@ resource "aws_db_instance" "pg_db" {
   backup_retention_period      = var.db_retention_period
 
 
-  restore_to_point_in_time {
-    restore_time                  = var.apply_pitr_backup_rds ? var.pitr_restore_time : null
-    source_db_instance_identifier = var.apply_pitr_backup_rds ? aws_db_parameter_group.postgres_db.id : null
+  # dynamic "restore_to_point_in_time" {
+  #   for_each = var.rds_restore_to_point_in_time_restore_time != null ? [1] : []
+  #   content {
+  #     restore_time                  = var.rds_restore_to_point_in_time_restore_time
+  #     source_db_instance_identifier = var.rds_restore_to_point_in_time_source_db_instance_identifier
+  #   }
+  # }
+
+  dynamic "restore_to_point_in_time" {
+    for_each = var.restore_to_point_in_time
+    content {
+      restore_time                  = restore_to_point_in_time.value["restore_time"]
+      source_db_instance_identifier = restore_to_point_in_time.value["source_db_instance_identifier"]
+      source_dbi_resource_id        = restore_to_point_in_time.value["source_dbi_resource_id"]
+      use_latest_restorable_time    = restore_to_point_in_time.value["use_latest_restorable_time"]
+    }
   }
 
+
+
   lifecycle {
-    ignore_changes = [storage_encrypted, restore_to_point_in_time]
+    ignore_changes = [storage_encrypted]
   }
 }
