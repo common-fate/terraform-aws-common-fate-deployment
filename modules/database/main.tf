@@ -33,16 +33,6 @@ resource "aws_db_instance" "pg_db" {
   deletion_protection          = var.deletion_protection
   performance_insights_enabled = true
   storage_encrypted            = true
-  # backup_retention_period      = var.db_retention_period
-
-
-  # dynamic "restore_to_point_in_time" {
-  #   for_each = var.rds_restore_to_point_in_time_restore_time != null ? [1] : []
-  #   content {
-  #     restore_time                  = var.rds_restore_to_point_in_time_restore_time
-  #     source_db_instance_identifier = var.rds_restore_to_point_in_time_source_db_instance_identifier
-  #   }
-  # }
 
   dynamic "restore_to_point_in_time" {
     for_each = var.restore_to_point_in_time
