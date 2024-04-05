@@ -400,8 +400,19 @@ variable "web_image_repository" {
   default     = "public.ecr.aws/z2x0a3a1/common-fate-deployment/web"
 }
 
+
+
+
+
+variable "rds_db_retention_period" {
+  description = "The time between backups for the rds instance, default is disabled"
+  type        = number
+  default     = 0
+}
+
+
 variable "restore_to_point_in_time" {
-  description = "nested block: NestingList, min items: 0, max items: 1"
+  description = "Configuration block for restoring a DB instance to an arbitrary point in time"
   type = set(object(
     {
       restore_time                             = string
