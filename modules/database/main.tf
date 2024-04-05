@@ -41,7 +41,7 @@ resource "aws_db_instance" "pg_db" {
       source_db_instance_identifier            = restore_to_point_in_time.value["source_db_instance_identifier"]
       source_dbi_resource_id                   = restore_to_point_in_time.value["source_dbi_resource_id"]
       use_latest_restorable_time               = restore_to_point_in_time.value["use_latest_restorable_time"]
-      source_db_instance_automated_backups_arn = restore_to_point_in_time.value["arnsource_db_instance_automated_backups_arn"]
+      source_db_instance_automated_backups_arn = restore_to_point_in_time.value["source_db_instance_automated_backups_arn"]
     }
   }
 
