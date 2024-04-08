@@ -136,6 +136,7 @@ resource "aws_ecs_task_definition" "access_handler_task" {
 
       portMappings = [{
         containerPort = 9090,
+        name          = "grpc"
       }],
       environment = [
         {
@@ -144,7 +145,7 @@ resource "aws_ecs_task_definition" "access_handler_task" {
         },
         {
           name  = "CF_AUTHZ_URL",
-          value = var.app_url
+          value = "http://authz-grpc:5050"
         },
         {
           name  = "CF_FRONTEND_URL",
@@ -238,6 +239,9 @@ resource "aws_lb_target_group" "access_handler_tg" {
 
 }
 
+variable "dicovery_arn" {
+  type = string
+}
 resource "aws_ecs_service" "access_handler_service" {
   name            = "${var.namespace}-${var.stage}-access-handler"
   cluster         = var.ecs_cluster_id
@@ -255,6 +259,20 @@ resource "aws_ecs_service" "access_handler_service" {
     target_group_arn = aws_lb_target_group.access_handler_tg.arn
     container_name   = "access-handler-container"
     container_port   = 9090
+  }
+
+
+  service_connect_configuration {
+    enabled   = true
+    namespace = var.dicovery_arn
+    service {
+      discovery_name = "access-grpc"
+      port_name      = "grpc"
+      client_alias {
+        dns_name = "grpc"
+        port     = 9090
+      }
+    }
   }
 }
 

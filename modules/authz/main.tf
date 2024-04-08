@@ -226,12 +226,15 @@ resource "aws_ecs_task_definition" "authz_task" {
     portMappings = [
       {
         containerPort = 9090,
+        name          = "monitoring"
       },
       {
         containerPort = 5050,
+        name          = "grpc"
       },
       {
         containerPort = 5051,
+        name          = "graphql"
       },
     ],
     environment = [
@@ -333,6 +336,15 @@ resource "aws_lb_target_group" "graphql_tg" {
   }
 }
 
+resource "aws_service_discovery_http_namespace" "test" {
+  name        = "cf-test-namespace"
+  description = "test"
+}
+
+output "dicovery_arn" {
+  value = aws_service_discovery_http_namespace.test.arn
+}
+
 resource "aws_ecs_service" "authz_service" {
   name            = "${var.namespace}-${var.stage}-authz"
   cluster         = var.ecs_cluster_id
@@ -340,6 +352,20 @@ resource "aws_ecs_service" "authz_service" {
   launch_type     = "FARGATE"
 
   desired_count = var.desired_task_count
+
+  service_connect_configuration {
+    enabled   = true
+    namespace = aws_service_discovery_http_namespace.test.arn
+
+    service {
+      discovery_name = "authz-grpc"
+      port_name      = "grpc"
+      client_alias {
+        dns_name = "authz-grpc"
+        port     = 5050
+      }
+    }
+  }
 
   network_configuration {
     subnets         = var.subnet_ids
