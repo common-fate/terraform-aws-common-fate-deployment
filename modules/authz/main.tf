@@ -336,14 +336,13 @@ resource "aws_lb_target_group" "graphql_tg" {
   }
 }
 
+
 resource "aws_service_discovery_http_namespace" "test" {
-  name        = "cf-test-namespace"
+  name        = "${var.service_discovery_namespace_name}.test"
   description = "test"
 }
 
-output "dicovery_arn" {
-  value = aws_service_discovery_http_namespace.test.arn
-}
+
 
 resource "aws_ecs_service" "authz_service" {
   name            = "${var.namespace}-${var.stage}-authz"
@@ -361,8 +360,7 @@ resource "aws_ecs_service" "authz_service" {
       discovery_name = "authz-grpc"
       port_name      = "grpc"
       client_alias {
-        dns_name = "authz-grpc"
-        port     = 5050
+        port = 5050
       }
     }
   }

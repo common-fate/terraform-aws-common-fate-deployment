@@ -152,3 +152,10 @@ variable "authz_image_repository" {
   description = "Docker image repository to use for the Authz image"
   default     = "public.ecr.aws/z2x0a3a1/common-fate-deployment/authz"
 }
+
+
+variable "service_discovery_namespace_name" {
+  type        = string
+  description = "The name of the service descovery namespace"
+  default     = "grpc"
+}

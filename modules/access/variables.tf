@@ -139,3 +139,10 @@ variable "unstable_enable_feature_access_simulation" {
   default     = false
   description = "Opt-in to enable Access Simulation APIs (in early access). This variable will be removed once the feature is released."
 }
+
+variable "service_discovery_namespace_arn" {
+  type        = string
+  description = "namespace arn of service discovery namespace"
+}
+
+

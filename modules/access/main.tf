@@ -137,6 +137,7 @@ resource "aws_ecs_task_definition" "access_handler_task" {
       portMappings = [{
         containerPort = 9090,
         name          = "grpc"
+        appProtocol   = "http"
       }],
       environment = [
         {
@@ -239,16 +240,14 @@ resource "aws_lb_target_group" "access_handler_tg" {
 
 }
 
-variable "dicovery_arn" {
-  type = string
-}
+
+
 resource "aws_ecs_service" "access_handler_service" {
   name            = "${var.namespace}-${var.stage}-access-handler"
   cluster         = var.ecs_cluster_id
   task_definition = aws_ecs_task_definition.access_handler_task.arn
   launch_type     = "FARGATE"
-
-  desired_count = var.desired_task_count
+  desired_count   = var.desired_task_count
 
   network_configuration {
     subnets         = var.subnet_ids
@@ -264,13 +263,12 @@ resource "aws_ecs_service" "access_handler_service" {
 
   service_connect_configuration {
     enabled   = true
-    namespace = var.dicovery_arn
+    namespace = var.service_discovery_namespace_arn
     service {
       discovery_name = "access-grpc"
       port_name      = "grpc"
       client_alias {
-        dns_name = "grpc"
-        port     = 9090
+        port = 9090
       }
     }
   }

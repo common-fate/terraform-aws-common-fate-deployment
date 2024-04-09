@@ -200,32 +200,6 @@ module "web" {
   web_image_repository  = var.web_image_repository
 }
 
-module "access_handler" {
-  source                                    = "./modules/access"
-  namespace                                 = var.namespace
-  stage                                     = var.stage
-  aws_region                                = var.aws_region
-  aws_account_id                            = data.aws_caller_identity.current.account_id
-  eventbus_arn                              = module.events.event_bus_arn
-  release_tag                               = var.release_tag
-  subnet_ids                                = local.private_subnet_ids
-  vpc_id                                    = local.vpc_id
-  ecs_cluster_id                            = local.ecs_cluster_id
-  alb_listener_arn                          = module.alb.listener_arn
-  auth_issuer                               = module.cognito.auth_issuer
-  log_level                                 = var.access_handler_log_level
-  app_url                                   = var.app_url
-  oidc_access_handler_service_client_id     = module.cognito.access_handler_service_client_id
-  oidc_access_handler_service_client_secret = module.cognito.access_handler_service_client_secret
-  oidc_access_handler_service_issuer        = module.cognito.auth_issuer
-  otel_log_group_name                       = module.ecs_base.otel_log_group_name
-  otel_writer_iam_policy_arn                = module.ecs_base.otel_writer_iam_policy_arn
-  alb_security_group_id                     = module.alb.alb_security_group_id
-  additional_cors_allowed_origins           = var.additional_cors_allowed_origins
-  access_image_repository                   = var.access_image_repository
-  unstable_enable_feature_access_simulation = var.unstable_enable_feature_access_simulation
-  dicovery_arn                              = module.authz.dicovery_arn
-}
 
 module "authz" {
   source                                = "./modules/authz"
@@ -254,7 +228,45 @@ module "authz" {
   authz_eval_bucket_arn                 = module.authz_eval_bucket.arn
   authz_eval_bucket_name                = module.authz_eval_bucket.id
   authz_image_repository                = var.authz_image_repository
+
 }
+
+module "access_handler" {
+  source                                    = "./modules/access"
+  namespace                                 = var.namespace
+  stage                                     = var.stage
+  aws_region                                = var.aws_region
+  aws_account_id                            = data.aws_caller_identity.current.account_id
+  eventbus_arn                              = module.events.event_bus_arn
+  release_tag                               = var.release_tag
+  subnet_ids                                = local.private_subnet_ids
+  vpc_id                                    = local.vpc_id
+  ecs_cluster_id                            = local.ecs_cluster_id
+  alb_listener_arn                          = module.alb.listener_arn
+  auth_issuer                               = module.cognito.auth_issuer
+  log_level                                 = var.access_handler_log_level
+  app_url                                   = var.app_url
+  oidc_access_handler_service_client_id     = module.cognito.access_handler_service_client_id
+  oidc_access_handler_service_client_secret = module.cognito.access_handler_service_client_secret
+  oidc_access_handler_service_issuer        = module.cognito.auth_issuer
+  otel_log_group_name                       = module.ecs_base.otel_log_group_name
+  otel_writer_iam_policy_arn                = module.ecs_base.otel_writer_iam_policy_arn
+  alb_security_group_id                     = module.alb.alb_security_group_id
+  additional_cors_allowed_origins           = var.additional_cors_allowed_origins
+  access_image_repository                   = var.access_image_repository
+  unstable_enable_feature_access_simulation = var.unstable_enable_feature_access_simulation
+  service_discovery_namespace_arn           = module.access_handler.service_discovery_namespace_arn
+
+  depends_on = [
+    module.authz
+  ]
+}
+
+
+
+
+
+
 
 module "provisioner" {
   source = "./modules/provisioner"
