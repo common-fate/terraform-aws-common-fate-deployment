@@ -405,7 +405,7 @@ variable "web_image_repository" {
 
 
 variable "rds_db_retention_period" {
-  description = "The time between backups for the rds instance, default is disabled"
+  description = "The backup retention period for the RDS instance"
   type        = number
   default     = 0
 }
@@ -413,7 +413,7 @@ variable "rds_db_retention_period" {
 
 variable "restore_to_point_in_time" {
   description = "Configuration block for restoring a DB instance to an arbitrary point in time"
-  type = set(object(
+  type = object(
     {
       restore_time                             = string
       source_db_instance_identifier            = string
@@ -421,8 +421,8 @@ variable "restore_to_point_in_time" {
       use_latest_restorable_time               = bool
       source_db_instance_automated_backups_arn = string
     }
-  ))
-  default = []
+  )
+  default = null
 }
 variable "unstable_enable_feature_access_simulation" {
   type        = bool
