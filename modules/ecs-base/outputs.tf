@@ -7,6 +7,6 @@ output "otel_writer_iam_policy_arn" {
 }
 
 output "service_discovery_namespace_arn" {
-  value = aws_service_discovery_http_namespace.internal_namespace.arn
+  value = aws_service_discovery_http_namespace.service_connect_namespace.arn
 }
 
