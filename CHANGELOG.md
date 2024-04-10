@@ -1,5 +1,18 @@
 # @common-fate/terraform-aws-common-fate-deployment
 
+## 1.34.0
+
+### Minor Changes
+
+- 64591cf: Adds support for syncing BigQuery resources (`GCP::BigQuery::Dataset` and `GCP::BigQuery::Table`)
+- 64591cf: adds api for listing overview of all background tasks enabled and their current status
+
+### Patch Changes
+
+- 64591cf: Fall back to displaying the role ID if the role name is not present in the web console New Access page.
+- 64591cf: Fix an issue where duplicate user emails would cause syncing workflows to fail.
+- 64591cf: Security fix: by default, the GraphQL resource API will no longer return syntax suggestions by default.
+
 ## 1.33.0
 
 ### Minor Changes
