@@ -21,7 +21,7 @@ resource "aws_security_group" "ecs_control_plane_sg_v2" {
     from_port       = 8080
     to_port         = 8080
     protocol        = "tcp"
-    security_groups = [var.alb_security_group_id] #var.access_handler_security_group_id
+    security_groups = [var.alb_security_group_id]
   }
 
   lifecycle {
@@ -734,6 +734,8 @@ resource "aws_ecs_service" "control_plane_service" {
 
   desired_count = var.desired_task_count
 
+
+
   service_connect_configuration {
     enabled   = true
     namespace = var.service_discovery_namespace_arn
@@ -789,6 +791,19 @@ resource "aws_ecs_service" "worker_service" {
   launch_type     = "FARGATE"
 
   desired_count = var.desired_worker_task_count
+
+  service_connect_configuration {
+    enabled   = true
+    namespace = var.service_discovery_namespace_arn
+    # service {
+    #   discovery_name = "worker-grpc"
+    #   port_name      = "worker"
+    #   client_alias {
+    #     port     = 8080
+    #     dns_name = "worker.grpc"
+    #   }
+    # }
+  }
 
   network_configuration {
     subnets         = var.subnet_ids

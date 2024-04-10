@@ -17,7 +17,7 @@ resource "aws_security_group" "ecs_access_handler_sg_v2" {
     from_port       = 9090
     to_port         = 9090
     protocol        = "tcp"
-    security_groups = [var.alb_security_group_id]
+    security_groups = [var.alb_security_group_id, var.worker_security_group_id, var.control_plane_security_group_id]
   }
 
   lifecycle {

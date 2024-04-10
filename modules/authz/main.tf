@@ -21,14 +21,14 @@ resource "aws_security_group" "ecs_authz_sg_v2" {
     from_port       = 5050
     to_port         = 5050
     protocol        = "tcp"
-    security_groups = [var.alb_security_group_id, var.access_handler_security_group_id, var.control_plane_security_group_id]
+    security_groups = [var.alb_security_group_id, var.access_handler_security_group_id, var.control_plane_security_group_id, var.worker_security_group_id]
   }
   // graphql
   ingress {
     from_port       = 5051
     to_port         = 5051
     protocol        = "tcp"
-    security_groups = [var.alb_security_group_id, var.access_handler_security_group_id, var.control_plane_security_group_id]
+    security_groups = [var.alb_security_group_id]
   }
 
   // monitoring
@@ -36,7 +36,7 @@ resource "aws_security_group" "ecs_authz_sg_v2" {
     from_port       = 9090
     to_port         = 9090
     protocol        = "tcp"
-    security_groups = [var.alb_security_group_id, var.access_handler_security_group_id, var.control_plane_security_group_id]
+    security_groups = [var.alb_security_group_id]
   }
 
   lifecycle {

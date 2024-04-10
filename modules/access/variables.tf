@@ -150,5 +150,13 @@ variable "authz_service_connect_address" {
   description = "the internal address assigned to the authz service by AWS ECS service connect"
 }
 
+variable "worker_security_group_id" {
+  type        = string
+  description = "The id of the security group for the worker."
+}
 
 
+variable "control_plane_security_group_id" {
+  type        = string
+  description = "The id of the security group for the control plane."
+}

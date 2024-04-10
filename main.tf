@@ -236,7 +236,7 @@ module "authz" {
   access_handler_security_group_id      = module.access_handler.security_group_id
   service_discovery_namespace_arn       = module.ecs_base.service_discovery_namespace_arn
   control_plane_security_group_id       = module.control_plane.security_group_id
-
+  worker_security_group_id              = module.control_plane.worker_security_group_id
 
 }
 
@@ -266,6 +266,8 @@ module "access_handler" {
   unstable_enable_feature_access_simulation = var.unstable_enable_feature_access_simulation
   service_discovery_namespace_arn           = module.ecs_base.service_discovery_namespace_arn
   authz_service_connect_address             = module.authz.authz_internal_address
+  control_plane_security_group_id           = module.control_plane.security_group_id
+  worker_security_group_id                  = module.control_plane.worker_security_group_id
 
 }
 
