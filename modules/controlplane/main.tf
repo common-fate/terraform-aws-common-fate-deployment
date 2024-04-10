@@ -756,7 +756,36 @@ resource "aws_lb_listener_rule" "service_rule" {
   }
   condition {
     path_pattern {
-      values = ["/commonfate.control*", "/api/*", "/commonfate.leastprivilege*"]
+      values = ["/commonfate.control*", "/api/*", "/commonfate.leastprivilege*"
+      ]
+    }
+  }
+}
+
+
+// This rule temporarily redirects some access service RPCs to the control plane
+resource "aws_lb_listener_rule" "service_rule_access_redirect" {
+  listener_arn = var.alb_listener_arn
+  priority     = 55 // lower that the access handler
+  action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.control_plane_tg.arn
+  }
+
+  condition {
+    host_header {
+      values = [replace(var.app_url, "https://", "")]
+    }
+  }
+  condition {
+    path_pattern {
+      values = [
+        "commonfate.access.v1alpha1.AccessService/QueryAvailabilities",
+        "commonfate.access.v1alpha1.AccessService/QueryEntitlements",
+        "commonfate.access.v1alpha1.AccessService/QueryApprovers",
+        "commonfate.access.v1alpha1.AccessService/PreviewUserAccess",
+        "commonfate.access.v1alpha1.AccessService/PreviewEntitlementAccess"
+      ]
     }
   }
 }
