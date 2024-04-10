@@ -795,14 +795,7 @@ resource "aws_ecs_service" "worker_service" {
   service_connect_configuration {
     enabled   = true
     namespace = var.service_discovery_namespace_arn
-    # service {
-    #   discovery_name = "worker-grpc"
-    #   port_name      = "worker"
-    #   client_alias {
-    #     port     = 8080
-    #     dns_name = "worker.grpc"
-    #   }
-    # }
+
   }
 
   network_configuration {
