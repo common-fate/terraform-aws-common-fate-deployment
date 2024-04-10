@@ -24,3 +24,8 @@ resource "aws_iam_policy" "otel" {
     ]
   })
 }
+
+resource "aws_service_discovery_http_namespace" "service_connect_namespace" {
+  name        = "${var.namespace}.${var.stage}-service-connect"
+  description = "Allows services within this namespace to communicate directly via dns"
+}
