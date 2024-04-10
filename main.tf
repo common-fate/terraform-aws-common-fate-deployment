@@ -206,6 +206,37 @@ module "web" {
 }
 
 
+module "access_handler" {
+  source                                    = "./modules/access"
+  namespace                                 = var.namespace
+  stage                                     = var.stage
+  aws_region                                = var.aws_region
+  aws_account_id                            = data.aws_caller_identity.current.account_id
+  eventbus_arn                              = module.events.event_bus_arn
+  release_tag                               = var.release_tag
+  subnet_ids                                = local.private_subnet_ids
+  vpc_id                                    = local.vpc_id
+  ecs_cluster_id                            = local.ecs_cluster_id
+  alb_listener_arn                          = module.alb.listener_arn
+  auth_issuer                               = module.cognito.auth_issuer
+  log_level                                 = var.access_handler_log_level
+  app_url                                   = var.app_url
+  oidc_access_handler_service_client_id     = module.cognito.access_handler_service_client_id
+  oidc_access_handler_service_client_secret = module.cognito.access_handler_service_client_secret
+  oidc_access_handler_service_issuer        = module.cognito.auth_issuer
+  otel_log_group_name                       = module.ecs_base.otel_log_group_name
+  otel_writer_iam_policy_arn                = module.ecs_base.otel_writer_iam_policy_arn
+  alb_security_group_id                     = module.alb.alb_security_group_id
+  additional_cors_allowed_origins           = var.additional_cors_allowed_origins
+  access_image_repository                   = var.access_image_repository
+  unstable_enable_feature_access_simulation = var.unstable_enable_feature_access_simulation
+  service_discovery_namespace_arn           = module.ecs_base.service_discovery_namespace_arn
+  authz_service_connect_address             = module.authz.authz_internal_address
+  control_plane_security_group_id           = module.control_plane.security_group_id
+  worker_security_group_id                  = module.control_plane.worker_security_group_id
+}
+
+
 module "authz" {
   source                                = "./modules/authz"
   namespace                             = var.namespace
@@ -237,44 +268,7 @@ module "authz" {
   service_discovery_namespace_arn       = module.ecs_base.service_discovery_namespace_arn
   control_plane_security_group_id       = module.control_plane.security_group_id
   worker_security_group_id              = module.control_plane.worker_security_group_id
-
 }
-
-module "access_handler" {
-  source                                    = "./modules/access"
-  namespace                                 = var.namespace
-  stage                                     = var.stage
-  aws_region                                = var.aws_region
-  aws_account_id                            = data.aws_caller_identity.current.account_id
-  eventbus_arn                              = module.events.event_bus_arn
-  release_tag                               = var.release_tag
-  subnet_ids                                = local.private_subnet_ids
-  vpc_id                                    = local.vpc_id
-  ecs_cluster_id                            = local.ecs_cluster_id
-  alb_listener_arn                          = module.alb.listener_arn
-  auth_issuer                               = module.cognito.auth_issuer
-  log_level                                 = var.access_handler_log_level
-  app_url                                   = var.app_url
-  oidc_access_handler_service_client_id     = module.cognito.access_handler_service_client_id
-  oidc_access_handler_service_client_secret = module.cognito.access_handler_service_client_secret
-  oidc_access_handler_service_issuer        = module.cognito.auth_issuer
-  otel_log_group_name                       = module.ecs_base.otel_log_group_name
-  otel_writer_iam_policy_arn                = module.ecs_base.otel_writer_iam_policy_arn
-  alb_security_group_id                     = module.alb.alb_security_group_id
-  additional_cors_allowed_origins           = var.additional_cors_allowed_origins
-  access_image_repository                   = var.access_image_repository
-  unstable_enable_feature_access_simulation = var.unstable_enable_feature_access_simulation
-  service_discovery_namespace_arn           = module.ecs_base.service_discovery_namespace_arn
-  authz_service_connect_address             = module.authz.authz_internal_address
-  control_plane_security_group_id           = module.control_plane.security_group_id
-  worker_security_group_id                  = module.control_plane.worker_security_group_id
-
-}
-
-
-
-
-
 
 
 module "provisioner" {
