@@ -8,7 +8,7 @@ output "security_group_id" {
 
 
 output "access_handler_internal_address" {
-  value = format("https://%s:%s", aws_ecs_service.access_handler_service.service_connect_configuration[0].service[0].discovery_name, aws_ecs_service.access_handler_service.service_connect_configuration[0].service[0].port_name)
+  value = format("http://%s:%s", aws_ecs_service.access_handler_service.service_connect_configuration[0].service[0].client_alias[0].dns_name, aws_ecs_service.access_handler_service.service_connect_configuration[0].service[0].client_alias[0].port)
 
 }
 
