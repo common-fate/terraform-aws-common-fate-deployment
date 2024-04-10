@@ -1,5 +1,11 @@
 # @common-fate/terraform-aws-common-fate-deployment
 
+## 1.33.0
+
+### Minor Changes
+
+- 1ad8a3d: Common Fate services now use internal hostnames to communicate with one another.
+
 ## 1.32.0
 
 ### Minor Changes
