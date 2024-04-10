@@ -154,8 +154,20 @@ variable "authz_image_repository" {
 }
 
 
-variable "service_discovery_namespace_name" {
+
+
+variable "access_handler_security_group_id" {
   type        = string
-  description = "The name of the service descovery namespace"
-  default     = "grpc"
+  description = "The id of the security group for the access handler"
 }
+
+variable "control_plane_security_group_id" {
+  type        = string
+  description = "The id of the security group for the control plane."
+}
+
+variable "service_discovery_namespace_arn" {
+  type        = string
+  description = "namespace arn of service discovery namespace"
+}
+

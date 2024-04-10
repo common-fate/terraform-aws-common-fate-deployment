@@ -21,14 +21,14 @@ resource "aws_security_group" "ecs_authz_sg_v2" {
     from_port       = 5050
     to_port         = 5050
     protocol        = "tcp"
-    security_groups = [var.alb_security_group_id]
+    security_groups = [var.alb_security_group_id, var.access_handler_security_group_id, var.control_plane_security_group_id]
   }
   // graphql
   ingress {
     from_port       = 5051
     to_port         = 5051
     protocol        = "tcp"
-    security_groups = [var.alb_security_group_id]
+    security_groups = [var.alb_security_group_id, var.access_handler_security_group_id, var.control_plane_security_group_id]
   }
 
   // monitoring
@@ -36,7 +36,7 @@ resource "aws_security_group" "ecs_authz_sg_v2" {
     from_port       = 9090
     to_port         = 9090
     protocol        = "tcp"
-    security_groups = [var.alb_security_group_id]
+    security_groups = [var.alb_security_group_id, var.access_handler_security_group_id, var.control_plane_security_group_id]
   }
 
   lifecycle {
@@ -337,12 +337,6 @@ resource "aws_lb_target_group" "graphql_tg" {
 }
 
 
-resource "aws_service_discovery_http_namespace" "test" {
-  name        = "${var.service_discovery_namespace_name}.test"
-  description = "test"
-}
-
-
 
 resource "aws_ecs_service" "authz_service" {
   name            = "${var.namespace}-${var.stage}-authz"
@@ -354,13 +348,14 @@ resource "aws_ecs_service" "authz_service" {
 
   service_connect_configuration {
     enabled   = true
-    namespace = aws_service_discovery_http_namespace.test.arn
+    namespace = var.service_discovery_namespace_arn
 
     service {
       discovery_name = "authz-grpc"
       port_name      = "grpc"
       client_alias {
-        port = 5050
+        port     = 5050
+        dns_name = "authz.grpc"
       }
     }
   }

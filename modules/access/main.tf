@@ -146,7 +146,7 @@ resource "aws_ecs_task_definition" "access_handler_task" {
         },
         {
           name  = "CF_AUTHZ_URL",
-          value = "http://authz-grpc:5050"
+          value = var.authz_service_connect_address
         },
         {
           name  = "CF_FRONTEND_URL",
@@ -268,7 +268,8 @@ resource "aws_ecs_service" "access_handler_service" {
       discovery_name = "access-grpc"
       port_name      = "grpc"
       client_alias {
-        port = 9090
+        port     = 9090
+        dns_name = "access.grpc"
       }
     }
   }

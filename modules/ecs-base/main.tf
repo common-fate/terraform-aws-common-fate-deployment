@@ -24,3 +24,8 @@ resource "aws_iam_policy" "otel" {
     ]
   })
 }
+
+resource "aws_service_discovery_http_namespace" "internal_namespace" {
+  name        = var.service_discovery_namespace_name
+  description = "test"
+}

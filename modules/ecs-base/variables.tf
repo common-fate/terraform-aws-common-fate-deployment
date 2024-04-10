@@ -15,3 +15,9 @@ variable "log_retention_in_days" {
   default     = 365
   type        = number
 }
+
+variable "service_discovery_namespace_name" {
+  type        = string
+  description = "The name of the service descovery namespace"
+  default     = "common-fate-internal"
+}
