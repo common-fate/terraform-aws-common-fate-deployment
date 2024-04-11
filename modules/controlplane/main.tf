@@ -802,9 +802,9 @@ resource "aws_lb_listener_rule" "service_rule_access_redirect_query" {
   condition {
     path_pattern {
       values = [
-        "commonfate.access.v1alpha1.AccessService/QueryAvailabilities",
-        "commonfate.access.v1alpha1.AccessService/QueryEntitlements",
-        "commonfate.access.v1alpha1.AccessService/QueryApprovers",
+        "/commonfate.access.v1alpha1.AccessService/QueryAvailabilities",
+        "/commonfate.access.v1alpha1.AccessService/QueryEntitlements",
+        "/commonfate.access.v1alpha1.AccessService/QueryApprovers",
       ]
     }
   }
@@ -828,8 +828,8 @@ resource "aws_lb_listener_rule" "service_rule_access_redirect_preview" {
   condition {
     path_pattern {
       values = [
-        "commonfate.access.v1alpha1.AccessService/PreviewUserAccess",
-        "commonfate.access.v1alpha1.AccessService/PreviewEntitlementAccess"
+        "/commonfate.access.v1alpha1.AccessService/PreviewUserAccess",
+        "/commonfate.access.v1alpha1.AccessService/PreviewEntitlementAccess"
       ]
     }
   }
