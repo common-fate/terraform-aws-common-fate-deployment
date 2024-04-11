@@ -1,5 +1,15 @@
 # @common-fate/terraform-aws-common-fate-deployment
 
+## 1.34.1
+
+### Patch Changes
+
+- 36b0147: Updates the built-in application version to v3.7.0, including the following changes:
+
+  Minor Changes
+
+  34ac234: The Common Fate Control Plane now additionally writes integration data (such as AWS accounts, PagerDuty teams, and GCP projects) to it's internal database. This is an internal change to make way for some planned authorization performance improvements.
+
 ## 1.34.0
 
 ### Minor Changes
