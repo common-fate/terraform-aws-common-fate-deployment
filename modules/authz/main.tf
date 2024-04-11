@@ -21,7 +21,7 @@ resource "aws_security_group" "ecs_authz_sg_v2" {
     from_port       = 5050
     to_port         = 5050
     protocol        = "tcp"
-    security_groups = [var.alb_security_group_id]
+    security_groups = [var.alb_security_group_id, var.access_handler_security_group_id, var.control_plane_security_group_id, var.worker_security_group_id]
   }
   // graphql
   ingress {
@@ -226,12 +226,15 @@ resource "aws_ecs_task_definition" "authz_task" {
     portMappings = [
       {
         containerPort = 9090,
+        name          = "monitoring"
       },
       {
         containerPort = 5050,
+        name          = "grpc"
       },
       {
         containerPort = 5051,
+        name          = "graphql"
       },
     ],
     environment = [
@@ -333,6 +336,8 @@ resource "aws_lb_target_group" "graphql_tg" {
   }
 }
 
+
+
 resource "aws_ecs_service" "authz_service" {
   name            = "${var.namespace}-${var.stage}-authz"
   cluster         = var.ecs_cluster_id
@@ -340,6 +345,20 @@ resource "aws_ecs_service" "authz_service" {
   launch_type     = "FARGATE"
 
   desired_count = var.desired_task_count
+
+  service_connect_configuration {
+    enabled   = true
+    namespace = var.service_discovery_namespace_arn
+
+    service {
+      discovery_name = "authz-grpc"
+      port_name      = "grpc"
+      client_alias {
+        port     = 5050
+        dns_name = "authz.grpc"
+      }
+    }
+  }
 
   network_configuration {
     subnets         = var.subnet_ids

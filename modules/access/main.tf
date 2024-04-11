@@ -17,7 +17,7 @@ resource "aws_security_group" "ecs_access_handler_sg_v2" {
     from_port       = 9090
     to_port         = 9090
     protocol        = "tcp"
-    security_groups = [var.alb_security_group_id]
+    security_groups = [var.alb_security_group_id, var.worker_security_group_id, var.control_plane_security_group_id]
   }
 
   lifecycle {
@@ -136,6 +136,8 @@ resource "aws_ecs_task_definition" "access_handler_task" {
 
       portMappings = [{
         containerPort = 9090,
+        name          = "grpc"
+        appProtocol   = "http"
       }],
       environment = [
         {
@@ -144,7 +146,7 @@ resource "aws_ecs_task_definition" "access_handler_task" {
         },
         {
           name  = "CF_AUTHZ_URL",
-          value = var.app_url
+          value = var.authz_service_connect_address
         },
         {
           name  = "CF_FRONTEND_URL",
@@ -238,13 +240,14 @@ resource "aws_lb_target_group" "access_handler_tg" {
 
 }
 
+
+
 resource "aws_ecs_service" "access_handler_service" {
   name            = "${var.namespace}-${var.stage}-access-handler"
   cluster         = var.ecs_cluster_id
   task_definition = aws_ecs_task_definition.access_handler_task.arn
   launch_type     = "FARGATE"
-
-  desired_count = var.desired_task_count
+  desired_count   = var.desired_task_count
 
   network_configuration {
     subnets         = var.subnet_ids
@@ -255,6 +258,20 @@ resource "aws_ecs_service" "access_handler_service" {
     target_group_arn = aws_lb_target_group.access_handler_tg.arn
     container_name   = "access-handler-container"
     container_port   = 9090
+  }
+
+
+  service_connect_configuration {
+    enabled   = true
+    namespace = var.service_discovery_namespace_arn
+    service {
+      discovery_name = "access-grpc"
+      port_name      = "grpc"
+      client_alias {
+        port     = 9090
+        dns_name = "access.grpc"
+      }
+    }
   }
 }
 

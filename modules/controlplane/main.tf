@@ -395,12 +395,17 @@ locals {
       value = var.app_url
     },
     {
-      name  = "CF_AUTHZ_URL",
-      value = var.app_url
+      name = "CF_AUTHZ_URL",
+      # value = var.app_url
+
+      value = var.authz_service_connect_address
+
     },
     {
-      name  = "CF_ACCESS_URL",
-      value = var.app_url
+      name = "CF_ACCESS_URL",
+      # value = var.app_url
+      value = var.access_handler_service_connect_address
+
     },
     {
       name  = "CF_SLACK_CLIENT_ID",
@@ -611,6 +616,7 @@ resource "aws_ecs_task_definition" "control_plane_task" {
 
       portMappings = [{
         containerPort = 8080,
+        name          = "control_plane"
       }],
 
       environment = local.control_plane_environment
@@ -728,6 +734,21 @@ resource "aws_ecs_service" "control_plane_service" {
 
   desired_count = var.desired_task_count
 
+
+
+  service_connect_configuration {
+    enabled   = true
+    namespace = var.service_discovery_namespace_arn
+    service {
+      discovery_name = "control_plane-grpc"
+      port_name      = "control_plane"
+      client_alias {
+        port     = 8080
+        dns_name = "control_plane.grpc"
+      }
+    }
+  }
+
   network_configuration {
     subnets          = var.subnet_ids
     security_groups  = [aws_security_group.ecs_control_plane_sg_v2.id]
@@ -799,6 +820,12 @@ resource "aws_ecs_service" "worker_service" {
   launch_type     = "FARGATE"
 
   desired_count = var.desired_worker_task_count
+
+  service_connect_configuration {
+    enabled   = true
+    namespace = var.service_discovery_namespace_arn
+
+  }
 
   network_configuration {
     subnets         = var.subnet_ids

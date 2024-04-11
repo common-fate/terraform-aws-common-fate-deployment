@@ -310,3 +310,25 @@ variable "unstable_enable_feature_access_simulation" {
   default     = false
   description = "Opt-in to enable Access Simulation APIs (in early access). This variable will be removed once the feature is released."
 }
+
+
+variable "service_discovery_namespace_arn" {
+  type        = string
+  description = "namespace arn of service discovery namespace"
+}
+
+variable "access_handler_security_group_id" {
+  type        = string
+  description = "The id of the security group for the access handler"
+}
+
+variable "authz_service_connect_address" {
+  type        = string
+  description = "the internal address assigned to the authz service by AWS ECS service connect"
+}
+
+variable "access_handler_service_connect_address" {
+  type        = string
+  description = "the internal address assigned to the access handler service by AWS ECS service connect"
+}
+
