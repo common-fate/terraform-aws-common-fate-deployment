@@ -785,7 +785,8 @@ resource "aws_lb_listener_rule" "service_rule" {
 
 
 // This rule temporarily redirects some access service RPCs to the control plane
-resource "aws_lb_listener_rule" "service_rule_access_redirect" {
+// split into query and preview because there is a limit to 5 conditions per rule
+resource "aws_lb_listener_rule" "service_rule_access_redirect_query" {
   listener_arn = var.alb_listener_arn
   priority     = 55 // lower that the access handler
   action {
@@ -804,6 +805,29 @@ resource "aws_lb_listener_rule" "service_rule_access_redirect" {
         "commonfate.access.v1alpha1.AccessService/QueryAvailabilities",
         "commonfate.access.v1alpha1.AccessService/QueryEntitlements",
         "commonfate.access.v1alpha1.AccessService/QueryApprovers",
+      ]
+    }
+  }
+}
+
+// This rule temporarily redirects some access service RPCs to the control plane
+// split into query and preview because there is a limit to 5 conditions per rule
+resource "aws_lb_listener_rule" "service_rule_access_redirect_preview" {
+  listener_arn = var.alb_listener_arn
+  priority     = 56 // lower that the access handler
+  action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.control_plane_tg.arn
+  }
+
+  condition {
+    host_header {
+      values = [replace(var.app_url, "https://", "")]
+    }
+  }
+  condition {
+    path_pattern {
+      values = [
         "commonfate.access.v1alpha1.AccessService/PreviewUserAccess",
         "commonfate.access.v1alpha1.AccessService/PreviewEntitlementAccess"
       ]
