@@ -158,6 +158,12 @@ variable "additional_cors_allowed_origins" {
   description = "Additional origins to add to the CORS allowlist. By default, the app URL is automatically added."
 }
 
+variable "ecs_opentelemetry_collector_log_retention_in_days" {
+  description = "Specifies the retention period for the ECS OpenTelemetry Collector CloudWatch Log Group."
+  default     = 365
+  type        = number
+}
+
 
 variable "provisioner_aws_idc_config" {
   description = <<EOF
