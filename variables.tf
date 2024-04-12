@@ -407,7 +407,7 @@ variable "web_image_repository" {
 variable "rds_db_retention_period" {
   description = "The backup retention period for the RDS instance"
   type        = number
-  default     = 0
+  default     = 7
 }
 
 
