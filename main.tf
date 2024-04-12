@@ -76,7 +76,9 @@ module "ecs" {
 }
 
 module "ecs_base" {
-  source = "./modules/ecs-base"
+  source    = "./modules/ecs-base"
+  namespace = var.namespace
+  stage     = var.stage
 }
 
 
