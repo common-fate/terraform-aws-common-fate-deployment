@@ -1,5 +1,11 @@
 # @common-fate/terraform-aws-common-fate-deployment
 
+## 1.35.1
+
+### Patch Changes
+
+- 733be7c: Fix an issue where DataStax Organization Grant entities could not be found.
+
 ## 1.35.0
 
 ### Minor Changes
