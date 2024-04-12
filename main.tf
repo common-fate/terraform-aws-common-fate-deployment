@@ -76,9 +76,10 @@ module "ecs" {
 }
 
 module "ecs_base" {
-  source    = "./modules/ecs-base"
-  namespace = var.namespace
-  stage     = var.stage
+  source                = "./modules/ecs-base"
+  namespace             = var.namespace
+  stage                 = var.stage
+  log_retention_in_days = var.ecs_opentelemetry_collector_log_retention_in_days
 }
 
 
