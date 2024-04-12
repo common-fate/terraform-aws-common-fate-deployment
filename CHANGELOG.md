@@ -1,5 +1,17 @@
 # @common-fate/terraform-aws-common-fate-deployment
 
+## 1.35.0
+
+### Minor Changes
+
+- 6b1ad3d: Point-In-Time-Recovery (PITR) is now enabled by default for the Common Fate RDS database. Adds variables to restore from a PITR backup.
+
+### Patch Changes
+
+- 0059931: Mitigates an issue where duplicate user identifiers may be created when a user first signs in to the web console.
+- 5caf1e1: Fix an issue where the `namespace`, `stage`, and `log_retention_in_days` variables were not propagated to the `ecs_base` module.
+- 0059931: Fix an issue where available entitlements could be orphaned during integration resource syncing.
+
 ## 1.34.1
 
 ### Patch Changes
