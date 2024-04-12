@@ -152,3 +152,28 @@ variable "authz_image_repository" {
   description = "Docker image repository to use for the Authz image"
   default     = "public.ecr.aws/z2x0a3a1/common-fate-deployment/authz"
 }
+
+
+
+
+variable "access_handler_security_group_id" {
+  type        = string
+  description = "The id of the security group for the access handler"
+}
+
+variable "control_plane_security_group_id" {
+  type        = string
+  description = "The id of the security group for the control plane."
+}
+
+
+variable "worker_security_group_id" {
+  type        = string
+  description = "The id of the security group for the worker."
+}
+
+variable "service_discovery_namespace_arn" {
+  type        = string
+  description = "namespace arn of service discovery namespace"
+}
+

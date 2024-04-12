@@ -155,6 +155,11 @@ module "control_plane" {
   control_image_repository                   = var.control_image_repository
   worker_image_repository                    = var.worker_image_repository
   unstable_enable_feature_access_simulation  = var.unstable_enable_feature_access_simulation
+  service_discovery_namespace_arn            = module.ecs_base.service_discovery_namespace_arn
+  access_handler_security_group_id           = module.access_handler.security_group_id
+  authz_service_connect_address              = module.authz.authz_internal_address
+  access_handler_service_connect_address     = module.access_handler.access_handler_internal_address
+
 }
 
 
@@ -203,6 +208,7 @@ module "web" {
   web_image_repository  = var.web_image_repository
 }
 
+
 module "access_handler" {
   source                                    = "./modules/access"
   namespace                                 = var.namespace
@@ -227,7 +233,12 @@ module "access_handler" {
   additional_cors_allowed_origins           = var.additional_cors_allowed_origins
   access_image_repository                   = var.access_image_repository
   unstable_enable_feature_access_simulation = var.unstable_enable_feature_access_simulation
+  service_discovery_namespace_arn           = module.ecs_base.service_discovery_namespace_arn
+  authz_service_connect_address             = module.authz.authz_internal_address
+  control_plane_security_group_id           = module.control_plane.security_group_id
+  worker_security_group_id                  = module.control_plane.worker_security_group_id
 }
+
 
 module "authz" {
   source                                = "./modules/authz"
@@ -256,7 +267,12 @@ module "authz" {
   authz_eval_bucket_arn                 = module.authz_eval_bucket.arn
   authz_eval_bucket_name                = module.authz_eval_bucket.id
   authz_image_repository                = var.authz_image_repository
+  access_handler_security_group_id      = module.access_handler.security_group_id
+  service_discovery_namespace_arn       = module.ecs_base.service_discovery_namespace_arn
+  control_plane_security_group_id       = module.control_plane.security_group_id
+  worker_security_group_id              = module.control_plane.worker_security_group_id
 }
+
 
 module "provisioner" {
   source = "./modules/provisioner"
