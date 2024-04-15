@@ -4,26 +4,6 @@ variable "namespace" {
   type        = string
 }
 
-variable "alert_filters" {
-  description = "Configure alerts emitted by Common Fate."
-  type = object({
-    deployments = string
-    jobs        = string
-  })
-
-  default = {
-    deployments = "errors"
-    jobs        = "errors"
-  }
-
-  validation {
-    condition = alltrue([
-      for k, v in var.alert_filters : contains(["errors", "all"], v)
-    ])
-    error_message = "the alert level must be either 'errors' or 'all'"
-  }
-}
-
 variable "stage" {
   description = "Defines the stage of the deployment (e.g., 'dev', 'staging', 'prod')."
   default     = "prod"

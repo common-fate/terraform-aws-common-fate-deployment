@@ -436,28 +436,6 @@ variable "unstable_enable_feature_access_simulation" {
   description = "Opt-in to enable Access Simulation APIs (in early access). This variable will be removed once the feature is released."
 }
 
-
-variable "alert_filters" {
-  description = "Configure alerts emitted by Common Fate."
-  type = object({
-    deployments = string
-    jobs        = string
-  })
-
-  default = {
-    deployments = "errors"
-    jobs        = "errors"
-  }
-
-  validation {
-    condition = alltrue([
-      for k, v in var.alert_filters : contains(["errors", "all"], v)
-    ])
-    error_message = "the alert level must be either 'errors' or 'all'"
-  }
-}
-
-
 variable "alert_metadata" {
   description = "Metadata to include in alerts emitted by Common Fate. Will be included in the 'metdata' field in the JSON alert payload."
   type        = any

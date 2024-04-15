@@ -56,47 +56,6 @@ resource "aws_cloudwatch_event_target" "deployment_failures" {
   }
 }
 
-
-resource "aws_cloudwatch_event_rule" "deployment_updates" {
-  count       = var.alert_filters["deployments"] == "all" ? 1 : 0
-  name        = "${var.namespace}-${var.stage}-deployment-all"
-  description = "Common Fate service deployment updates"
-
-  event_pattern = jsonencode(
-    {
-      "source" : ["aws.ecs"],
-      "detail-type" : ["ECS Deployment State Change"],
-      "resources" : [
-        {
-          "prefix" : "arn:aws:ecs:${var.aws_region}:${var.aws_account_id}:service/${local.cluster_name}"
-        }
-      ]
-    },
-  )
-}
-
-resource "aws_cloudwatch_event_target" "deployment_updates" {
-  count     = var.alert_filters["deployments"] == "all" ? 1 : 0
-  rule      = aws_cloudwatch_event_rule.deployment_updates[0].name
-  target_id = "${var.namespace}-${var.stage}-deployment-updates-to-sns"
-  arn       = aws_sns_topic.deployments.arn
-
-  input_transformer {
-    input_paths = {
-      reason        = "$.detail.reason"
-      deployment_id = "$.detail.deploymentId"
-    }
-    input_template = <<EOF
-    {
-      "title": "ECS service has been updated",
-      "description": "<reason>",
-      "metadata": ${jsonencode(var.alert_metadata)},
-      "event": <aws.events.event.json>
-    }
-    EOF
-  }
-}
-
 resource "aws_sns_topic" "deployments" {
   name         = "${var.namespace}-${var.stage}-deployment-alerts"
   display_name = "Common Fate deployment alerts"
@@ -156,43 +115,6 @@ resource "aws_cloudwatch_event_target" "job_failures" {
     {
       "title": "Job <job_kind> has failed",
       "description": "Job <job_id> failed with error: `<error>`.",
-      "metadata": ${jsonencode(var.alert_metadata)},
-      "event": <aws.events.event.json>
-    }
-    EOF
-  }
-}
-
-
-resource "aws_cloudwatch_event_rule" "job_completion" {
-  count          = var.alert_filters["jobs"] == "all" ? 1 : 0
-  name           = "${var.namespace}-${var.stage}-job-completion"
-  description    = "Alerts for Common Fate background job completion"
-  event_bus_name = var.event_bus_name
-
-  event_pattern = jsonencode({
-    "source" : ["commonfate.io/events"],
-    "detail-type" : ["job.completed"],
-    },
-  )
-}
-
-resource "aws_cloudwatch_event_target" "job_completion" {
-  count          = var.alert_filters["jobs"] == "all" ? 1 : 0
-  rule           = aws_cloudwatch_event_rule.job_completion[0].name
-  event_bus_name = var.event_bus_name
-  target_id      = "${var.namespace}-${var.stage}-job-completion"
-  arn            = aws_sns_topic.jobs.arn
-
-  input_transformer {
-    input_paths = {
-      job_kind = "$.detail.job_kind"
-      job_id   = "$.detail.job_id"
-    }
-    input_template = <<EOF
-    {
-      "title": "Job <job_kind> is complete",
-      "description": "Job <job_id> is complete.",
       "metadata": ${jsonencode(var.alert_metadata)},
       "event": <aws.events.event.json>
     }
