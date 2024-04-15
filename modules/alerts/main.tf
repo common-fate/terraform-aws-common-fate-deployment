@@ -38,7 +38,7 @@ resource "aws_cloudwatch_event_rule" "deployment_failures" {
 resource "aws_cloudwatch_event_target" "deployment_failures" {
   rule      = aws_cloudwatch_event_rule.deployment_failures.name
   target_id = "${var.namespace}-${var.stage}-deployment-failures-to-sns"
-  arn       = aws_sns_topic.deployments.arn
+  arn       = aws_sns_topic.deployment_failures.arn
 
   input_transformer {
     input_paths = {
@@ -56,12 +56,12 @@ resource "aws_cloudwatch_event_target" "deployment_failures" {
   }
 }
 
-resource "aws_sns_topic" "deployments" {
+resource "aws_sns_topic" "deployment_failures" {
   name         = "${var.namespace}-${var.stage}-deployment-alerts"
   display_name = "Common Fate deployment alerts"
 }
 
-data "aws_iam_policy_document" "deployments" {
+data "aws_iam_policy_document" "deployment_failures" {
   statement {
     effect  = "Allow"
     actions = ["SNS:Publish"]
@@ -71,13 +71,13 @@ data "aws_iam_policy_document" "deployments" {
       identifiers = ["events.amazonaws.com"]
     }
 
-    resources = [aws_sns_topic.deployments.arn]
+    resources = [aws_sns_topic.deployment_failures.arn]
   }
 }
 
-resource "aws_sns_topic_policy" "deployments" {
-  arn    = aws_sns_topic.deployments.arn
-  policy = data.aws_iam_policy_document.deployments.json
+resource "aws_sns_topic_policy" "deployment_failures" {
+  arn    = aws_sns_topic.deployment_failures.arn
+  policy = data.aws_iam_policy_document.deployment_failures.json
 }
 
 ######################################################
@@ -102,7 +102,7 @@ resource "aws_cloudwatch_event_rule" "job_failures" {
 resource "aws_cloudwatch_event_target" "job_failures" {
   rule           = aws_cloudwatch_event_rule.job_failures.name
   target_id      = "${var.namespace}-${var.stage}-job-failures"
-  arn            = aws_sns_topic.jobs.arn
+  arn            = aws_sns_topic.job_failures.arn
   event_bus_name = var.event_bus_name
 
   input_transformer {
@@ -122,12 +122,12 @@ resource "aws_cloudwatch_event_target" "job_failures" {
   }
 }
 
-resource "aws_sns_topic" "jobs" {
+resource "aws_sns_topic" "job_failures" {
   name         = "${var.namespace}-${var.stage}-job-alerts"
   display_name = "Alerts for Common Fate background jobs"
 }
 
-data "aws_iam_policy_document" "jobs" {
+data "aws_iam_policy_document" "job_failures" {
   statement {
     effect  = "Allow"
     actions = ["SNS:Publish"]
@@ -137,11 +137,11 @@ data "aws_iam_policy_document" "jobs" {
       identifiers = ["events.amazonaws.com"]
     }
 
-    resources = [aws_sns_topic.jobs.arn]
+    resources = [aws_sns_topic.job_failures.arn]
   }
 }
 
-resource "aws_sns_topic_policy" "jobs" {
-  arn    = aws_sns_topic.jobs.arn
-  policy = data.aws_iam_policy_document.jobs.json
+resource "aws_sns_topic_policy" "job_failures" {
+  arn    = aws_sns_topic.job_failures.arn
+  policy = data.aws_iam_policy_document.job_failures.json
 }
