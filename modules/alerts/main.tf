@@ -29,7 +29,7 @@ resource "aws_cloudwatch_event_rule" "deployment_failures" {
         }
       ]
       "detail" : {
-        "eventName" : "SERVICE_DEPLOYMENT_FAILED"
+        "eventName" : ["SERVICE_DEPLOYMENT_FAILED"]
       }
     },
   )
