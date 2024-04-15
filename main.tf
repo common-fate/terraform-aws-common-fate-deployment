@@ -53,9 +53,12 @@ module "control_plane_db" {
 
 
 module "authz_db" {
-  source    = "./modules/authz-database"
-  namespace = var.namespace
-  stage     = var.stage
+  source                          = "./modules/authz-database"
+  namespace                       = var.namespace
+  stage                           = var.stage
+  dynamodb_restore_date_time      = var.dynamodb_restore_date_time
+  dynamodb_restore_source_name    = var.dynamodb_restore_source_name
+  dynamodb_restore_to_latest_time = var.dynamodb_restore_to_latest_time
 }
 
 
