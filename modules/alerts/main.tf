@@ -139,9 +139,10 @@ resource "aws_cloudwatch_event_rule" "job_failures" {
 }
 
 resource "aws_cloudwatch_event_target" "job_failures" {
-  rule      = aws_cloudwatch_event_rule.job_failures.name
-  target_id = "${var.namespace}-${var.stage}-job-failures"
-  arn       = aws_sns_topic.jobs.arn
+  rule           = aws_cloudwatch_event_rule.job_failures.name
+  target_id      = "${var.namespace}-${var.stage}-job-failures"
+  arn            = aws_sns_topic.jobs.arn
+  event_bus_name = var.event_bus_name
 
   input_transformer {
     input_paths = {
@@ -174,10 +175,11 @@ resource "aws_cloudwatch_event_rule" "job_completion" {
 }
 
 resource "aws_cloudwatch_event_target" "job_completion" {
-  count     = var.alert_configuration["jobs"] == "all" ? 1 : 0
-  rule      = aws_cloudwatch_event_rule.job_completion[0].name
-  target_id = "${var.namespace}-${var.stage}-job-completion"
-  arn       = aws_sns_topic.jobs.arn
+  count          = var.alert_configuration["jobs"] == "all" ? 1 : 0
+  rule           = aws_cloudwatch_event_rule.job_completion[0].name
+  event_bus_name = var.event_bus_name
+  target_id      = "${var.namespace}-${var.stage}-job-completion"
+  arn            = aws_sns_topic.jobs.arn
 
   input_transformer {
     input_paths = {
