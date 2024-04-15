@@ -47,7 +47,7 @@ resource "aws_cloudwatch_event_target" "deployment_failures" {
     }
     input_template = <<EOF
     {
-      "title": "Deployment <deployment_id> has failed",
+      "title": "ECS service deployment has failed",
       "description": "<reason>",
       "metadata": ${jsonencode(var.alert_metadata)},
       "event": <aws.events.event.json>
@@ -88,7 +88,7 @@ resource "aws_cloudwatch_event_target" "deployment_updates" {
     }
     input_template = <<EOF
     {
-      "title": "Deployment <deployment_id> has been updated",
+      "title": "ECS service has been updated",
       "description": "<reason>",
       "metadata": ${jsonencode(var.alert_metadata)},
       "event": <aws.events.event.json>
@@ -154,7 +154,7 @@ resource "aws_cloudwatch_event_target" "job_failures" {
     }
     input_template = <<EOF
     {
-      "title": "Job `<job_kind>` has failed",
+      "title": "Job <job_kind> has failed",
       "description": "Job <job_id> failed with error: `<error>`.",
       "metadata": ${jsonencode(var.alert_metadata)},
       "event": <aws.events.event.json>
@@ -191,7 +191,7 @@ resource "aws_cloudwatch_event_target" "job_completion" {
     }
     input_template = <<EOF
     {
-      "title": "Job `<job_kind>` is complete",
+      "title": "Job <job_kind> is complete",
       "description": "Job <job_id> is complete.",
       "metadata": ${jsonencode(var.alert_metadata)},
       "event": <aws.events.event.json>
