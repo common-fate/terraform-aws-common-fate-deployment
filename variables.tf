@@ -435,3 +435,14 @@ variable "unstable_enable_feature_access_simulation" {
   default     = false
   description = "Opt-in to enable Access Simulation APIs (in early access). This variable will be removed once the feature is released."
 }
+
+variable "alerts" {
+  description = "Configure alerts emitted by Common Fate"
+  type = object({
+    all_deployment_events = bool
+  })
+
+  default = {
+    all_deployment_events = false
+  }
+}

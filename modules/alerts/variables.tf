@@ -4,6 +4,11 @@ variable "namespace" {
   type        = string
 }
 
+variable "alert_on_all_deployment_events" {
+  description = "Set to 'true' to emit alerts for all deployment events, not just failures."
+  default     = false
+}
+
 variable "stage" {
   description = "Defines the stage of the deployment (e.g., 'dev', 'staging', 'prod')."
   default     = "prod"
@@ -12,5 +17,15 @@ variable "stage" {
 
 variable "ecs_cluster_arn" {
   description = "The ECS Cluster ARN"
+  type        = string
+}
+
+variable "aws_account_id" {
+  description = "The AWS account ID the module is being deployed to"
+  type        = string
+}
+
+variable "ecs_cluster_id" {
+  description = "The ECS Cluster name"
   type        = string
 }

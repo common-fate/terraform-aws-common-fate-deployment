@@ -67,10 +67,13 @@ module "events" {
 
 
 module "alerts" {
-  source          = "./modules/alerts"
-  namespace       = var.namespace
-  stage           = var.stage
-  ecs_cluster_arn = "arn:aws:ecs:${var.aws_region}:${data.aws_caller_identity.current.account_id}:cluster/${local.ecs_cluster_id}"
+  source                         = "./modules/alerts"
+  namespace                      = var.namespace
+  stage                          = var.stage
+  ecs_cluster_arn                = "arn:aws:ecs:${var.aws_region}:${data.aws_caller_identity.current.account_id}:cluster/${local.ecs_cluster_id}"
+  aws_account_id                 = data.aws_caller_identity.current.account_id
+  ecs_cluster_id                 = local.ecs_cluster_id
+  alert_on_all_deployment_events = var.alerts["all_deployment_events"]
 }
 
 
