@@ -186,9 +186,9 @@ output "event_bus_arn" {
 output "sns_alerts" {
   description = "SNS topic ARNs of alerts used for monitoring a Common Fate deployment"
   value = {
-    ecs_deployment_failure = {
-      emitted_when = "An ECS deployment has failed"
-      arn          = module.alerts.ecs_deployment_failure
+    ecs_deployment_alerts = {
+      emitted_when = "The state of an ECS service has changed"
+      arn          = module.alerts.ecs_deployment_alerts
     }
   }
 }
