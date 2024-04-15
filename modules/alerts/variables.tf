@@ -5,15 +5,22 @@ variable "namespace" {
 }
 
 variable "alerts" {
-  description = "Configure alerts emitted by Common Fate"
+  description = "Configure alerts emitted by Common Fate."
   type = object({
-    all_deployment_events = bool
-    all_job_events        = bool
+    deployments = string
+    jobs        = string
   })
 
   default = {
-    all_deployment_events = false
-    all_job_events        = false
+    deployments = "errors"
+    jobs        = "errors"
+  }
+
+  validation {
+    condition = alltrue([
+      for o in var.alerts : contains("errors", "all", o.value)
+    ])
+    error_message = "the alert level must be either 'errors' or 'all'"
   }
 }
 

@@ -15,9 +15,9 @@ locals {
 # By default we only emit events on deployment failures.
 ######################################################
 
-resource "aws_cloudwatch_event_rule" "ecs_service_deployment_alerts" {
-  name        = "${var.namespace}-${var.stage}-ecs-service-deployment-alerts"
-  description = "Alerts for ECS service deployments"
+resource "aws_cloudwatch_event_rule" "deployments" {
+  name        = "${var.namespace}-${var.stage}-deployment-alerts"
+  description = "Common Fate service deployment alerts"
 
   event_pattern = jsonencode(merge({
     "source" : ["aws.ecs"],
@@ -28,8 +28,8 @@ resource "aws_cloudwatch_event_rule" "ecs_service_deployment_alerts" {
       }
     ]
     },
-    // only alert on SERVICE_DEPLOYMENT_FAILED events if alert_on_all_deployment_events is false
-    var.alerts["all_deployment_events"] == false ? {
+    // only alert on SERVICE_DEPLOYMENT_FAILED events if deployments is set to error level
+    var.alerts["deployments"] == "errors" ? {
       "detail" : {
         "eventName" : "SERVICE_DEPLOYMENT_FAILED"
       }
@@ -37,18 +37,18 @@ resource "aws_cloudwatch_event_rule" "ecs_service_deployment_alerts" {
   ))
 }
 
-resource "aws_cloudwatch_event_target" "ecs_service_deployment_alerts_to_sns" {
-  rule      = aws_cloudwatch_event_rule.ecs_service_deployment_alerts.name
-  target_id = "${var.namespace}-${var.stage}-ecs-service-deployment-alerts-to-sns"
-  arn       = aws_sns_topic.ecs_deployment_alerts.arn
+resource "aws_cloudwatch_event_target" "deployments" {
+  rule      = aws_cloudwatch_event_rule.deployments.name
+  target_id = "${var.namespace}-${var.stage}-deployment-alerts-to-sns"
+  arn       = aws_sns_topic.deployments.arn
 }
 
-resource "aws_sns_topic" "ecs_deployment_alerts" {
-  name         = "${var.namespace}-${var.stage}-ecs-deployment-alerts"
-  display_name = "Alerts for ECS service deployments"
+resource "aws_sns_topic" "deployments" {
+  name         = "${var.namespace}-${var.stage}-deployment-alerts"
+  display_name = "Common Fate deployment alerts"
 }
 
-data "aws_iam_policy_document" "ecs_deployment_alerts" {
+data "aws_iam_policy_document" "deployments" {
   statement {
     effect  = "Allow"
     actions = ["SNS:Publish"]
@@ -58,13 +58,13 @@ data "aws_iam_policy_document" "ecs_deployment_alerts" {
       identifiers = ["events.amazonaws.com"]
     }
 
-    resources = [aws_sns_topic.ecs_deployment_alerts.arn]
+    resources = [aws_sns_topic.deployments.arn]
   }
 }
 
-resource "aws_sns_topic_policy" "ecs_deployment_alerts" {
-  arn    = aws_sns_topic.ecs_deployment_alerts.arn
-  policy = data.aws_iam_policy_document.ecs_deployment_alerts.json
+resource "aws_sns_topic_policy" "deployments" {
+  arn    = aws_sns_topic.deployments.arn
+  policy = data.aws_iam_policy_document.deployments.json
 }
 
 ######################################################
@@ -74,29 +74,29 @@ resource "aws_sns_topic_policy" "ecs_deployment_alerts" {
 # By default we only emit events on failed jobs.
 ######################################################
 
-resource "aws_cloudwatch_event_rule" "job_alerts" {
+resource "aws_cloudwatch_event_rule" "jobs" {
   name        = "${var.namespace}-${var.stage}-job-alerts"
   description = "Alerts for Common Fate background jobs"
 
   event_pattern = jsonencode({
     "source" : ["commonfate.io/events"],
-    "detail-type" : var.alerts["all_job_events"] ? ["job.completed", "job.failed"] : ["job.failed"],
+    "detail-type" : var.alerts["jobs"] == "all" ? ["job.completed", "job.failed"] : ["job.failed"],
     },
   )
 }
 
-resource "aws_cloudwatch_event_target" "job_alerts_to_sns" {
-  rule      = aws_cloudwatch_event_rule.ecs_service_deployment_alerts.name
+resource "aws_cloudwatch_event_target" "jobs" {
+  rule      = aws_cloudwatch_event_rule.jobs.name
   target_id = "${var.namespace}-${var.stage}-job-alerts-to-sns"
-  arn       = aws_sns_topic.ecs_deployment_alerts.arn
+  arn       = aws_sns_topic.jobs.arn
 }
 
-resource "aws_sns_topic" "job_alerts" {
+resource "aws_sns_topic" "jobs" {
   name         = "${var.namespace}-${var.stage}-job-alerts"
   display_name = "Alerts for Common Fate background jobs"
 }
 
-data "aws_iam_policy_document" "job_alerts" {
+data "aws_iam_policy_document" "jobs" {
   statement {
     effect  = "Allow"
     actions = ["SNS:Publish"]
@@ -106,11 +106,11 @@ data "aws_iam_policy_document" "job_alerts" {
       identifiers = ["events.amazonaws.com"]
     }
 
-    resources = [aws_sns_topic.job_alerts.arn]
+    resources = [aws_sns_topic.jobs.arn]
   }
 }
 
-resource "aws_sns_topic_policy" "job_alerts" {
-  arn    = aws_sns_topic.job_alerts.arn
-  policy = data.aws_iam_policy_document.job_alerts.json
+resource "aws_sns_topic_policy" "jobs" {
+  arn    = aws_sns_topic.jobs.arn
+  policy = data.aws_iam_policy_document.jobs.json
 }
