@@ -4,9 +4,17 @@ variable "namespace" {
   type        = string
 }
 
-variable "alert_on_all_deployment_events" {
-  description = "Set to 'true' to emit alerts for all deployment events, not just failures."
-  default     = false
+variable "alerts" {
+  description = "Configure alerts emitted by Common Fate"
+  type = object({
+    all_deployment_events = bool
+    all_job_events        = bool
+  })
+
+  default = {
+    all_deployment_events = false
+    all_job_events        = false
+  }
 }
 
 variable "stage" {
