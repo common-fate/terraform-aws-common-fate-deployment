@@ -4,7 +4,8 @@
 
 // This topic is used for deployment failure alerts etc
 resource "aws_sns_topic" "ecs_deployment_failures" {
-  name = "${var.namespace}-${var.stage}-ecs-deployment-failures"
+  name         = "${var.namespace}-${var.stage}-ecs-deployment-failures"
+  display_name = "Receives events when an ECS deployment has failed"
 }
 
 ######################################################
