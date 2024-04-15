@@ -18,7 +18,7 @@ variable "alerts" {
 
   validation {
     condition = alltrue([
-      for o in var.alerts : contains("errors", "all", o.value)
+      for o in var.alerts : contains(["errors", "all"], o.value)
     ])
     error_message = "the alert level must be either 'errors' or 'all'"
   }
