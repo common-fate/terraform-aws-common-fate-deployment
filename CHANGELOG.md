@@ -1,5 +1,15 @@
 # @common-fate/terraform-aws-common-fate-deployment
 
+## 1.37.0
+
+### Minor Changes
+
+- c602cf6: Adds variables which allow for point-in-time restore for DynamoDB
+
+### Patch Changes
+
+- c540522: Fixes an issue which prevented the 'Approve' button from showing in the web console.
+
 ## 1.36.0
 
 ### Minor Changes
