@@ -40,4 +40,9 @@ resource "aws_dynamodb_table" "global_table" {
     Namespace = var.namespace
     Stage     = var.stage
   }
+
+  restore_date_time      = var.dynamodb_restore_date_time
+  restore_source_name    = var.dynamodb_restore_source_name
+  restore_to_latest_time = var.dynamodb_restore_to_latest_time
+
 }

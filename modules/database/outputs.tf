@@ -21,3 +21,7 @@ output "secret_arn" {
   description = "The Amazon Resource Name (ARN) of the secret associated with the RDS database instance."
   value       = aws_db_instance.pg_db.master_user_secret.0.secret_arn
 }
+
+output "db_identifier" {
+  value = aws_db_instance.pg_db.identifier
+}
