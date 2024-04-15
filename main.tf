@@ -67,13 +67,14 @@ module "events" {
 
 
 module "alerts" {
-  source         = "./modules/alerts"
-  namespace      = var.namespace
-  stage          = var.stage
-  aws_account_id = data.aws_caller_identity.current.account_id
-  ecs_cluster_id = local.ecs_cluster_id
-  aws_region     = var.aws_region
-  alerts         = var.alerts
+  source              = "./modules/alerts"
+  namespace           = var.namespace
+  stage               = var.stage
+  aws_account_id      = data.aws_caller_identity.current.account_id
+  ecs_cluster_id      = local.ecs_cluster_id
+  aws_region          = var.aws_region
+  alert_configuration = var.alerts
+  event_bus_name      = module.events.event_bus_name
 }
 
 

@@ -15,32 +15,84 @@ locals {
 # By default we only emit events on deployment failures.
 ######################################################
 
-resource "aws_cloudwatch_event_rule" "deployments" {
-  name        = "${var.namespace}-${var.stage}-deployment-alerts"
-  description = "Common Fate service deployment alerts"
+resource "aws_cloudwatch_event_rule" "deployment_failures" {
+  name        = "${var.namespace}-${var.stage}-deployment-failures"
+  description = "Common Fate service deployment failures"
 
-  event_pattern = jsonencode(merge({
-    "source" : ["aws.ecs"],
-    "detail-type" : ["ECS Deployment State Change"],
-    "resources" : [
-      {
-        "prefix" : "arn:aws:ecs:${var.aws_region}:${var.aws_account_id}:service/${local.cluster_name}"
-      }
-    ]
-    },
-    // only alert on SERVICE_DEPLOYMENT_FAILED events if deployments is set to error level
-    var.alerts["deployments"] == "errors" ? {
+  event_pattern = jsonencode(
+    {
+      "source" : ["aws.ecs"],
+      "detail-type" : ["ECS Deployment State Change"],
+      "resources" : [
+        {
+          "prefix" : "arn:aws:ecs:${var.aws_region}:${var.aws_account_id}:service/${local.cluster_name}"
+        }
+      ]
       "detail" : {
         "eventName" : "SERVICE_DEPLOYMENT_FAILED"
       }
-    } : {}
-  ))
+    },
+  )
 }
 
-resource "aws_cloudwatch_event_target" "deployments" {
-  rule      = aws_cloudwatch_event_rule.deployments.name
-  target_id = "${var.namespace}-${var.stage}-deployment-alerts-to-sns"
+resource "aws_cloudwatch_event_target" "deployment_failures" {
+  rule      = aws_cloudwatch_event_rule.deployment_failures.name
+  target_id = "${var.namespace}-${var.stage}-deployment-failures-to-sns"
   arn       = aws_sns_topic.deployments.arn
+
+  input_transformer {
+    input_paths = {
+      reason        = "$.detail.reason"
+      deployment_id = "$.detail.deploymentId"
+    }
+    input_template = <<EOF
+    {
+      "title": "Deployment <deployment_id> has failed",
+      "description": "<reason>",
+      "event": <aws.events.event.json>
+    }
+    EOF
+  }
+}
+
+
+resource "aws_cloudwatch_event_rule" "deployment_updates" {
+  count       = var.alert_configuration["deployments"] == "all" ? 1 : 0
+  name        = "${var.namespace}-${var.stage}-deployment-all"
+  description = "Common Fate service deployment updates"
+
+  event_pattern = jsonencode(
+    {
+      "source" : ["aws.ecs"],
+      "detail-type" : ["ECS Deployment State Change"],
+      "resources" : [
+        {
+          "prefix" : "arn:aws:ecs:${var.aws_region}:${var.aws_account_id}:service/${local.cluster_name}"
+        }
+      ]
+    },
+  )
+}
+
+resource "aws_cloudwatch_event_target" "deployment_updates" {
+  count     = var.alert_configuration["deployments"] == "all" ? 1 : 0
+  rule      = aws_cloudwatch_event_rule.deployment_updates[0].name
+  target_id = "${var.namespace}-${var.stage}-deployment-updates-to-sns"
+  arn       = aws_sns_topic.deployments.arn
+
+  input_transformer {
+    input_paths = {
+      reason        = "$.detail.reason"
+      deployment_id = "$.detail.deploymentId"
+    }
+    input_template = <<EOF
+    {
+      "title": "Deployment <deployment_id> has been updated",
+      "description": "<reason>",
+      "event": <aws.events.event.json>
+    }
+    EOF
+  }
 }
 
 resource "aws_sns_topic" "deployments" {
@@ -74,21 +126,72 @@ resource "aws_sns_topic_policy" "deployments" {
 # By default we only emit events on failed jobs.
 ######################################################
 
-resource "aws_cloudwatch_event_rule" "jobs" {
-  name        = "${var.namespace}-${var.stage}-job-alerts"
-  description = "Alerts for Common Fate background jobs"
+resource "aws_cloudwatch_event_rule" "job_failures" {
+  name           = "${var.namespace}-${var.stage}-job-failures"
+  description    = "Alerts for Common Fate background job failures"
+  event_bus_name = var.event_bus_name
 
   event_pattern = jsonencode({
     "source" : ["commonfate.io/events"],
-    "detail-type" : var.alerts["jobs"] == "all" ? ["job.completed", "job.failed"] : ["job.failed"],
+    "detail-type" : ["job.failed"],
     },
   )
 }
 
-resource "aws_cloudwatch_event_target" "jobs" {
-  rule      = aws_cloudwatch_event_rule.jobs.name
-  target_id = "${var.namespace}-${var.stage}-job-alerts-to-sns"
+resource "aws_cloudwatch_event_target" "job_failures" {
+  rule      = aws_cloudwatch_event_rule.job_failures.name
+  target_id = "${var.namespace}-${var.stage}-job-failures"
   arn       = aws_sns_topic.jobs.arn
+
+  input_transformer {
+    input_paths = {
+      job_kind = "$.detail.job_kind"
+      job_id   = "$.detail.job_id"
+      error    = "$.detail.error"
+    }
+    input_template = <<EOF
+    {
+      "title": "Job `<job_kind>` has failed",
+      "description": "Job <job_id> failed with error: `<error>`.",
+      "event": <aws.events.event.json>
+    }
+    EOF
+  }
+}
+
+
+resource "aws_cloudwatch_event_rule" "job_completion" {
+  count          = var.alert_configuration["jobs"] == "all" ? 1 : 0
+  name           = "${var.namespace}-${var.stage}-job-completion"
+  description    = "Alerts for Common Fate background job completion"
+  event_bus_name = var.event_bus_name
+
+  event_pattern = jsonencode({
+    "source" : ["commonfate.io/events"],
+    "detail-type" : ["job.completed"],
+    },
+  )
+}
+
+resource "aws_cloudwatch_event_target" "job_completion" {
+  count     = var.alert_configuration["jobs"] == "all" ? 1 : 0
+  rule      = aws_cloudwatch_event_rule.job_completion[0].name
+  target_id = "${var.namespace}-${var.stage}-job-completion"
+  arn       = aws_sns_topic.jobs.arn
+
+  input_transformer {
+    input_paths = {
+      job_kind = "$.detail.job_kind"
+      job_id   = "$.detail.job_id"
+    }
+    input_template = <<EOF
+    {
+      "title": "Job `<job_kind>` is complete",
+      "description": "Job <job_id> is complete.",
+      "event": <aws.events.event.json>
+    }
+    EOF
+  }
 }
 
 resource "aws_sns_topic" "jobs" {

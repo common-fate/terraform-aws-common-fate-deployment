@@ -4,7 +4,7 @@ variable "namespace" {
   type        = string
 }
 
-variable "alerts" {
+variable "alert_configuration" {
   description = "Configure alerts emitted by Common Fate."
   type = object({
     deployments = string
@@ -18,7 +18,7 @@ variable "alerts" {
 
   validation {
     condition = alltrue([
-      for k, v in var.alerts : contains(["errors", "all"], v)
+      for k, v in var.alert_configuration : contains(["errors", "all"], v)
     ])
     error_message = "the alert level must be either 'errors' or 'all'"
   }
@@ -43,5 +43,11 @@ variable "aws_account_id" {
 
 variable "ecs_cluster_id" {
   description = "The ARN of the ECS Cluster"
+  type        = string
+}
+
+
+variable "event_bus_name" {
+  description = "The Common Fate EventBridge event bus name"
   type        = string
 }

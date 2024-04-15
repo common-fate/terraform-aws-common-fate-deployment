@@ -7,6 +7,11 @@ output "event_bus_arn" {
   value       = aws_cloudwatch_event_bus.event_bus.arn
 }
 
+output "event_bus_name" {
+  description = "The EventBridge event bus name"
+  value       = aws_cloudwatch_event_bus.event_bus.name
+}
+
 output "sqs_queue_arn" {
   description = "The sqs queue arn"
   value       = aws_sqs_queue.event_queue.arn
