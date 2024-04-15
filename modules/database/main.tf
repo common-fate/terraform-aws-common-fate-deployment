@@ -38,13 +38,11 @@ resource "aws_db_instance" "pg_db" {
   dynamic "restore_to_point_in_time" {
     for_each = var.restore_to_point_in_time != null ? [1] : []
     content {
-
       restore_time                             = var.restore_to_point_in_time.restore_time
       source_db_instance_identifier            = var.restore_to_point_in_time.source_db_instance_identifier
       source_dbi_resource_id                   = var.restore_to_point_in_time.source_dbi_resource_id
       use_latest_restorable_time               = var.restore_to_point_in_time.use_latest_restorable_time
       source_db_instance_automated_backups_arn = var.restore_to_point_in_time.source_db_instance_automated_backups_arn
-
     }
   }
 

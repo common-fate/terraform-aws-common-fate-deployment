@@ -18,7 +18,7 @@ variable "aws_region" {
 variable "release_tag" {
   description = "Override the application release tag to be used in the deployment. As of module version v1.13.0, application versions are bundled into the Terraform module, and so in most cases you should not override this."
   type        = string
-  default     = "v3.7.0"
+  default     = "v3.7.2"
 }
 
 variable "app_certificate_arn" {
@@ -156,6 +156,12 @@ variable "additional_cors_allowed_origins" {
   type        = list(string)
   default     = []
   description = "Additional origins to add to the CORS allowlist. By default, the app URL is automatically added."
+}
+
+variable "ecs_opentelemetry_collector_log_retention_in_days" {
+  description = "Specifies the retention period for the ECS OpenTelemetry Collector CloudWatch Log Group."
+  default     = 365
+  type        = number
 }
 
 
