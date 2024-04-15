@@ -3,6 +3,10 @@ data "aws_arn" "ecs_cluster" {
   arn = var.ecs_cluster_id
 }
 
+locals {
+  cluster_name = trimprefix(data.aws_arn.ecs_cluster.resource, "cluster/")
+}
+
 
 ######################################################
 # SNS topics
@@ -29,7 +33,7 @@ resource "aws_cloudwatch_event_rule" "ecs_service_deployment_alerts" {
     "detail-type" : ["ECS Deployment State Change"],
     "resources" : [
       {
-        "prefix" : "arn:aws:ecs:${var.aws_region}:${var.aws_account_id}:service/${data.aws_arn.ecs_cluster.resource}"
+        "prefix" : "arn:aws:ecs:${var.aws_region}:${var.aws_account_id}:service/${local.cluster_name}"
       }
     ]
     },
