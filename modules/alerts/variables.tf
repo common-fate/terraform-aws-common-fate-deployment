@@ -10,13 +10,6 @@ variable "stage" {
   type        = string
 }
 
-variable "ecs_deployment_alerts_webhooks_subscription_urls" {
-  description = "A list of webhook urls to subscribe to the ecs-deployment-alerts SNS topic"
-  default     = []
-  type        = list(string)
-}
-
-
 variable "ecs_cluster_arn" {
   description = "The ECS Cluster ARN"
   type        = string
