@@ -65,6 +65,17 @@ module "events" {
   stage     = var.stage
 }
 
+
+module "alerting" {
+  source                                           = "./modules/alerting"
+  namespace                                        = var.namespace
+  stage                                            = var.stage
+  ecs_deployment_alerts_webhooks_subscription_urls = var.ecs_deployment_alerts_webhooks_subscription_urls
+  ecs_cluster_arn                                  = "arn:aws:ecs:${var.aws_region}:${data.aws_caller_identity.current.account_id}:cluster/${local.ecs_cluster_id}"
+}
+
+
+
 moved {
   from = module.ecs
   to   = module.ecs[0]

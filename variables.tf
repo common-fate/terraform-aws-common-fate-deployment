@@ -435,3 +435,11 @@ variable "unstable_enable_feature_access_simulation" {
   default     = false
   description = "Opt-in to enable Access Simulation APIs (in early access). This variable will be removed once the feature is released."
 }
+
+
+variable "ecs_deployment_alerts_webhooks_subscription_urls" {
+  description = "A list of webhook urls to subscribe to the ecs-deployment-alerts SNS topic. This topic will receieve SERVICE_DEPLOYMENT_FAILED events from ECS"
+  default     = []
+  type        = list(string)
+}
+
