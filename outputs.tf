@@ -177,3 +177,18 @@ output "cognito_user_pool_id" {
   description = "The Cognito user pool ID."
   value       = module.cognito.user_pool_id
 }
+
+output "event_bus_arn" {
+  description = "The EventBridge event bus ARN"
+  value       = module.events.event_bus_arn
+}
+
+output "sns_alerts" {
+  description = "SNS topic ARNs of alerts used for monitoring a Common Fate deployment"
+  value = {
+    ecs_deployment_failure = {
+      emitted_when = "An ECS deployment has failed"
+      arn          = module.alerts.ecs_deployment_failure
+    }
+  }
+}

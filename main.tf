@@ -66,8 +66,8 @@ module "events" {
 }
 
 
-module "alerting" {
-  source                                           = "./modules/alerting"
+module "alerts" {
+  source                                           = "./modules/alerts"
   namespace                                        = var.namespace
   stage                                            = var.stage
   ecs_deployment_alerts_webhooks_subscription_urls = var.ecs_deployment_alerts_webhooks_subscription_urls

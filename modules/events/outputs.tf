@@ -3,7 +3,7 @@
 ######################################################
 
 output "event_bus_arn" {
-  description = "The event bus arn"
+  description = "The EventBridge event bus ARN"
   value       = aws_cloudwatch_event_bus.event_bus.arn
 }
 
