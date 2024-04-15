@@ -15,10 +15,11 @@ variable "stage" {
   type        = string
 }
 
-variable "ecs_cluster_arn" {
-  description = "The ECS Cluster ARN"
+variable "aws_region" {
+  description = "The AWS region the module is being deployed to"
   type        = string
 }
+
 
 variable "aws_account_id" {
   description = "The AWS account ID the module is being deployed to"
@@ -26,6 +27,6 @@ variable "aws_account_id" {
 }
 
 variable "ecs_cluster_id" {
-  description = "The ECS Cluster name"
+  description = "The ARN of the ECS Cluster"
   type        = string
 }

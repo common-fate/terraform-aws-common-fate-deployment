@@ -1,3 +1,9 @@
+
+data "aws_arn" "ecs_cluster" {
+  arn = var.ecs_cluster_id
+}
+
+
 ######################################################
 # SNS topics
 ######################################################
@@ -23,7 +29,7 @@ resource "aws_cloudwatch_event_rule" "ecs_service_deployment_alerts" {
     "detail-type" : ["ECS Deployment State Change"],
     "resources" : [
       {
-        "prefix" : "arn:aws:ecs:us-west-2:${var.aws_account_id}:service/${var.ecs_cluster_id}"
+        "prefix" : "arn:aws:ecs:${var.aws_region}:${var.aws_account_id}:service/${data.aws_arn.ecs_cluster.resource}"
       }
     ]
     },
