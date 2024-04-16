@@ -436,6 +436,13 @@ variable "unstable_enable_feature_access_simulation" {
   description = "Opt-in to enable Access Simulation APIs (in early access). This variable will be removed once the feature is released."
 }
 
+variable "alert_metadata" {
+  description = "Metadata to include in alerts emitted by Common Fate. Will be included in the 'metdata' field in the JSON alert payload."
+  type        = any
+  nullable    = true
+  default     = null
+}
+
 variable "dynamodb_restore_date_time" {
   description = "Time of the point-in-time recovery point to restore."
   type        = string
@@ -453,5 +460,4 @@ variable "dynamodb_restore_to_latest_time" {
   description = "If set, restores table to the most recent point-in-time recovery point."
   type        = bool
   default     = null
-
 }

@@ -168,6 +168,11 @@ resource "aws_ecs_service" "web_service" {
 
   desired_count = var.desired_task_count
 
+  deployment_circuit_breaker {
+    enable   = true
+    rollback = true
+  }
+
   network_configuration {
     subnets         = var.subnet_ids
     security_groups = [aws_security_group.ecs_web_sg_v2.id]
