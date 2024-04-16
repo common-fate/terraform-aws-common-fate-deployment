@@ -18,7 +18,7 @@ variable "aws_region" {
 variable "release_tag" {
   description = "Override the application release tag to be used in the deployment. As of module version v1.13.0, application versions are bundled into the Terraform module, and so in most cases you should not override this."
   type        = string
-  default     = "v3.8.1"
+  default     = "v3.8.2"
 }
 
 variable "app_certificate_arn" {
@@ -430,3 +430,24 @@ variable "restore_to_point_in_time" {
   )
   default = null
 }
+
+variable "dynamodb_restore_date_time" {
+  description = "Time of the point-in-time recovery point to restore."
+  type        = string
+  default     = null
+
+}
+
+variable "dynamodb_restore_source_name" {
+  description = "Name of the table to restore. Must match the name of an existing table."
+  type        = string
+  default     = null
+
+}
+variable "dynamodb_restore_to_latest_time" {
+  description = "If set, restores table to the most recent point-in-time recovery point."
+  type        = bool
+  default     = null
+
+}
+
