@@ -14,8 +14,8 @@ output "alert_topics" {
     }
 
     job_failures = {
-      errors_emitted_when = "A background job has failed"
-      sns_topic_arn       = aws_sns_topic.job_failures.arn
+      emitted_when  = "A background job has failed"
+      sns_topic_arn = aws_sns_topic.job_failures.arn
     }
   }
 }
