@@ -832,7 +832,8 @@ resource "aws_lb_listener_rule" "service_rule_access_redirect_preview" {
     path_pattern {
       values = [
         "/commonfate.access.v1alpha1.AccessService/PreviewUserAccess",
-        "/commonfate.access.v1alpha1.AccessService/PreviewEntitlementAccess"
+        "/commonfate.access.v1alpha1.AccessService/PreviewEntitlementAccess",
+        "/commonfate.access.v1alpha1.AccessService/DebugEntitlementAccess"
       ]
     }
   }
