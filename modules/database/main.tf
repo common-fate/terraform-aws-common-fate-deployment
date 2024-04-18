@@ -34,6 +34,7 @@ resource "aws_db_instance" "pg_db" {
   performance_insights_enabled = true
   storage_encrypted            = true
   backup_retention_period      = var.rds_db_retention_period
+  multi_az                     = true
 
   dynamic "restore_to_point_in_time" {
     for_each = var.restore_to_point_in_time != null ? [1] : []
