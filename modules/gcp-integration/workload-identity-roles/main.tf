@@ -113,7 +113,7 @@ resource "google_organization_iam_custom_role" "provision" {
   org_id      = var.gcp_organization_id
   title       = "Common Fate Provision"
   description = "Common Fate provisioner role which allows assigning entitlements"
-  permissions = provision_permissions
+  permissions = local.provision_permissions
 }
 
 resource "google_service_account" "provision" {
