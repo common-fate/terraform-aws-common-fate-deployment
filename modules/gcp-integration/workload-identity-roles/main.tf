@@ -90,6 +90,7 @@ locals {
     "bigquery.tables.setIamPolicy",
     "bigquery.datasets.getIamPolicy",
     "bigquery.datasets.get",
+    "bigquery.datasets.update",
     "bigquery.datasets.setIamPolicy"
   ] : []
 
