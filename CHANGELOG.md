@@ -1,5 +1,32 @@
 # @common-fate/terraform-aws-common-fate-deployment
 
+## 1.38.0
+
+### Minor Changes
+
+- f8498b0: GCP Integration Module: adds optional support for provisioning access to GCP organizations and GCP BigQuery resources, which require additional IAM permissions.
+- 96ca1d3: Common Fate now supports webhook integrations. You can use webhook integrations to route events to other security tools, or use them to build your own notification integrations.
+- 96ca1d3: Adds support for Just-In-Time access to GCP BigQuery Tables.
+- 96ca1d3: Adds an in-app contact form which can be used to reach Common Fate support if you have questions, feedback, or problems.
+- 96ca1d3: The retention for authorization events (visible in the "Authorization" page in the web console) is now 1 year by default. After the retention period, events will be removed from the Common Fate database. For BYOC customers, events will still be present in CloudWatch, depending on the retention period you have configured for your log group.
+- 96ca1d3: Adds support for Just-In-Time access to GCP BigQuery Datasets.
+- 96ca1d3: Adds an entitlement access debugger which provides detailed information about the policies and entities which are affecting a users ability to request access to an entitlement and whether they require approval.
+- cfed93f: Adds SNS topic for alerting on Common Fate background job failures.
+- cfed93f: Adds SNS topic for alerting on ECS deployment failures.
+- 96ca1d3: For BYOC customers: Common Fate now emits `job.failed` event when a background job fails, and a `job.completed` events when a background job completes successfully.
+- 96ca1d3: Adds support for obtaining an AWS profile (to be stored in `~/.aws/config`) for a particular AWS account and role when using the Common Fate CLI.
+- cfed93f: Enables ECS Circuit Breaker for ECS services.
+- 96ca1d3: Add support for Just-In-Time access to GCP Organizations, by granting an organization-level role.
+
+### Patch Changes
+
+- 96ca1d3: Fix error handling for slack integrations in the event handler. In some cases a database error would be reported as having no integrations configured.
+- b3cf16e: Redirect the DebugEntitlementAccess RPC to the control plane
+- 0321530: For BYOC customers: the Common Fate Control plane now serves the Granted Profile Registry API. We've updated the load balancer rules to reflect this.
+- 96ca1d3: Fixes an issue where the Common Fate could not reconnect to the database after a password rotation.
+- 96ca1d3: Fixes an issue where some access preview APIs would not return the expected results for particular policy types.
+- 7acb3f3: Permit the control plane and worker task role to fetch the database secret from secrets manager. This change is implemented to support application layer database credential rotation support.
+
 ## 1.37.0
 
 ### Minor Changes
