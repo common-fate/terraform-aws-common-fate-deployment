@@ -196,6 +196,12 @@ resource "aws_iam_role" "control_plane_ecs_task_role" {
   })
 }
 
+resource "aws_iam_role_policy_attachment" "control_plane_ecs_task_database_secrets_access_attach" {
+  role       = aws_iam_role.control_plane_ecs_task_role.name
+  policy_arn = aws_iam_policy.database_secrets_read_access.arn
+}
+
+
 resource "aws_iam_role_policy_attachment" "control_plane_ecs_task_parameter_store_secrets_read_access_attach_tr" {
   role       = aws_iam_role.control_plane_ecs_task_role.name
   policy_arn = aws_iam_policy.parameter_store_secrets_read_access.arn
@@ -563,9 +569,11 @@ locals {
     {
       name  = "CF_FEATURE_ACCESS_SIMULATION_ENABLED",
       value = var.unstable_enable_feature_access_simulation ? "true" : "false"
+    },
+    {
+      name  = "CF_DATABASE_PASSWORD_SECRET_ARN",
+      value = var.database_secret_sm_arn
     }
-
-
   ]
 
   // Only add these secrets if their values are provided
