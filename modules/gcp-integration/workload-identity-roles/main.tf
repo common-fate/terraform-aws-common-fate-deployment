@@ -76,6 +76,36 @@ resource "google_service_account_iam_binding" "read" {
   ]
 }
 
+
+locals {
+  base_provision_permissions = [
+    "resourcemanager.projects.getIamPolicy",
+    "resourcemanager.projects.setIamPolicy",
+    "resourcemanager.folders.getIamPolicy",
+    "resourcemanager.folders.setIamPolicy"
+  ]
+
+  bigquery_permissions = var.permit_bigquery_provisioning == true ? [
+    "bigquery.tables.getIamPolicy",
+    "bigquery.tables.setIamPolicy",
+    "bigquery.datasets.getIamPolicy",
+    "bigquery.datasets.get",
+    "bigquery.datasets.update",
+    "bigquery.datasets.setIamPolicy"
+  ] : []
+
+  organization_permissions = var.permit_organization_provisioning == true ? [
+    "resourcemanager.organizations.getIamPolicy",
+    "resourcemanager.organizations.setIamPolicy",
+  ] : []
+
+  provision_permissions = concat(
+    local.base_provision_permissions,
+    local.bigquery_permissions,
+    local.organization_permissions,
+  )
+}
+
 #######################################################
 # GCP Provision Role
 # used for provisioning access to entitlements
@@ -85,12 +115,7 @@ resource "google_organization_iam_custom_role" "provision" {
   org_id      = var.gcp_organization_id
   title       = "Common Fate Provision"
   description = "Common Fate provisioner role which allows assigning entitlements"
-  permissions = [
-    "resourcemanager.projects.getIamPolicy",
-    "resourcemanager.projects.setIamPolicy",
-    "resourcemanager.folders.getIamPolicy",
-    "resourcemanager.folders.setIamPolicy"
-  ]
+  permissions = local.provision_permissions
 }
 
 resource "google_service_account" "provision" {
