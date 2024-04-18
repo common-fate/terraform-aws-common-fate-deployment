@@ -196,7 +196,7 @@ resource "aws_iam_role" "control_plane_ecs_task_role" {
   })
 }
 
-resource "aws_iam_role_policy_attachment" "control_plane_ecs_task_database_secrets_access_attach" {
+resource "aws_iam_role_policy_attachment" "control_plane_ecs_task_database_secrets_access_tr_attach" {
   role       = aws_iam_role.control_plane_ecs_task_role.name
   policy_arn = aws_iam_policy.database_secrets_read_access.arn
 }
