@@ -61,3 +61,13 @@ variable "gcp_provisioner_service_account_id" {
   type    = string
   default = "common-fate-gcp-provision"
 }
+
+variable "permit_bigquery_provisioning" {
+  type    = bool
+  default = false
+}
+
+variable "permit_organization_provisioning" {
+  type    = bool
+  default = false
+}

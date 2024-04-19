@@ -256,6 +256,10 @@ resource "aws_ecs_service" "access_handler_service" {
     container_port   = 9090
   }
 
+  deployment_circuit_breaker {
+    enable   = true
+    rollback = true
+  }
 
   service_connect_configuration {
     enabled   = true
@@ -290,5 +294,3 @@ resource "aws_lb_listener_rule" "service_rule" {
     }
   }
 }
-
-

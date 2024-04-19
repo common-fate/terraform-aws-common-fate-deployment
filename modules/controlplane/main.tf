@@ -196,6 +196,12 @@ resource "aws_iam_role" "control_plane_ecs_task_role" {
   })
 }
 
+resource "aws_iam_role_policy_attachment" "control_plane_ecs_task_database_secrets_access_tr_attach" {
+  role       = aws_iam_role.control_plane_ecs_task_role.name
+  policy_arn = aws_iam_policy.database_secrets_read_access.arn
+}
+
+
 resource "aws_iam_role_policy_attachment" "control_plane_ecs_task_parameter_store_secrets_read_access_attach_tr" {
   role       = aws_iam_role.control_plane_ecs_task_role.name
   policy_arn = aws_iam_policy.parameter_store_secrets_read_access.arn
@@ -560,7 +566,14 @@ locals {
       name  = "CF_RELEASE_TAG",
       value = var.release_tag
     },
-
+    {
+      name  = "CF_FEATURE_ACCESS_SIMULATION_ENABLED",
+      value = var.unstable_enable_feature_access_simulation ? "true" : "false"
+    },
+    {
+      name  = "CF_DATABASE_PASSWORD_SECRET_ARN",
+      value = var.database_secret_sm_arn
+    }
   ]
 
   // Only add these secrets if their values are provided
@@ -729,7 +742,10 @@ resource "aws_ecs_service" "control_plane_service" {
 
   desired_count = var.desired_task_count
 
-
+  deployment_circuit_breaker {
+    enable   = true
+    rollback = true
+  }
 
   service_connect_configuration {
     enabled   = true
@@ -772,7 +788,7 @@ resource "aws_lb_listener_rule" "service_rule" {
   }
   condition {
     path_pattern {
-      values = ["/commonfate.control*", "/api/*", "/commonfate.leastprivilege*"
+      values = ["/commonfate.control*", "/api/*", "/commonfate.leastprivilege*", "/granted*"
       ]
     }
   }
@@ -824,7 +840,8 @@ resource "aws_lb_listener_rule" "service_rule_access_redirect_preview" {
     path_pattern {
       values = [
         "/commonfate.access.v1alpha1.AccessService/PreviewUserAccess",
-        "/commonfate.access.v1alpha1.AccessService/PreviewEntitlementAccess"
+        "/commonfate.access.v1alpha1.AccessService/PreviewEntitlementAccess",
+        "/commonfate.access.v1alpha1.AccessService/DebugEntitlementAccess"
       ]
     }
   }
@@ -840,10 +857,15 @@ resource "aws_ecs_service" "worker_service" {
 
   desired_count = var.desired_worker_task_count
 
+  deployment_circuit_breaker {
+    enable   = true
+    rollback = true
+  }
+
+
   service_connect_configuration {
     enabled   = true
     namespace = var.service_discovery_namespace_arn
-
   }
 
   network_configuration {

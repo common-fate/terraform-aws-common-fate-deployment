@@ -426,6 +426,11 @@ resource "aws_ecs_service" "provisioner_service" {
   launch_type     = "FARGATE"
   desired_count   = var.desired_task_count
 
+  deployment_circuit_breaker {
+    enable   = true
+    rollback = true
+  }
+
   network_configuration {
     subnets         = var.subnet_ids
     security_groups = [aws_security_group.ecs_provisioner_sg_v2.id]
@@ -435,4 +440,3 @@ resource "aws_ecs_service" "provisioner_service" {
     registry_arn = aws_service_discovery_service.service.arn
   }
 }
-

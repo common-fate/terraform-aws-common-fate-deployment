@@ -346,6 +346,11 @@ resource "aws_ecs_service" "authz_service" {
 
   desired_count = var.desired_task_count
 
+  deployment_circuit_breaker {
+    enable   = true
+    rollback = true
+  }
+
   service_connect_configuration {
     enabled   = true
     namespace = var.service_discovery_namespace_arn
