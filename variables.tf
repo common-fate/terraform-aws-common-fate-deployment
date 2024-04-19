@@ -457,3 +457,8 @@ variable "dynamodb_restore_to_latest_time" {
   default     = null
 }
 
+variable "rds_multi_az" {
+  description = "Enables RDS database to be deployed across multiple Availability Zones"
+  type        = bool
+  default     = true
+}
