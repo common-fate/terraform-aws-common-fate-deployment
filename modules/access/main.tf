@@ -25,17 +25,6 @@ resource "aws_security_group" "ecs_access_handler_sg_v2" {
   }
 }
 
-# Update the RDS security group to allow connections from the ECS access_handler service
-resource "aws_security_group_rule" "rds_access_from_access_handler" {
-  type                     = "ingress"
-  from_port                = 5432
-  to_port                  = 5432
-  protocol                 = "tcp"
-  security_group_id        = var.database_security_group_id
-  source_security_group_id = aws_security_group.ecs_access_handler_sg_v2.id
-}
-
-
 
 
 resource "aws_cloudwatch_log_group" "access_handler_log_group" {
@@ -68,32 +57,6 @@ resource "aws_iam_role" "access_handler_ecs_execution_role" {
       }
     ]
   })
-}
-
-resource "aws_iam_policy" "database_secrets_read_access" {
-  name        = "${var.namespace}-${var.stage}-control-plane-sm"
-  description = "Allows pull database secret from secrets manager"
-
-  policy = jsonencode({
-    Version = "2012-10-17",
-    Statement = [
-      {
-        Effect = "Allow",
-        "Action" : [
-          "secretsmanager:GetSecretValue"
-        ],
-        "Resource" : [
-          var.database_secret_sm_arn
-        ]
-      }
-    ]
-  })
-}
-
-
-resource "aws_iam_role_policy_attachment" "access_handler_ecs_task_database_secrets_access_attach" {
-  role       = aws_iam_role.access_handler_ecs_execution_role.name
-  policy_arn = aws_iam_policy.database_secrets_read_access.arn
 }
 
 resource "aws_iam_role_policy_attachment" "access_handler_ecs_execution_role_policy_attach" {
@@ -144,11 +107,6 @@ resource "aws_iam_policy" "eventbus_put_events" {
       }
     ]
   })
-}
-
-resource "aws_iam_role_policy_attachment" "access_handler_ecs_task_database_secrets_access_tr_attach" {
-  role       = aws_iam_role.access_handler_ecs_task_role.name
-  policy_arn = aws_iam_policy.database_secrets_read_access.arn
 }
 
 resource "aws_iam_role_policy_attachment" "otel" {
@@ -220,30 +178,10 @@ resource "aws_ecs_task_definition" "access_handler_task" {
         {
           name  = "CF_RELEASE_TAG",
           value = var.release_tag
-        },
-        {
-          name  = "CF_PG_USER",
-          value = var.database_user
-        },
-        {
-          name  = "CF_PG_HOST",
-          value = var.database_host
-        },
-        {
-          name  = "CF_PG_SSLMode",
-          value = "require"
-        },
-        {
-          name  = "CF_DATABASE_PASSWORD_SECRET_ARN",
-          value = var.database_secret_sm_arn
         }
       ],
       secrets = [
-        {
-          name = "CF_PG_PASSWORD",
-          // the password key is extracted from the json that is stored in secrets manager so that we don't need to decode it in the go server
-          valueFrom = "${var.database_secret_sm_arn}:password::"
-        },
+
       ]
 
       logConfiguration = {

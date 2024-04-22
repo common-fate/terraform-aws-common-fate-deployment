@@ -155,24 +155,3 @@ variable "control_plane_security_group_id" {
   type        = string
   description = "The id of the security group for the control plane."
 }
-
-
-variable "database_security_group_id" {
-  description = "Specifies the ID of the security group for the database."
-  type        = string
-}
-
-variable "database_secret_sm_arn" {
-  description = "The AWS Secrets Manager ARN for the database credentials."
-  type        = string
-}
-
-variable "database_user" {
-  description = "Specifies the username for database access."
-  type        = string
-}
-
-variable "database_host" {
-  description = "Specifies the hostname or IP address of the database."
-  type        = string
-}
