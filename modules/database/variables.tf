@@ -54,3 +54,10 @@ variable "rds_multi_az" {
   type        = bool
   default     = true
 }
+
+
+variable "apply_immediately" {
+  description = "Apply RDS changes immediately."
+  type        = bool
+  default     = true
+}

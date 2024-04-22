@@ -50,6 +50,7 @@ module "control_plane_db" {
   rds_db_retention_period  = var.rds_db_retention_period
   restore_to_point_in_time = var.restore_to_point_in_time
   rds_multi_az             = var.rds_multi_az
+  apply_immediately        = var.rds_apply_immediately
 }
 
 
