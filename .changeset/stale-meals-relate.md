@@ -2,4 +2,4 @@
 "@common-fate/terraform-aws-common-fate-deployment": patch
 ---
 
-Remove unstable_enable_feature_access_simulation variable now that the feature is released.
+Removes `unstable_enable_feature_access_simulation` variable from the Terraform module. This was used during the preview period for the Access Preview feature.
