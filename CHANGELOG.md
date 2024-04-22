@@ -1,5 +1,19 @@
 # @common-fate/terraform-aws-common-fate-deployment
 
+## 1.39.0
+
+### Minor Changes
+
+- cc8a9b1: When viewing an Access Request which needs approval, you'll now see a list of users who are authorized to approve access.
+- cc8a9b1: Adds Access Preview. Common Fate administrators can now list the entitlements that end-users can have authorization to access. Access Preview shows whether access will be auto-approved, and indicates the particular authorization policies which contribute to the authorization decision.
+- 12acbd7: Adds variable to allow for Multi-AZ on RDS database.
+- e43324c: The Common Fate web console now filters entitlements by default. If an end-user doesn't have authorization to request access to an entitlement, it will not be shown in the list to select from in the web console.
+- fe1c946: Adds 'rds_apply_immediately' variable to immediately apply RDS changes. Set to 'true' by default.
+
+### Patch Changes
+
+- e59ab5d: Removes `unstable_enable_feature_access_simulation` variable from the Terraform module. This was used during the preview period for the Access Preview feature.
+
 ## 1.38.0
 
 ### Minor Changes
