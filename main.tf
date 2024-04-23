@@ -123,7 +123,6 @@ module "cognito" {
 }
 
 
-
 module "control_plane" {
   source    = "./modules/controlplane"
   namespace = var.namespace
@@ -257,6 +256,10 @@ module "access_handler" {
   authz_service_connect_address             = module.authz.authz_internal_address
   control_plane_security_group_id           = module.control_plane.security_group_id
   worker_security_group_id                  = module.control_plane.worker_security_group_id
+  database_secret_sm_arn                    = module.control_plane_db.secret_arn
+  database_security_group_id                = module.control_plane_db.security_group_id
+  database_host                             = module.control_plane_db.endpoint
+  database_user                             = module.control_plane_db.username
 }
 
 
