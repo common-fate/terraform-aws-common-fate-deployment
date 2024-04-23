@@ -258,7 +258,7 @@ resource "aws_iam_policy" "authz_eval_bucket" {
       {
         "Sid" : "AllObjectActions",
         "Effect" : "Allow",
-        "Action" : "s3:GetObject",
+        "Action" : ["s3:GetObject", "s3:PutObject"],
         "Resource" : ["${var.authz_eval_bucket_arn}/*"]
       }
     ]
@@ -569,7 +569,11 @@ locals {
     {
       name  = "CF_DATABASE_PASSWORD_SECRET_ARN",
       value = var.database_secret_sm_arn
-    }
+    },
+    {
+      name  = "CF_EVAL_SINK_TYPE",
+      value = "aws"
+    },
   ]
 
   // Only add these secrets if their values are provided

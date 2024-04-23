@@ -161,6 +161,28 @@ resource "aws_iam_role_policy_attachment" "access_handler_eventbus_put_events_at
   policy_arn = aws_iam_policy.eventbus_put_events.arn
 }
 
+resource "aws_iam_policy" "authz_eval_bucket" {
+  name        = "${var.namespace}-${var.stage}-access-handler-authz-eval-bucket"
+  description = "Allows the Authz service to write to the authorization evaluation S3 bucket"
+
+  policy = jsonencode({
+    "Version" : "2012-10-17",
+    "Statement" : [
+      {
+        "Sid" : "AllObjectActions",
+        "Effect" : "Allow",
+        "Action" : "s3:PutObject",
+        "Resource" : ["${var.authz_eval_bucket_arn}/*"]
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "eval_bucket_attach" {
+  role       = aws_iam_role.access_handler_ecs_task_role.name
+  policy_arn = aws_iam_policy.authz_eval_bucket.arn
+}
+
 resource "aws_ecs_task_definition" "access_handler_task" {
   family                   = "${var.namespace}-${var.stage}-access-handler"
   network_mode             = "awsvpc"
@@ -236,7 +258,15 @@ resource "aws_ecs_task_definition" "access_handler_task" {
         {
           name  = "CF_DATABASE_PASSWORD_SECRET_ARN",
           value = var.database_secret_sm_arn
-        }
+        },
+        {
+          name  = "CF_EVAL_SINK_TYPE",
+          value = "aws"
+        },
+        {
+          name  = "CF_EVAL_SINK_AWS_S3_BUCKET",
+          value = var.authz_eval_bucket_name
+        },
       ],
       secrets = [
         {
