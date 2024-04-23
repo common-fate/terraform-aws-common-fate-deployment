@@ -71,7 +71,7 @@ resource "aws_iam_role" "access_handler_ecs_execution_role" {
 }
 
 resource "aws_iam_policy" "database_secrets_read_access" {
-  name        = "${var.namespace}-${var.stage}-control-plane-sm"
+  name        = "${var.namespace}-${var.stage}-access-handler-sm"
   description = "Allows pull database secret from secrets manager"
 
   policy = jsonencode({
