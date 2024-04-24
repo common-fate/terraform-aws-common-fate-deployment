@@ -468,3 +468,9 @@ variable "rds_apply_immediately" {
   type        = bool
   default     = true
 }
+variable "unstable_feature_embedded_authorizations" {
+  type        = bool
+  default     = false
+  description = "Opt-in to enable Embedded Authorization (in early access). This variable will be removed once the feature is released."
+}
+

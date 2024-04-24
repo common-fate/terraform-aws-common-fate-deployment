@@ -274,6 +274,10 @@ resource "aws_ecs_task_definition" "access_handler_task" {
           name  = "CF_EVAL_SINK_AWS_S3_BUCKET",
           value = var.authz_eval_bucket_name
         },
+        {
+          name  = "CF_FEATURE_EMBEDDED_AUTHORIZATIONS",
+          value = var.unstable_feature_embedded_authorizations
+        },
       ],
       secrets = [
         {

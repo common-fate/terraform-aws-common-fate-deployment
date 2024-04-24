@@ -179,6 +179,7 @@ module "control_plane" {
   access_handler_security_group_id           = module.access_handler.security_group_id
   authz_service_connect_address              = module.authz.authz_internal_address
   access_handler_service_connect_address     = module.access_handler.access_handler_internal_address
+  unstable_feature_embedded_authorizations   = var.unstable_feature_embedded_authorizations
 
 }
 
@@ -262,6 +263,7 @@ module "access_handler" {
   database_user                             = module.control_plane_db.username
   authz_eval_bucket_arn                     = module.authz_eval_bucket.arn
   authz_eval_bucket_name                    = module.authz_eval_bucket.id
+  unstable_feature_embedded_authorizations  = var.unstable_feature_embedded_authorizations
 }
 
 
