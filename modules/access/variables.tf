@@ -176,3 +176,12 @@ variable "database_host" {
   description = "Specifies the hostname or IP address of the database."
   type        = string
 }
+
+variable "authz_eval_bucket_name" {
+  type        = string
+  description = "Name of authorization evaluation bucket"
+}
+variable "authz_eval_bucket_arn" {
+  type        = string
+  description = "ARN of authorization evaluation bucket"
+}

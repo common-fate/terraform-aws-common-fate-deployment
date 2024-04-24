@@ -260,6 +260,8 @@ module "access_handler" {
   database_security_group_id                = module.control_plane_db.security_group_id
   database_host                             = module.control_plane_db.endpoint
   database_user                             = module.control_plane_db.username
+  authz_eval_bucket_arn                     = module.authz_eval_bucket.arn
+  authz_eval_bucket_name                    = module.authz_eval_bucket.id
 }
 
 
