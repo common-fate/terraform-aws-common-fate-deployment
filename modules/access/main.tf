@@ -70,6 +70,13 @@ resource "aws_iam_role" "access_handler_ecs_execution_role" {
   })
 }
 
+resource "aws_iam_role_policy_attachment" "access_handler_exec_role_database_secrets_access_attach" {
+  role       = aws_iam_role.access_handler_ecs_execution_role.name
+  policy_arn = aws_iam_policy.database_secrets_read_access.arn
+}
+
+
+
 resource "aws_iam_policy" "database_secrets_read_access" {
   name        = "${var.namespace}-${var.stage}-access-handler-sm"
   description = "Allows pull database secret from secrets manager"
