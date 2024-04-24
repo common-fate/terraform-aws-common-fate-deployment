@@ -576,7 +576,7 @@ locals {
     },
     {
       name  = "CF_FEATURE_EMBEDDED_AUTHORIZATIONS",
-      value = var.unstable_feature_embedded_authorizations
+      value = var.unstable_feature_embedded_authorizations ? "true" : "false"
     },
   ]
 

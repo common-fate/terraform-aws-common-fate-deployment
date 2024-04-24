@@ -276,7 +276,7 @@ resource "aws_ecs_task_definition" "access_handler_task" {
         },
         {
           name  = "CF_FEATURE_EMBEDDED_AUTHORIZATIONS",
-          value = var.unstable_feature_embedded_authorizations
+          value = var.unstable_feature_embedded_authorizations ? "true" : "false"
         },
       ],
       secrets = [
