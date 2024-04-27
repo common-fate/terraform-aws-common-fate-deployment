@@ -185,3 +185,10 @@ variable "authz_eval_bucket_arn" {
   type        = string
   description = "ARN of authorization evaluation bucket"
 }
+
+variable "unstable_feature_embedded_authorizations" {
+  type        = bool
+  default     = false
+  description = "Opt-in to enable Embedded Authorization (in early access). This variable will be removed once the feature is released."
+}
+

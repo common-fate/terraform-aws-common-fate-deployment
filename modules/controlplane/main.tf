@@ -574,6 +574,10 @@ locals {
       name  = "CF_EVAL_SINK_TYPE",
       value = "aws"
     },
+    {
+      name  = "CF_FEATURE_EMBEDDED_AUTHORIZATIONS",
+      value = var.unstable_feature_embedded_authorizations ? "true" : "false"
+    },
   ]
 
   // Only add these secrets if their values are provided
