@@ -153,10 +153,12 @@ variable "alb_listener_arn" {
   description = "Specifies the Amazon Load Balancer (ALB) listener ARN."
   type        = string
 }
-variable "licence_key_ps_arn" {
-  description = "The AWS Parameter Store ARN for the license key."
+
+variable "licence_key" {
+  description = "The Common Fate licence key."
   type        = string
 }
+
 variable "log_retention_in_days" {
   description = "Specifies the cloudwatch log retention period."
   default     = 365
@@ -325,3 +327,32 @@ variable "access_handler_service_connect_address" {
   description = "the internal address assigned to the access handler service by AWS ECS service connect"
 }
 
+variable "xray_monitoring_enabled" {
+  description = "If enabled, writes OpenTelemetry monitoring events to AWS X-Ray."
+  type        = bool
+  default     = true
+}
+
+variable "managed_monitoring_enabled" {
+  description = "Enables Managed Monitoring for the deployment."
+  type        = bool
+  default     = false
+}
+
+variable "managed_monitoring_endpoint" {
+  description = "The Managed Monitoring OpenTelemetry endpoint"
+  type        = string
+  default     = "https://otel.commonfate.io"
+}
+
+variable "factory_base_url" {
+  description = "The Common Fate Factory API Base URL"
+  type        = string
+  default     = "https://factory.commonfate.io"
+}
+
+variable "factory_oidc_issuer" {
+  description = "The Common Fate Factory OIDC Issuer"
+  type        = string
+  default     = "https://factory.commonfate.io"
+}
