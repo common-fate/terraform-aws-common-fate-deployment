@@ -29,7 +29,9 @@ data "aws_arn" "licence_key" {
 
 data "aws_ssm_parameter" "licence_key" {
   count = var.licence_key_ps_arn != null ? 1 : 0
-  name  = data.aws_arn.licence_key[0].resource
+  // the parameter resource is e.g. 'parameter/common-fate/prod/licence-key',
+  // but we need '/common-fate/prod/licence-key' here.
+  name = trimprefix(data.aws_arn.licence_key[0].resource, "parameter")
 }
 
 module "vpc" {
