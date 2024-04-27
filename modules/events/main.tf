@@ -17,7 +17,8 @@ resource "aws_sqs_queue" "event_queue" {
 }
 
 resource "aws_sqs_queue" "event_queue_deadletter" {
-  name = "${var.namespace}-${var.stage}-event-deadletter"
+  name                    = "${var.namespace}-${var.stage}-event-deadletter"
+  sqs_managed_sse_enabled = true
 }
 
 resource "aws_sqs_queue_redrive_allow_policy" "event_queue_redrive_allow_policy" {
