@@ -136,6 +136,7 @@ variable "licence_key" {
   description = "The Common Fate licence key."
   type        = string
   nullable    = true
+  default     = null
 }
 
 variable "access_handler_log_level" {
