@@ -186,6 +186,7 @@ variable "authz_eval_bucket_arn" {
   description = "ARN of authorization evaluation bucket"
 }
 
+
 variable "licence_key" {
   description = "The Common Fate licence key."
   type        = string
@@ -219,4 +220,10 @@ variable "factory_oidc_issuer" {
   description = "The Common Fate Factory OIDC Issuer"
   type        = string
   default     = "https://factory.commonfate.io"
+}
+
+variable "unstable_feature_embedded_authorizations" {
+  type        = bool
+  default     = false
+  description = "Opt-in to enable Embedded Authorization (in early access). This variable will be removed once the feature is released."
 }

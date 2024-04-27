@@ -503,3 +503,9 @@ variable "factory_oidc_issuer" {
   type        = string
   default     = "https://factory.commonfate.io"
 }
+
+variable "unstable_feature_embedded_authorizations" {
+  type        = bool
+  default     = false
+  description = "Opt-in to enable Embedded Authorization (in early access). This variable will be removed once the feature is released."
+}

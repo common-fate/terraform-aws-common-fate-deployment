@@ -198,6 +198,7 @@ module "control_plane" {
   managed_monitoring_endpoint                = var.managed_monitoring_endpoint
   factory_base_url                           = var.factory_base_url
   factory_oidc_issuer                        = var.factory_oidc_issuer
+  unstable_feature_embedded_authorizations   = var.unstable_feature_embedded_authorizations
 }
 
 
@@ -286,6 +287,7 @@ module "access_handler" {
   managed_monitoring_endpoint               = var.managed_monitoring_endpoint
   factory_base_url                          = var.factory_base_url
   factory_oidc_issuer                       = var.factory_oidc_issuer
+  unstable_feature_embedded_authorizations  = var.unstable_feature_embedded_authorizations
 }
 
 

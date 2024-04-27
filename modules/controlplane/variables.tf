@@ -327,6 +327,7 @@ variable "access_handler_service_connect_address" {
   description = "the internal address assigned to the access handler service by AWS ECS service connect"
 }
 
+
 variable "xray_monitoring_enabled" {
   description = "If enabled, writes OpenTelemetry monitoring events to AWS X-Ray."
   type        = bool
@@ -355,4 +356,10 @@ variable "factory_oidc_issuer" {
   description = "The Common Fate Factory OIDC Issuer"
   type        = string
   default     = "https://factory.commonfate.io"
+}
+
+variable "unstable_feature_embedded_authorizations" {
+  type        = bool
+  default     = false
+  description = "Opt-in to enable Embedded Authorization (in early access). This variable will be removed once the feature is released."
 }
