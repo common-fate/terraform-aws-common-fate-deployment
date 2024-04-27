@@ -491,7 +491,7 @@ variable "managed_monitoring_enabled" {
 variable "managed_monitoring_endpoint" {
   description = "The Managed Monitoring OpenTelemetry endpoint"
   type        = string
-  default     = "https://otel.commonfate.io"
+  default     = "otel.commonfate.io"
 }
 
 variable "factory_base_url" {
