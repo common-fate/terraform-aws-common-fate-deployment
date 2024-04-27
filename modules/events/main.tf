@@ -11,7 +11,7 @@ resource "aws_sqs_queue" "event_queue" {
   name                    = "${var.namespace}-${var.stage}-event-queue"
   sqs_managed_sse_enabled = true
   redrive_policy = jsonencode({
-    deadLetterTargetArn = aws_sqs_queue.terraform_queue_deadletter.arn
+    deadLetterTargetArn = aws_sqs_queue.event_queue_deadletter.arn
     maxReceiveCount     = 3
   })
 }
