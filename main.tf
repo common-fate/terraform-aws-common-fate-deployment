@@ -23,13 +23,13 @@ locals {
 }
 
 data "aws_arn" "licence_key" {
-  for_each = var.licence_key_ps_arn != null ? [1] : []
-  arn      = var.licence_key_ps_arn
+  count = var.licence_key_ps_arn != null ? 1 : 0
+  arn   = var.licence_key_ps_arn
 }
 
 data "aws_ssm_parameter" "licence_key" {
-  for_each = var.licence_key_ps_arn != null ? [1] : []
-  name     = data.aws_arn.licence_key[0].resource
+  count = var.licence_key_ps_arn != null ? 1 : 0
+  name  = data.aws_arn.licence_key[0].resource
 }
 
 module "vpc" {

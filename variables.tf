@@ -130,6 +130,7 @@ variable "licence_key_ps_arn" {
   description = "The AWS Parameter Store ARN for the license key."
   type        = string
   nullable    = true
+  default     = null
 }
 
 variable "licence_key" {
