@@ -575,8 +575,38 @@ locals {
       value = "aws"
     },
     {
+
+      name  = "CF_LICENCE_KEY",
+      value = var.licence_key
+    },
+    {
+      name  = "CF_FACTORY_BASE_URL",
+      value = var.factory_base_url
+    },
+    {
+      name  = "CF_FACTORY_OIDC_ISSUER",
+      value = var.factory_oidc_issuer
+    },
+    {
+      name  = "CF_MONITORING_LOCAL_ENABLED",
+      value = var.xray_monitoring_enabled ? "true" : "false"
+    },
+    {
+      name  = "CF_MONITORING_MANAGED_ENABLED",
+      value = var.managed_monitoring_enabled ? "true" : "false"
+    },
+    {
+      name  = "CF_MONITORING_MANAGED_ENDPOINT",
+      value = var.managed_monitoring_endpoint
+    },
+    {
+      name  = "CF_DEPLOYMENT_NAME",
+      value = var.stage
+    },
+    {
       name  = "CF_FEATURE_EMBEDDED_AUTHORIZATIONS",
       value = var.unstable_feature_embedded_authorizations ? "true" : "false"
+
     },
   ]
 
@@ -604,10 +634,6 @@ locals {
         name = "CF_PG_PASSWORD",
         // the password key is extracted from the json that is stored in secrets manager so that we don't need to decode it in the go server
         valueFrom = "${var.database_secret_sm_arn}:password::"
-      },
-      {
-        name      = "CF_LICENCE_KEY",
-        valueFrom = var.licence_key_ps_arn
       },
 
   ])

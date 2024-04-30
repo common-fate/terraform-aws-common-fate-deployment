@@ -275,6 +275,34 @@ resource "aws_ecs_task_definition" "access_handler_task" {
           value = var.authz_eval_bucket_name
         },
         {
+          name  = "CF_LICENCE_KEY",
+          value = var.licence_key
+        },
+        {
+          name  = "CF_FACTORY_BASE_URL",
+          value = var.factory_base_url
+        },
+        {
+          name  = "CF_FACTORY_OIDC_ISSUER",
+          value = var.factory_oidc_issuer
+        },
+        {
+          name  = "CF_MONITORING_LOCAL_ENABLED",
+          value = var.xray_monitoring_enabled ? "true" : "false"
+        },
+        {
+          name  = "CF_MONITORING_MANAGED_ENABLED",
+          value = var.managed_monitoring_enabled ? "true" : "false"
+        },
+        {
+          name  = "CF_MONITORING_MANAGED_ENDPOINT",
+          value = var.managed_monitoring_endpoint
+        },
+        {
+          name  = "CF_DEPLOYMENT_NAME",
+          value = var.stage
+        },
+        {
           name  = "CF_FEATURE_EMBEDDED_AUTHORIZATIONS",
           value = var.unstable_feature_embedded_authorizations ? "true" : "false"
         },

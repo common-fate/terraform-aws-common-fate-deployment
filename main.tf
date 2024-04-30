@@ -18,6 +18,22 @@ moved {
   to   = module.vpc[0]
 }
 
+locals {
+  licence_key_value = var.licence_key_ps_arn != null ? data.aws_ssm_parameter.licence_key[0].value : var.licence_key
+}
+
+data "aws_arn" "licence_key" {
+  count = var.licence_key_ps_arn != null ? 1 : 0
+  arn   = var.licence_key_ps_arn
+}
+
+data "aws_ssm_parameter" "licence_key" {
+  count = var.licence_key_ps_arn != null ? 1 : 0
+  // the parameter resource is e.g. 'parameter/common-fate/prod/licence-key',
+  // but we need '/common-fate/prod/licence-key' here.
+  name = trimprefix(data.aws_arn.licence_key[0].resource, "parameter")
+}
+
 module "vpc" {
   count                  = var.vpc_id != null ? 0 : 1
   source                 = "./modules/vpc"
@@ -157,7 +173,7 @@ module "control_plane" {
   slack_service_client_id                    = module.cognito.slack_service_client_id
   slack_service_client_secret                = module.cognito.slack_service_client_secret
   oidc_slack_issuer                          = module.cognito.auth_issuer
-  licence_key_ps_arn                         = var.licence_key_ps_arn
+  licence_key                                = local.licence_key_value
   log_level                                  = var.control_plane_log_level
   grant_assume_on_role_arns                  = var.control_plane_grant_assume_on_role_arns
   oidc_control_plane_issuer                  = module.cognito.auth_issuer
@@ -179,8 +195,12 @@ module "control_plane" {
   access_handler_security_group_id           = module.access_handler.security_group_id
   authz_service_connect_address              = module.authz.authz_internal_address
   access_handler_service_connect_address     = module.access_handler.access_handler_internal_address
+  xray_monitoring_enabled                    = var.xray_monitoring_enabled
+  managed_monitoring_enabled                 = var.managed_monitoring_enabled
+  managed_monitoring_endpoint                = var.managed_monitoring_endpoint
+  factory_base_url                           = var.factory_base_url
+  factory_oidc_issuer                        = var.factory_oidc_issuer
   unstable_feature_embedded_authorizations   = var.unstable_feature_embedded_authorizations
-
 }
 
 
@@ -263,6 +283,12 @@ module "access_handler" {
   database_user                             = module.control_plane_db.username
   authz_eval_bucket_arn                     = module.authz_eval_bucket.arn
   authz_eval_bucket_name                    = module.authz_eval_bucket.id
+  licence_key                               = local.licence_key_value
+  xray_monitoring_enabled                   = var.xray_monitoring_enabled
+  managed_monitoring_enabled                = var.managed_monitoring_enabled
+  managed_monitoring_endpoint               = var.managed_monitoring_endpoint
+  factory_base_url                          = var.factory_base_url
+  factory_oidc_issuer                       = var.factory_oidc_issuer
   unstable_feature_embedded_authorizations  = var.unstable_feature_embedded_authorizations
 }
 

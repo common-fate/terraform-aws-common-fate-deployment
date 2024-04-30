@@ -129,9 +129,16 @@ variable "scim_token_ps_arn" {
 variable "licence_key_ps_arn" {
   description = "The AWS Parameter Store ARN for the license key."
   type        = string
+  nullable    = true
+  default     = null
 }
 
-
+variable "licence_key" {
+  description = "The Common Fate licence key."
+  type        = string
+  nullable    = true
+  default     = null
+}
 
 variable "access_handler_log_level" {
   description = "Log level for Access Handler service"
@@ -468,9 +475,39 @@ variable "rds_apply_immediately" {
   type        = bool
   default     = true
 }
+
+variable "xray_monitoring_enabled" {
+  description = "If enabled, writes OpenTelemetry monitoring events to AWS X-Ray."
+  type        = bool
+  default     = true
+}
+
+variable "managed_monitoring_enabled" {
+  description = "Enables Managed Monitoring for the deployment."
+  type        = bool
+  default     = false
+}
+
+variable "managed_monitoring_endpoint" {
+  description = "The Managed Monitoring OpenTelemetry endpoint"
+  type        = string
+  default     = "otel.commonfate.io"
+}
+
+variable "factory_base_url" {
+  description = "The Common Fate Factory API Base URL"
+  type        = string
+  default     = "https://factory.commonfate.io"
+}
+
+variable "factory_oidc_issuer" {
+  description = "The Common Fate Factory OIDC Issuer"
+  type        = string
+  default     = "https://factory.commonfate.io"
+}
+
 variable "unstable_feature_embedded_authorizations" {
   type        = bool
   default     = false
   description = "Opt-in to enable Embedded Authorization (in early access). This variable will be removed once the feature is released."
 }
-

@@ -8,10 +8,28 @@ resource "aws_cloudwatch_event_bus" "event_bus" {
 
 
 resource "aws_sqs_queue" "event_queue" {
-  name = "${var.namespace}-${var.stage}-event-queue"
+  name                    = "${var.namespace}-${var.stage}-event-queue"
   sqs_managed_sse_enabled = true
-  # Additional configurations like redrive policy can be added here
+  redrive_policy = jsonencode({
+    deadLetterTargetArn = aws_sqs_queue.event_queue_deadletter.arn
+    maxReceiveCount     = 3
+  })
 }
+
+resource "aws_sqs_queue" "event_queue_deadletter" {
+  name                    = "${var.namespace}-${var.stage}-event-deadletter"
+  sqs_managed_sse_enabled = true
+}
+
+resource "aws_sqs_queue_redrive_allow_policy" "event_queue_redrive_allow_policy" {
+  queue_url = aws_sqs_queue.event_queue.id
+
+  redrive_allow_policy = jsonencode({
+    redrivePermission = "byQueue",
+    sourceQueueArns   = [aws_sqs_queue.event_queue.arn]
+  })
+}
+
 resource "aws_cloudwatch_event_rule" "to_sqs_rule" {
   name           = "${var.namespace}-${var.stage}-to-sqs-rule"
   description    = "Route events to SQS queue"
@@ -66,7 +84,7 @@ resource "aws_cloudwatch_log_resource_policy" "events_policy" {
     {
       "Effect": "Allow",
       "Principal": {
-        "Service": [ 
+        "Service": [
           "events.amazonaws.com",
           "delivery.logs.amazonaws.com"
           ]
@@ -84,7 +102,7 @@ resource "aws_cloudwatch_log_resource_policy" "events_policy" {
     }
   ]
 }
-POLICY  
+POLICY
 }
 
 #Create a new Event Rule
@@ -104,4 +122,3 @@ resource "aws_cloudwatch_event_target" "cw_logs_target" {
   event_bus_name = aws_cloudwatch_event_bus.event_bus.name
   target_id      = "SendToCloudwatch"
 }
-
