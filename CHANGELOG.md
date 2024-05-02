@@ -1,5 +1,12 @@
 # @common-fate/terraform-aws-common-fate-deployment
 
+## 1.40.1
+
+### Patch Changes
+
+- 4d7de64: Fix an issue causing the duration input to reset when requesting access in the web console.
+- 4d7de64: Fix an issue on the new request page which would cause the access duration to reset when the reason was updated.
+
 ## 1.40.0
 
 ### Minor Changes
