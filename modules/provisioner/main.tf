@@ -14,6 +14,7 @@ locals {
   aws_rds_config  = var.aws_rds_config != null ? var.aws_rds_config : {}
   okta_config     = var.okta_config != null ? var.okta_config : {}
   datastax_config = var.datastax_config != null ? var.datastax_config : {}
+  auth0_config    = var.auth0_config != null ? var.auth0_config : {}
 
   provisioner_types = compact([
     var.aws_idc_config != null ? "AWS_IDC" : "",
@@ -22,6 +23,7 @@ locals {
     var.aws_rds_config != null ? "AWS_RDS" : "",
     var.okta_config != null ? "Okta" : "",
     var.datastax_config != null ? "DataStax" : "",
+    var.auth0_config != null ? "Auth0" : "",
   ])
 
   env_vars = [
@@ -144,6 +146,26 @@ locals {
     }
   ] : []
 
+  auth0_env_vars = var.okta_config != null ? [
+    {
+      name  = "CF_AUTH0_DOMAIN"
+      value = local.auth0_config.domain
+    },
+    {
+      name  = "CF_AUTH0_CLIENT_ID"
+      value = local.auth0_config.client_id
+    }
+  ] : []
+
+  auth0_client_secret_secret_path_arn = var.auth0_config != null ? "arn:aws:ssm:${var.aws_region}:${data.aws_caller_identity.current.account_id}:parameter${local.auth0_config.client_secret_secret_path}" : ""
+  auth0_secrets = var.auth0_config != null ? [
+    {
+      name = "CF_AUTH0_CLIENT_SECRET",
+      // construct the arn from a path to make configuration more simple and consistent accross infra and config
+      valueFrom = local.auth0_client_secret_secret_path_arn
+    }
+  ] : []
+
   // @TODO remove this eventually as it has been replaced with a tag condition key
   grant_assume_roles = compact([
     var.aws_idc_config != null ? var.aws_idc_config.role_arn : "",
@@ -154,10 +176,11 @@ locals {
     var.entra_config != null ? local.entra_client_secret_path_arn : "",
     var.okta_config != null ? local.okta_api_key_secret_path_arn : "",
     var.datastax_config != null ? local.datastax_api_key_secret_path_arn : "",
+    var.auth0_config != null ? local.auth0_client_secret_secret_path_arn : "",
   ])
 
-  combined_env_vars = concat(local.env_vars, local.aws_env_vars, local.gcp_env_vars, local.entra_env_vars, local.aws_rds_env_vars, local.okta_env_vars)
-  combined_secrets  = concat(local.gcp_secrets, local.entra_secrets, local.okta_secrets, local.datastax_secrets)
+  combined_env_vars = concat(local.env_vars, local.aws_env_vars, local.gcp_env_vars, local.entra_env_vars, local.aws_rds_env_vars, local.okta_env_vars, local.auth0_env_vars)
+  combined_secrets  = concat(local.gcp_secrets, local.entra_secrets, local.okta_secrets, local.datastax_secrets, local.auth0_secrets)
   name_prefix       = join("-", compact([var.namespace, var.stage, var.name_prefix]))
 }
 

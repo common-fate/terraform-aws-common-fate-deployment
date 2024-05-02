@@ -353,5 +353,6 @@ module "provisioner" {
   aws_rds_config               = var.provisioner_aws_rds_config
   okta_config                  = var.provisioner_okta_config
   datastax_config              = var.provisioner_datastax_config
+  auth0_config                 = var.provisioner_auth0_config
   provisioner_image_repository = var.provisioner_image_repository
 }

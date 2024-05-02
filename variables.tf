@@ -266,6 +266,22 @@ variable "provisioner_datastax_config" {
 }
 
 
+variable "provisioner_auth0_config" {
+  description = <<EOF
+  Configuration for Auth0. The following keys are expected:
+  - domain: The Auth0 tenant domain.
+  - client_id: The Auth0 application client ID.
+  - client_secret_secret_path: The SSM Parameter store secret path for the Auth0 application client secret.
+  EOF
+  type = object({
+    domain                    = string
+    client_id                 = string
+    client_secret_secret_path = string
+  })
+  default = null
+}
+
+
 
 variable "unstable_enable_feature_least_privilege" {
   type        = bool
