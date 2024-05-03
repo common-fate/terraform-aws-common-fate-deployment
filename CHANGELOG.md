@@ -1,5 +1,13 @@
 # @common-fate/terraform-aws-common-fate-deployment
 
+## 1.40.2
+
+### Patch Changes
+
+- e2a931b: For BYOC customers: fixes an issue where the 'version' attribute on OpenTelemetry spans was not being set.
+- e2a931b: Fix an issue where auto-approved access would use a lower priority Access Workflow, if the Access Workflow had a longer duration.
+- e2a931b: Fix an issue where containers could fail to start if the Common Fate support API was unable to issue an access token to the deployment.
+
 ## 1.40.1
 
 ### Patch Changes
