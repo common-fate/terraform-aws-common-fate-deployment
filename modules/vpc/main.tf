@@ -51,35 +51,6 @@ module "vpc_endpoints" {
       policy          = data.aws_iam_policy_document.dynamodb_endpoint_policy.json
       tags            = { Name = "dynamodb-vpc-endpoint" }
     },
-    ecs = {
-      service             = "ecs"
-      private_dns_enabled = true
-      subnet_ids          = module.vpc.private_subnets
-    },
-    ecs_telemetry = {
-      create              = false
-      service             = "ecs-telemetry"
-      private_dns_enabled = true
-      subnet_ids          = module.vpc.private_subnets
-    },
-    ecr_api = {
-      service             = "ecr.api"
-      private_dns_enabled = true
-      subnet_ids          = module.vpc.private_subnets
-      policy              = data.aws_iam_policy_document.generic_endpoint_policy.json
-    },
-    ecr_dkr = {
-      service             = "ecr.dkr"
-      private_dns_enabled = true
-      subnet_ids          = module.vpc.private_subnets
-      policy              = data.aws_iam_policy_document.generic_endpoint_policy.json
-    },
-    rds = {
-      service             = "rds"
-      private_dns_enabled = true
-      subnet_ids          = module.vpc.private_subnets
-      security_group_ids  = [aws_security_group.rds.id]
-    },
   }
 }
 
@@ -102,39 +73,5 @@ data "aws_iam_policy_document" "dynamodb_endpoint_policy" {
 
       values = [module.vpc.vpc_id]
     }
-  }
-}
-
-data "aws_iam_policy_document" "generic_endpoint_policy" {
-  statement {
-    effect    = "Deny"
-    actions   = ["*"]
-    resources = ["*"]
-
-    principals {
-      type        = "*"
-      identifiers = ["*"]
-    }
-
-    condition {
-      test     = "StringNotEquals"
-      variable = "aws:SourceVpc"
-
-      values = [module.vpc.vpc_id]
-    }
-  }
-}
-
-resource "aws_security_group" "rds" {
-  name_prefix = "${var.namespace}-${var.stage}-rds-vpce"
-  description = "Allow PostgreSQL inbound traffic"
-  vpc_id      = module.vpc.vpc_id
-
-  ingress {
-    description = "Postgres from VPC"
-    from_port   = 5432
-    to_port     = 5432
-    protocol    = "tcp"
-    cidr_blocks = [module.vpc.vpc_cidr_block]
   }
 }
