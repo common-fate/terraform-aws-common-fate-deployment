@@ -131,7 +131,7 @@ resource "aws_security_group" "rds" {
   vpc_id      = module.vpc.vpc_id
 
   ingress {
-    description = "TLS from VPC"
+    description = "Postgres from VPC"
     from_port   = 5432
     to_port     = 5432
     protocol    = "tcp"
