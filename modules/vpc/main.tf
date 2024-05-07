@@ -26,7 +26,7 @@ module "vpc_endpoints" {
   vpc_id = module.vpc.vpc_id
 
   create_security_group      = true
-  security_group_name_prefix = "${var.namespace}-${var.stage}-vpce-"
+  security_group_name        = "${var.namespace}-${var.stage}-vpce"
   security_group_description = "VPC endpoint security group"
   security_group_rules = {
     ingress_https = {
@@ -37,12 +37,10 @@ module "vpc_endpoints" {
 
   endpoints = {
     s3 = {
-      service             = "s3"
-      private_dns_enabled = true
-      dns_options = {
-        private_dns_only_for_inbound_resolver_endpoint = false
-      }
-      tags = { Name = "s3-vpc-endpoint" }
+      service         = "s3"
+      service_type    = "Gateway"
+      route_table_ids = flatten([module.vpc.intra_route_table_ids, module.vpc.private_route_table_ids, module.vpc.public_route_table_ids])
+      tags            = { Name = "s3-vpc-endpoint" }
     },
     dynamodb = {
       service         = "dynamodb"
