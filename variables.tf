@@ -524,6 +524,6 @@ variable "factory_oidc_issuer" {
 
 variable "unstable_feature_embedded_authorizations" {
   type        = bool
-  default     = false
+  default     = true
   description = "Opt-in to enable Embedded Authorization (in early access). This variable will be removed once the feature is released."
 }
