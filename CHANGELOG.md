@@ -1,5 +1,27 @@
 # @common-fate/terraform-aws-common-fate-deployment
 
+## 1.41.0
+
+### Minor Changes
+
+- c84bcf8: Adds provisioning configuration for the Common Fate Auth0 integration.
+- 3a7c2be: Adds support for requesting access to a GCP Role Group. A Role Group is a group of multiple roles which are requested and assigned together. GCP Role Groups allow you to work around the permission count restriction in custom roles.
+- 3a7c2be: Adds Auth0 integration.
+- 3a7c2be: Updates API for slack alerts to allow for configuring messages via direct message to approvers
+- 55e6057: Adds VPC Endpoints for services used in the stack.
+
+### Patch Changes
+
+- 3a7c2be: For BYOC customers: fixes an issue where the 'version' attribute on OpenTelemetry spans was not being set.
+- 3a7c2be: Fixes name based lookups for target and role when using the CLI to ensure access when the embedded authorization feature flag is enabled.
+- 3a7c2be: Fix an issue where auto-approved access would use a lower priority Access Workflow, if the Access Workflow had a longer duration.
+- 3a7c2be: Improve performance of the integration APIs
+- 3a7c2be: Fix an issue causing the duration input to reset when requesting access in the web console.
+- 3a7c2be: Fixes an issue where invalid configuration could cause the built-in Provisioner to report 'no provisioner has the capability to Grant <Role> on <Target>'. If you have a single provisioner registered with your Common Fate deployment, we'll always try and call it rather than reporting an error if the capabilities aren't correctly configured.
+- 3a7c2be: Performance improvement for the Availability Maker background process.
+- c51b5d8: Enable embedded authorization by default
+- 3a7c2be: Fix an issue on the new request page which would cause the access duration to reset when the reason was updated.
+
 ## 1.40.2
 
 ### Patch Changes
