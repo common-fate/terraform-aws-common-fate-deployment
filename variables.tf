@@ -527,3 +527,10 @@ variable "unstable_feature_embedded_authorizations" {
   default     = true
   description = "Opt-in to enable Embedded Authorization (in early access). This variable will be removed once the feature is released."
 }
+
+
+variable "database_auto_migrate" {
+  type        = bool
+  default     = true
+  description = "Whether to run database migrations automatically when the Control Plane service starts. If rolling back to a previous release after a migration has run, set this to `false`."
+}
