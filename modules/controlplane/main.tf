@@ -606,6 +606,10 @@ locals {
     {
       name  = "CF_FEATURE_EMBEDDED_AUTHORIZATIONS",
       value = var.unstable_feature_embedded_authorizations ? "true" : "false"
+    },
+    {
+      name  = "CF_DATABASE_AUTO_MIGRATE",
+      value = var.database_auto_migrate ? "true" : "false"
 
     },
   ]

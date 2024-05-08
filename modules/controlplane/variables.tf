@@ -363,3 +363,9 @@ variable "unstable_feature_embedded_authorizations" {
   default     = false
   description = "Opt-in to enable Embedded Authorization (in early access). This variable will be removed once the feature is released."
 }
+
+variable "database_auto_migrate" {
+  type        = bool
+  default     = true
+  description = "Runs database migrations when the containers start up. Is set to true by default"
+}

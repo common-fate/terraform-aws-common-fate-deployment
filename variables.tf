@@ -519,7 +519,14 @@ variable "factory_base_url" {
 variable "factory_oidc_issuer" {
   description = "The Common Fate Factory OIDC Issuer"
   type        = string
-  default     = "https://factory.commonfate.io"
+
+  default = "https://factory.commonfate.io"
+}
+
+variable "database_auto_migrate" {
+  type        = bool
+  default     = true
+  description = "Runs database migrations when the containers start up. Is set to true by default"
 }
 
 variable "unstable_feature_embedded_authorizations" {
@@ -527,3 +534,4 @@ variable "unstable_feature_embedded_authorizations" {
   default     = true
   description = "Opt-in to enable Embedded Authorization (in early access). This variable will be removed once the feature is released."
 }
+
