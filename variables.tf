@@ -528,7 +528,7 @@ variable "unstable_feature_embedded_authorizations" {
   description = "Opt-in to enable Embedded Authorization (in early access). This variable will be removed once the feature is released."
 }
 variable "force_config_migrations" {
-  type        = bool
+  type        = string
   description = "Opt-in to enable existing configurations to be migrated to postgres."
-  default     = true
+  default     = "true"
 }
