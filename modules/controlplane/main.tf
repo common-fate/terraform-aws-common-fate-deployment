@@ -575,7 +575,6 @@ locals {
       value = "aws"
     },
     {
-
       name  = "CF_LICENCE_KEY",
       value = var.licence_key
     },
@@ -607,6 +606,8 @@ locals {
       name  = "CF_FEATURE_EMBEDDED_AUTHORIZATIONS",
       value = var.unstable_feature_embedded_authorizations ? "true" : "false"
 
+      name  = "CF_FORCE_CONFIG_MIGRATIONS",
+      value = var.force_config_migrations
     },
   ]
 
