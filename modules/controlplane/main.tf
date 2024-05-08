@@ -434,6 +434,10 @@ locals {
       name  = "CF_PG_SSLMode",
       value = "require"
     },
+    {
+      name  = "CF_DATABASE_AUTO_MIGRATE",
+      value = var.database_auto_migrate ? "true" : "false"
+    },
 
     {
       name  = "CF_CONTROL_PLANE_SERVICE_OIDC_CLIENT_ID",

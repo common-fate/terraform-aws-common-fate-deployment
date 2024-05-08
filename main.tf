@@ -201,6 +201,7 @@ module "control_plane" {
   factory_base_url                           = var.factory_base_url
   factory_oidc_issuer                        = var.factory_oidc_issuer
   unstable_feature_embedded_authorizations   = var.unstable_feature_embedded_authorizations
+  database_auto_migrate                      = var.database_auto_migrate
 }
 
 
