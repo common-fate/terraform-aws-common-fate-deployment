@@ -247,6 +247,7 @@ module "web" {
   auth_issuer           = module.cognito.auth_issuer
   alb_security_group_id = module.alb.alb_security_group_id
   web_image_repository  = var.web_image_repository
+  centralised_support   = var.centralised_support
 }
 
 

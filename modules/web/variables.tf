@@ -152,3 +152,9 @@ variable "web_image_repository" {
   description = "Docker image repository to use for the Web image"
   default     = "public.ecr.aws/z2x0a3a1/common-fate-deployment/web"
 }
+variable "centralised_support" {
+  type        = bool
+  default     = true
+  description = "Opt-in to enable centalised support, when enabled will send diagnostics to Common Fate. Also allows in app support for end users."
+
+}
