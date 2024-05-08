@@ -1,5 +1,13 @@
 # @common-fate/terraform-aws-common-fate-deployment
 
+## 1.41.1
+
+### Patch Changes
+
+- 4ccb495: Allow disabling automatic database migrations using the `database_auto_migrate` variable when the Control Plane container starts.
+- 8014185: Fix an issue which could cause active grants to be revoked if the activation expiry is exceeded.
+- 8014185: For BYOC customers: allow disabling automatic database migrations when the Control Plane container starts.
+
 ## 1.41.0
 
 ### Minor Changes
