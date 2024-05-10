@@ -21,7 +21,9 @@ resource "aws_cognito_identity_provider" "saml_idp" {
   provider_type = "SAML"
 
   attribute_mapping = {
-    email = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"
+    email = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress",
+    family_name = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/familyname",
+    given_name = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname"
   }
 
   provider_details = var.saml_metadata_is_file ? {
