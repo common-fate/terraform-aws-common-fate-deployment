@@ -1,7 +1,3 @@
-provider "google" {
-  project = var.gcp_project
-}
-
 resource "google_iam_workload_identity_pool" "this" {
   workload_identity_pool_id = var.workload_identity_pool_id
   display_name              = var.workload_identity_pool_display_name
