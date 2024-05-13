@@ -1,5 +1,12 @@
 # @common-fate/terraform-aws-common-fate-deployment
 
+## 1.41.2
+
+### Patch Changes
+
+- 345c247: Fix to Slack interactivity causing 500 errors when activating or closing requests
+- 6331b4f: Add option to force rerunning the configuration migration on startup.
+
 ## 1.41.1
 
 ### Patch Changes
