@@ -531,6 +531,6 @@ variable "unstable_feature_embedded_authorizations" {
 variable "centralised_support" {
   type        = bool
   default     = true
-  description = "Enable end users to access centalised support. "
+  description = "Opt-in end users to access centalised support. "
 
 }
