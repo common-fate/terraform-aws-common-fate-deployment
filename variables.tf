@@ -527,7 +527,11 @@ variable "unstable_feature_embedded_authorizations" {
   default     = true
   description = "Opt-in to enable Embedded Authorization (in early access). This variable will be removed once the feature is released."
 }
-
+variable "force_rerun_config_migrations" {
+  type        = bool
+  description = "Whether to force the config migration to rerun on startup of the control plane"
+  default     = false
+}
 
 variable "database_auto_migrate" {
   type        = bool
