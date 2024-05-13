@@ -532,6 +532,12 @@ variable "centralised_support" {
   type        = bool
   default     = true
   description = "Opt-in end users to access centalised support. "
+}
+variable "force_rerun_config_migrations" {
+  type        = bool
+  description = "Whether to force the config migration to rerun on startup of the control plane"
+  default     = false
+}
 
 }
 variable "database_auto_migrate" {
