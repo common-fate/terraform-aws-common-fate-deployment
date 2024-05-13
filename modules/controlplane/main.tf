@@ -434,6 +434,10 @@ locals {
       name  = "CF_PG_SSLMode",
       value = "require"
     },
+    {
+      name  = "CF_DATABASE_AUTO_MIGRATE",
+      value = var.database_auto_migrate ? "true" : "false"
+    },
 
     {
       name  = "CF_CONTROL_PLANE_SERVICE_OIDC_CLIENT_ID",
@@ -607,7 +611,7 @@ locals {
       value = var.unstable_feature_embedded_authorizations ? "true" : "false"
 
       name  = "CF_FORCE_CONFIG_MIGRATIONS",
-      value = var.force_config_migrations
+      value = var.force_rerun_config_migrations ? "true" : "false"
     },
   ]
 

@@ -362,7 +362,12 @@ variable "unstable_feature_embedded_authorizations" {
   default     = false
   description = "Opt-in to enable Embedded Authorization (in early access). This variable will be removed once the feature is released."
 }
-variable "force_config_migrations" {
-  type        = string
-  description = "Opt-in to enable existing configurations to be migrated to postgres."
+variable "force_rerun_config_migrations" {
+  type        = bool
+  description = "Whether to force the config migration to rerun on startup of the control plane"
+}
+variable "database_auto_migrate" {
+  type        = bool
+  default     = true
+  description = "Whether to run database migrations automatically when the Control Plane service starts. If rolling back to a previous release after a migration has run, set this to `false`."
 }
