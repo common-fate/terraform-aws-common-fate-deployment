@@ -531,7 +531,7 @@ variable "unstable_feature_embedded_authorizations" {
 variable "centralised_support" {
   type        = bool
   default     = true
-  description = "Opt-in end users to access centalised support. "
+  description = "Enable the in-app centralised support feature."
 }
 variable "force_rerun_config_migrations" {
   type        = bool

@@ -155,6 +155,6 @@ variable "web_image_repository" {
 variable "centralised_support" {
   type        = bool
   default     = true
-  description = "Opt-in end users to access centalised support. "
+  description = "Enable the in-app centralised support feature."
 
 }
