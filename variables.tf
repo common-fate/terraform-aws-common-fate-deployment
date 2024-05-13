@@ -531,6 +531,6 @@ variable "unstable_feature_embedded_authorizations" {
 variable "centralised_support" {
   type        = bool
   default     = true
-  description = "Opt-in to enable centalised support, when enabled will send diagnostics to Common Fate. Also allows in app support for end users."
+  description = "Enable centalised support, when enabled will send diagnostics to Common Fate. Also allows in app support for end users."
 
 }

@@ -2,4 +2,4 @@
 "@common-fate/terraform-aws-common-fate-deployment": patch
 ---
 
-added variable to enable or disable centralised support
+Centralised support can now be disabled by setting the variable centralised_support to false.
