@@ -155,6 +155,6 @@ variable "web_image_repository" {
 variable "centralised_support" {
   type        = bool
   default     = true
-  description = "Enable centalised support, when enabled will send diagnostics to Common Fate. Also allows in app support for end users."
+  description = "Enable end users to access centalised support. "
 
 }
