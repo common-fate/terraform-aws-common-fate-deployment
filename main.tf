@@ -2,6 +2,23 @@ provider "aws" {
   region = var.aws_region
 }
 
+terraform {
+  required_providers {
+    deploymeta = {
+      source  = "common-fate/deploymeta"
+      version = "0.1.0"
+    }
+  }
+}
+
+
+provider "deploymeta" {
+  deployment_name = "${var.namespace}-${var.stage}"
+  licence_key     = local.licence_key_value
+}
+
+data "deploymeta_deployment" "this" {}
+
 data "aws_partition" "current" {}
 data "aws_caller_identity" "current" {}
 
@@ -11,6 +28,10 @@ locals {
   private_subnet_ids       = var.vpc_id != null ? var.private_subnet_ids : module.vpc[0].private_subnet_ids
   database_subnet_group_id = var.vpc_id != null ? var.database_subnet_group_id : module.vpc[0].database_subnet_group_id
   ecs_cluster_id           = var.ecs_cluster_id != null ? var.ecs_cluster_id : module.ecs[0].cluster_id
+}
+
+locals {
+  app_url = var.app_url != "" ? var.app_url : "start.${data.deploymeta_deployment.this.default_domain}"
 }
 
 moved {
@@ -33,6 +54,57 @@ data "aws_ssm_parameter" "licence_key" {
   // but we need '/common-fate/prod/licence-key' here.
   name = trimprefix(data.aws_arn.licence_key[0].resource, "parameter")
 }
+
+resource "aws_route53_zone" "this" {
+  count = var.provision_default_dns_namespace ? 1 : 0
+  name  = data.deploymeta_deployment.this.default_domain
+}
+
+resource "deploymeta_nameservers" "this" {
+  count      = var.provision_default_dns_namespace ? 1 : 0
+  ns_records = aws_route53_zone.this[0].name_servers
+}
+
+resource "aws_acm_certificate" "start" {
+  count             = var.provision_default_dns_namespace ? 1 : 0
+  domain_name       = "start.${data.deploymeta_deployment.this[0].default_domain}"
+  validation_method = "DNS"
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+resource "aws_route53_record" "start_cert_dns" {
+  count           = var.provision_default_dns_namespace ? 1 : 0
+  allow_overwrite = true
+  name            = tolist(aws_acm_certificate.start[0].domain_validation_options)[0].resource_record_name
+  records         = [tolist(aws_acm_certificate.start[0].domain_validation_options)[0].resource_record_value]
+  type            = tolist(aws_acm_certificate.start[0].domain_validation_options)[0].resource_record_type
+  zone_id         = aws_route53_zone.this[0].zone_id
+  ttl             = 60
+}
+
+resource "aws_acm_certificate_validation" "start_cert_validation" {
+  count                   = var.provision_default_dns_namespace ? 1 : 0
+  certificate_arn         = aws_acm_certificate.start[0].arn
+  validation_record_fqdns = [aws_route53_record.start_cert_dns[0].fqdn]
+}
+
+resource "aws_route53_record" "default_app_url" {
+  count           = var.provision_default_dns_namespace ? 1 : 0
+  zone_id         = aws_route53_zone.this[0].zone_id
+  allow_overwrite = true
+  name            = "start"
+  type            = "A"
+  ttl             = 60
+
+  alias {
+    name                   = module.alb.domain
+    zone_id                = module.alb.zone_id
+    evaluate_target_health = true
+  }
+}
+
 
 module "vpc" {
   count                  = var.vpc_id != null ? 0 : 1
@@ -126,7 +198,7 @@ module "cognito" {
   namespace                           = var.namespace
   stage                               = var.stage
   aws_region                          = var.aws_region
-  app_url                             = var.app_url
+  app_url                             = local.app_url
   auth_url                            = var.auth_url
   auth_certificate_arn                = var.auth_certificate_arn
   saml_metadata_is_file               = var.saml_metadata_is_file
@@ -151,7 +223,7 @@ module "control_plane" {
   database_security_group_id                 = module.control_plane_db.security_group_id
   eventbus_arn                               = module.events.event_bus_arn
   sqs_queue_arn                              = module.events.sqs_queue_arn
-  app_url                                    = var.app_url
+  app_url                                    = local.app_url
   pager_duty_client_id                       = var.pager_duty_client_id
   pager_duty_client_secret_ps_arn            = var.pager_duty_client_secret_ps_arn
   release_tag                                = var.release_tag
@@ -245,7 +317,7 @@ module "web" {
   team_name             = var.team_name
   ecs_cluster_id        = local.ecs_cluster_id
   alb_listener_arn      = module.alb.listener_arn
-  app_url               = var.app_url
+  app_url               = local.app_url
   auth_issuer           = module.cognito.auth_issuer
   alb_security_group_id = module.alb.alb_security_group_id
   web_image_repository  = var.web_image_repository
@@ -267,7 +339,7 @@ module "access_handler" {
   alb_listener_arn                          = module.alb.listener_arn
   auth_issuer                               = module.cognito.auth_issuer
   log_level                                 = var.access_handler_log_level
-  app_url                                   = var.app_url
+  app_url                                   = local.app_url
   oidc_access_handler_service_client_id     = module.cognito.access_handler_service_client_id
   oidc_access_handler_service_client_secret = module.cognito.access_handler_service_client_secret
   oidc_access_handler_service_issuer        = module.cognito.auth_issuer
@@ -311,7 +383,7 @@ module "authz" {
   dynamodb_table_name                   = module.authz_db.dynamodb_table_name
   log_level                             = var.authz_log_level
   dynamodb_table_arn                    = module.authz_db.dynamodb_table_arn
-  app_url                               = var.app_url
+  app_url                               = local.app_url
   oidc_trusted_issuer                   = module.cognito.auth_issuer
   oidc_terraform_client_id              = module.cognito.terraform_client_id
   oidc_access_handler_service_client_id = module.cognito.access_handler_service_client_id
@@ -347,7 +419,7 @@ module "provisioner" {
   provisioner_service_client_id     = module.cognito.provisioner_client_id
   provisioner_service_client_secret = module.cognito.provisioner_client_secret
   auth_issuer                       = module.cognito.auth_issuer
-  app_url                           = var.app_url
+  app_url                           = local.app_url
   assume_role_external_id           = var.assume_role_external_id
 
   gcp_config                   = var.provisioner_gcp_config

@@ -14,5 +14,9 @@ output "listener_arn" {
 
 output "alb_security_group_id" {
   description = "the id for the security group managing the alb"
-  value = aws_security_group.alb_sg.id
+  value       = aws_security_group.alb_sg.id
+}
+
+output "zone_id" {
+  value = aws_lb.main_alb.zone_id
 }

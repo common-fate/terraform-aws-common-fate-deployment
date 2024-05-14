@@ -73,11 +73,7 @@ variable "auth_url" {
 variable "app_url" {
   description = "The app url (e.g., 'https://common-fate.mydomain.com')."
   type        = string
-
-  validation {
-    condition     = can(regex("^https://", var.app_url))
-    error_message = "The app_url must start with 'https://'."
-  }
+  default     = ""
 }
 
 variable "team_name" {
@@ -544,4 +540,10 @@ variable "database_auto_migrate" {
   type        = bool
   default     = true
   description = "Whether to run database migrations automatically when the Control Plane service starts. If rolling back to a previous release after a migration has run, set this to `false`."
+}
+
+variable "provision_default_dns_namespace" {
+  description = "Whether to provision a DNS namespace for the deployment"
+  type        = bool
+  default     = false
 }

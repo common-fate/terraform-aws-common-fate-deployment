@@ -28,7 +28,7 @@ resource "aws_security_group" "alb_sg" {
   }
 
 }
-#trivy:ignore:AVD-AWS-0053 
+#trivy:ignore:AVD-AWS-0053
 resource "aws_lb" "main_alb" {
   name                             = "${var.namespace}-${var.stage}-common-fate"
   internal                         = var.use_internal_load_balancer
@@ -37,7 +37,6 @@ resource "aws_lb" "main_alb" {
   subnets                          = var.public_subnet_ids
   enable_cross_zone_load_balancing = true
   drop_invalid_header_fields       = true
-
 }
 
 locals {
