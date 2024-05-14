@@ -31,7 +31,7 @@ locals {
 }
 
 locals {
-  app_url             = var.app_url != "" ? var.app_url : "start.${data.deploymeta_deployment.this.default_domain}"
+  app_url             = var.app_url != "" ? var.app_url : "https://start.${data.deploymeta_deployment.this.default_domain}"
   app_certificate_arn = var.use_custom_app_domain ? var.app_certificate_arn : aws_acm_certificate.start[0].arn
 }
 
