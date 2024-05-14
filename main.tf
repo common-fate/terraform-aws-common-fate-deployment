@@ -68,7 +68,7 @@ resource "deploymeta_nameservers" "this" {
 
 resource "aws_acm_certificate" "start" {
   count             = var.use_custom_app_domain == false ? 1 : 0
-  domain_name       = "start.${data.deploymeta_deployment.this[0].default_domain}"
+  domain_name       = "start.${data.deploymeta_deployment.this.default_domain}"
   validation_method = "DNS"
   lifecycle {
     create_before_destroy = true
@@ -97,7 +97,6 @@ resource "aws_route53_record" "default_app_url" {
   allow_overwrite = true
   name            = "start"
   type            = "A"
-  ttl             = 60
 
   alias {
     name                   = module.alb.domain
