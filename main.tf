@@ -273,6 +273,8 @@ module "control_plane" {
   unstable_feature_embedded_authorizations   = var.unstable_feature_embedded_authorizations
   force_rerun_config_migrations              = var.force_rerun_config_migrations
   database_auto_migrate                      = var.database_auto_migrate
+
+  depends_on = [module.alb]
 }
 
 
@@ -320,6 +322,8 @@ module "web" {
   alb_security_group_id = module.alb.alb_security_group_id
   web_image_repository  = var.web_image_repository
   centralised_support   = var.centralised_support
+
+  depends_on = [module.alb]
 }
 
 
@@ -363,6 +367,8 @@ module "access_handler" {
   factory_base_url                          = var.factory_base_url
   factory_oidc_issuer                       = var.factory_oidc_issuer
   unstable_feature_embedded_authorizations  = var.unstable_feature_embedded_authorizations
+
+  depends_on = [module.alb]
 }
 
 
@@ -397,6 +403,8 @@ module "authz" {
   service_discovery_namespace_arn       = module.ecs_base.service_discovery_namespace_arn
   control_plane_security_group_id       = module.control_plane.security_group_id
   worker_security_group_id              = module.control_plane.worker_security_group_id
+
+  depends_on = [module.alb]
 }
 
 
@@ -428,4 +436,6 @@ module "provisioner" {
   datastax_config              = var.provisioner_datastax_config
   auth0_config                 = var.provisioner_auth0_config
   provisioner_image_repository = var.provisioner_image_repository
+
+  depends_on = [module.alb]
 }
