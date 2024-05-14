@@ -31,7 +31,8 @@ locals {
 }
 
 locals {
-  app_url = var.app_url != "" ? var.app_url : "start.${data.deploymeta_deployment.this.default_domain}"
+  app_url             = var.app_url != "" ? var.app_url : "start.${data.deploymeta_deployment.this.default_domain}"
+  app_certificate_arn = var.use_custom_app_domain ? var.app_certificate_arn : aws_acm_certificate.start[0].arn
 }
 
 moved {
@@ -66,7 +67,7 @@ resource "deploymeta_nameservers" "this" {
 }
 
 resource "aws_acm_certificate" "start" {
-  count             = var.provision_default_dns_namespace ? 1 : 0
+  count             = var.use_custom_app_domain == false ? 1 : 0
   domain_name       = "start.${data.deploymeta_deployment.this[0].default_domain}"
   validation_method = "DNS"
   lifecycle {
@@ -75,7 +76,7 @@ resource "aws_acm_certificate" "start" {
 }
 
 resource "aws_route53_record" "start_cert_dns" {
-  count           = var.provision_default_dns_namespace ? 1 : 0
+  count           = var.use_custom_app_domain == false ? 1 : 0
   allow_overwrite = true
   name            = tolist(aws_acm_certificate.start[0].domain_validation_options)[0].resource_record_name
   records         = [tolist(aws_acm_certificate.start[0].domain_validation_options)[0].resource_record_value]
@@ -85,13 +86,13 @@ resource "aws_route53_record" "start_cert_dns" {
 }
 
 resource "aws_acm_certificate_validation" "start_cert_validation" {
-  count                   = var.provision_default_dns_namespace ? 1 : 0
+  count                   = var.use_custom_app_domain == false ? 1 : 0
   certificate_arn         = aws_acm_certificate.start[0].arn
   validation_record_fqdns = [aws_route53_record.start_cert_dns[0].fqdn]
 }
 
 resource "aws_route53_record" "default_app_url" {
-  count           = var.provision_default_dns_namespace ? 1 : 0
+  count           = var.use_custom_app_domain == false ? 1 : 0
   zone_id         = aws_route53_zone.this[0].zone_id
   allow_overwrite = true
   name            = "start"
@@ -121,7 +122,7 @@ module "alb" {
   namespace = var.namespace
   stage     = var.stage
   certificate_arns = [
-    var.app_certificate_arn
+    local.app_certificate_arn
   ]
   public_subnet_ids          = local.public_subnet_ids
   vpc_id                     = local.vpc_id

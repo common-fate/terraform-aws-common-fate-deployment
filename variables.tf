@@ -24,6 +24,7 @@ variable "release_tag" {
 variable "app_certificate_arn" {
   description = "The Amazon Certificate Manager (ACM) certificate ARN for the application."
   type        = string
+  default     = ""
 }
 
 variable "auth_certificate_arn" {
@@ -546,4 +547,10 @@ variable "provision_default_dns_namespace" {
   description = "Whether to provision a DNS namespace for the deployment"
   type        = bool
   default     = false
+}
+
+variable "use_custom_app_domain" {
+  description = "Whether to use a custom domain for the Common Fate application"
+  type        = bool
+  default     = true
 }
