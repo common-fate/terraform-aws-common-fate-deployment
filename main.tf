@@ -57,12 +57,12 @@ data "aws_ssm_parameter" "licence_key" {
 }
 
 resource "aws_route53_zone" "this" {
-  count = var.provision_default_dns_namespace ? 1 : 0
+  count = var.use_default_dns_namespace ? 1 : 0
   name  = data.deploymeta_deployment.this.default_domain
 }
 
 resource "deploymeta_nameservers" "this" {
-  count      = var.provision_default_dns_namespace ? 1 : 0
+  count      = var.use_default_dns_namespace ? 1 : 0
   ns_records = aws_route53_zone.this[0].name_servers
 }
 
