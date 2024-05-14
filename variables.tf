@@ -543,7 +543,7 @@ variable "database_auto_migrate" {
   description = "Whether to run database migrations automatically when the Control Plane service starts. If rolling back to a previous release after a migration has run, set this to `false`."
 }
 
-variable "provision_default_dns_namespace" {
+variable "use_default_dns_namespace" {
   description = "Whether to provision a DNS namespace for the deployment"
   type        = bool
   default     = false
