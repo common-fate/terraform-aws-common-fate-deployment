@@ -1,5 +1,12 @@
 # @common-fate/terraform-aws-common-fate-deployment
 
+## 1.42.2
+
+### Patch Changes
+
+- 00085cf: Fix an issue where account name whitespace was not properly removed when using Common Fate as a Granted Profile Registry backend.
+- 00085cf: Fix an issue preventing Grants from being migrated to the new Common Fate internal storage backend.
+
 ## 1.42.1
 
 ### Patch Changes
