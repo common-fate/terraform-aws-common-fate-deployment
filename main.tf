@@ -201,6 +201,7 @@ module "control_plane" {
   factory_base_url                           = var.factory_base_url
   factory_oidc_issuer                        = var.factory_oidc_issuer
   unstable_feature_embedded_authorizations   = var.unstable_feature_embedded_authorizations
+  force_rerun_config_migrations              = var.force_rerun_config_migrations
   database_auto_migrate                      = var.database_auto_migrate
 }
 
@@ -248,6 +249,7 @@ module "web" {
   auth_issuer           = module.cognito.auth_issuer
   alb_security_group_id = module.alb.alb_security_group_id
   web_image_repository  = var.web_image_repository
+  centralised_support   = var.centralised_support
 }
 
 

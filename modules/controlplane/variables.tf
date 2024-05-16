@@ -327,7 +327,6 @@ variable "access_handler_service_connect_address" {
   description = "the internal address assigned to the access handler service by AWS ECS service connect"
 }
 
-
 variable "xray_monitoring_enabled" {
   description = "If enabled, writes OpenTelemetry monitoring events to AWS X-Ray."
   type        = bool
@@ -363,7 +362,10 @@ variable "unstable_feature_embedded_authorizations" {
   default     = false
   description = "Opt-in to enable Embedded Authorization (in early access). This variable will be removed once the feature is released."
 }
-
+variable "force_rerun_config_migrations" {
+  type        = bool
+  description = "Whether to force the config migration to rerun on startup of the control plane"
+}
 variable "database_auto_migrate" {
   type        = bool
   default     = true

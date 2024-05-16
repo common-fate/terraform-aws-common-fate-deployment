@@ -134,6 +134,10 @@ resource "aws_ecs_task_definition" "web_task" {
         name  = "CF_RELEASE_TAG",
         value = var.release_tag
       },
+      {
+        name  = "CF_CENTRALISED_SUPPORT",
+        value = var.centralised_support ? "true" : "false"
+      },
     ]
 
     logConfiguration = {
