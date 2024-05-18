@@ -95,7 +95,7 @@ resource "aws_route53_record" "default_app_url" {
   count           = var.use_custom_app_domain == false ? 1 : 0
   zone_id         = aws_route53_zone.this[0].zone_id
   allow_overwrite = true
-  name            = "start"
+  name            = "console"
   type            = "A"
 
   alias {
