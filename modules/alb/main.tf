@@ -28,7 +28,7 @@ resource "aws_security_group" "alb_sg" {
   }
 
 }
-#trivy:ignore:AVD-AWS-0053 
+#trivy:ignore:AVD-AWS-0053
 resource "aws_lb" "main_alb" {
   name                             = "${var.namespace}-${var.stage}-common-fate"
   internal                         = var.use_internal_load_balancer
@@ -40,9 +40,6 @@ resource "aws_lb" "main_alb" {
 
 }
 
-locals {
-  distinct_certificates = distinct(var.certificate_arns)
-}
 // The listener is configured to use SNI for multiple certificates if provided
 // else it will just use a single cert if all provided arns are the same
 resource "aws_lb_listener" "https_listener" {
@@ -51,7 +48,7 @@ resource "aws_lb_listener" "https_listener" {
   protocol          = "HTTPS"
   ssl_policy        = "ELBSecurityPolicy-TLS-1-2-2017-01"
 
-  certificate_arn = element(local.distinct_certificates, 0)
+  certificate_arn = var.certificate_arn
 
   default_action {
     type = "fixed-response"
@@ -83,7 +80,7 @@ resource "aws_lb_listener" "http" {
 
 // if there are any other distict certificates, add them to the listener
 resource "aws_lb_listener_certificate" "additional_certs" {
-  for_each        = { for idx, cert_arn in local.distinct_certificates : idx => cert_arn if idx > 0 }
+  for_each        = var.additional_certificate_arns
   listener_arn    = aws_lb_listener.https_listener.arn
   certificate_arn = each.value
 }

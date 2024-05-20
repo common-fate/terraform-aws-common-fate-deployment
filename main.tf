@@ -45,12 +45,10 @@ module "vpc" {
 }
 
 module "alb" {
-  source    = "./modules/alb"
-  namespace = var.namespace
-  stage     = var.stage
-  certificate_arns = [
-    var.app_certificate_arn
-  ]
+  source                     = "./modules/alb"
+  namespace                  = var.namespace
+  stage                      = var.stage
+  certificate_arn            = var.app_certificate_arn
   public_subnet_ids          = local.public_subnet_ids
   vpc_id                     = local.vpc_id
   use_internal_load_balancer = var.use_internal_load_balancer
