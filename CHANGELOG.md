@@ -1,5 +1,13 @@
 # @common-fate/terraform-aws-common-fate-deployment
 
+## 1.42.3
+
+### Patch Changes
+
+- 7df0e6f: Patch Changes
+  f81192d: Fix background data migration for users.
+- a64ebb6: Adds given name and family name SAML attributes to client
+
 ## 1.42.2
 
 ### Patch Changes
