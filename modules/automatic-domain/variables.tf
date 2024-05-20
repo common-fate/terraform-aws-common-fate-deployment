@@ -5,7 +5,7 @@ variable "licence_key" {
   default     = null
 }
 
-variable "alb_domain" {
+variable "load_balancer_domain" {
   description = "The Common Fate ALB domain"
   type        = string
 }
