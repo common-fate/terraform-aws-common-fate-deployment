@@ -28,14 +28,14 @@ resource "aws_acm_certificate" "this" {
 
 resource "deploymeta_dns_record" "automatic_cert_validation" {
   zone_name = data.deploymeta_deployment.this.dns_zone_name
-  name      = tolist(aws_acm_certificate.start.domain_validation_options)[0].resource_record_name
-  values    = [tolist(aws_acm_certificate.start.domain_validation_options)[0].resource_record_value]
-  type      = tolist(aws_acm_certificate.start.domain_validation_options)[0].resource_record_type
+  name      = tolist(aws_acm_certificate.this.domain_validation_options)[0].resource_record_name
+  values    = [tolist(aws_acm_certificate.this.domain_validation_options)[0].resource_record_value]
+  type      = tolist(aws_acm_certificate.this.domain_validation_options)[0].resource_record_type
 }
 
 resource "deploymeta_dns_record" "app_domain" {
   zone_name = data.deploymeta_deployment.this.dns_zone_name
   name      = "${local.app_domain}."
-  values    = [var.alb_domain]
+  values    = [var.load_balancer_domain]
   type      = "CNAME"
 }
