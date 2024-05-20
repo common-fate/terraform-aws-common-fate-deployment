@@ -203,6 +203,9 @@ module "control_plane" {
   unstable_feature_embedded_authorizations   = var.unstable_feature_embedded_authorizations
   force_rerun_config_migrations              = var.force_rerun_config_migrations
   database_auto_migrate                      = var.database_auto_migrate
+  oidc_access_handler_service_client_id      = module.cognito.access_handler_service_client_id
+  oidc_provisioner_service_client_id         = module.cognito.provisioner_client_id
+  oidc_terraform_client_id                   = module.cognito.terraform_client_id
 }
 
 

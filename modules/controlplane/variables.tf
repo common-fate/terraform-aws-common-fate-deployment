@@ -371,3 +371,19 @@ variable "database_auto_migrate" {
   default     = true
   description = "Whether to run database migrations automatically when the Control Plane service starts. If rolling back to a previous release after a migration has run, set this to `false`."
 }
+
+
+variable "oidc_terraform_client_id" {
+  description = "Terraform Service Account OIDC Client ID"
+  type        = string
+}
+
+variable "oidc_access_handler_service_client_id" {
+  description = "Access Handler Service Account OIDC Client ID"
+  type        = string
+}
+
+variable "oidc_provisioner_service_client_id" {
+  description = "Provisioner Service Account OIDC Client ID"
+  type        = string
+}

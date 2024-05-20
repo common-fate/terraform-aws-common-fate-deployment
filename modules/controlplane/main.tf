@@ -613,6 +613,18 @@ locals {
       name  = "CF_FORCE_CONFIG_MIGRATIONS",
       value = var.force_rerun_config_migrations ? "true" : "false"
     },
+    {
+      name  = "CF_TERRAFORM_SERVICE_OIDC_CLIENT_ID",
+      value = var.oidc_terraform_client_id
+    },
+    {
+      name  = "CF_PROVISIONER_SERVICE_OIDC_CLIENT_ID",
+      value = var.oidc_provisioner_service_client_id
+    },
+    {
+      name  = "CF_ACCESS_SERVICE_OIDC_CLIENT_ID",
+      value = var.oidc_access_handler_service_client_id
+    },
   ]
 
   // Only add these secrets if their values are provided
