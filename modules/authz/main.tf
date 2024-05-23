@@ -23,13 +23,6 @@ resource "aws_security_group" "ecs_authz_sg_v2" {
     protocol        = "tcp"
     security_groups = [var.alb_security_group_id, var.access_handler_security_group_id, var.control_plane_security_group_id, var.worker_security_group_id]
   }
-  // graphql
-  ingress {
-    from_port       = 5051
-    to_port         = 5051
-    protocol        = "tcp"
-    security_groups = [var.alb_security_group_id]
-  }
 
   // monitoring
   ingress {
@@ -231,11 +224,7 @@ resource "aws_ecs_task_definition" "authz_task" {
       {
         containerPort = 5050,
         name          = "grpc"
-      },
-      {
-        containerPort = 5051,
-        name          = "graphql"
-      },
+      }
     ],
     environment = [
       {
@@ -322,19 +311,6 @@ resource "aws_lb_target_group" "grpc_tg" {
 
 }
 
-resource "aws_lb_target_group" "graphql_tg" {
-  name        = "${var.namespace}-${var.stage}-authz-graphql"
-  port        = 5051
-  protocol    = "HTTP"
-  vpc_id      = var.vpc_id
-  target_type = "ip"
-
-  health_check {
-    enabled = true
-    path    = "/health" # Uses the monitoring API for healthcheck
-    port    = 9090
-  }
-}
 
 
 
@@ -375,33 +351,10 @@ resource "aws_ecs_service" "authz_service" {
     container_name   = "authz-container"
     container_port   = 5050
   }
-  load_balancer {
-    target_group_arn = aws_lb_target_group.graphql_tg.arn
-    container_name   = "authz-container"
-    container_port   = 5051
-  }
+
 }
 
-resource "aws_lb_listener_rule" "graph_service_rule" {
-  listener_arn = var.alb_listener_arn
-  priority     = 70
 
-  action {
-    type             = "forward"
-    target_group_arn = aws_lb_target_group.graphql_tg.arn
-  }
-
-  condition {
-    host_header {
-      values = [replace(var.app_url, "https://", "")]
-    }
-  }
-  condition {
-    path_pattern {
-      values = ["/graph*"]
-    }
-  }
-}
 resource "aws_lb_listener_rule" "grpc_service_rule" {
   listener_arn = var.alb_listener_arn
   priority     = 80
