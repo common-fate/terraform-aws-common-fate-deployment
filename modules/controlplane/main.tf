@@ -894,6 +894,29 @@ resource "aws_lb_listener_rule" "service_rule_access_redirect_preview" {
   }
 }
 
+resource "aws_lb_listener_rule" "service_rule_access_redirect_policyset" {
+  listener_arn = var.alb_listener_arn
+  priority     = 57 // lower that authz
+  action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.control_plane_tg.arn
+  }
+
+  condition {
+    host_header {
+      values = [replace(var.app_url, "https://", "")]
+    }
+  }
+  condition {
+    path_pattern {
+      values = [
+        "/commonfate.authz.v1alpha1.PolicyService*",
+        "/commonfate.authz.v1alpha1.SchemaService*",
+      ]
+    }
+  }
+}
+
 
 
 resource "aws_ecs_service" "worker_service" {
