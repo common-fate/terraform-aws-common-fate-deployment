@@ -921,10 +921,6 @@ resource "aws_lb_listener_rule" "service_rule_access_redirect_preview" {
 resource "aws_lb_listener_rule" "service_rule_access_redirect_policyset" {
   listener_arn = var.alb_listener_arn
   priority     = 57 // lower than authz
-  action {
-    type             = "forward"
-    target_group_arn = aws_lb_target_group.control_plane_tg.arn
-  }
 
   action {
     type             = "forward"
