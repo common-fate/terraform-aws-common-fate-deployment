@@ -618,6 +618,10 @@ locals {
       value = var.oidc_terraform_client_id
     },
     {
+      name  = "CF_READ_ONLY_SERVICE_OIDC_CLIENT_ID",
+      value = var.oidc_read_only_client_id
+    },
+    {
       name  = "CF_PROVISIONER_SERVICE_OIDC_CLIENT_ID",
       value = var.oidc_provisioner_service_client_id
     },

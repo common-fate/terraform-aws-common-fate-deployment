@@ -21,9 +21,9 @@ resource "aws_cognito_identity_provider" "saml_idp" {
   provider_type = "SAML"
 
   attribute_mapping = {
-    email = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress",
+    email       = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress",
     family_name = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/familyname",
-    given_name = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname"
+    given_name  = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname"
   }
 
   provider_details = var.saml_metadata_is_file ? {
@@ -123,6 +123,23 @@ resource "aws_cognito_user_pool_client" "terraform_client" {
   allowed_oauth_flows_user_pool_client = true
   generate_secret                      = true
 }
+
+resource "aws_cognito_user_pool_client" "read_only_client" {
+  name         = "${var.namespace}-${var.stage}-read-only-client"
+  user_pool_id = aws_cognito_user_pool.cognito_user_pool.id
+
+  explicit_auth_flows = [
+    "ALLOW_USER_SRP_AUTH",
+    "ALLOW_REFRESH_TOKEN_AUTH"
+  ]
+
+  access_token_validity                = 8
+  allowed_oauth_flows                  = ["client_credentials"]
+  allowed_oauth_scopes                 = aws_cognito_resource_server.resource_server.scope_identifiers
+  allowed_oauth_flows_user_pool_client = true
+  generate_secret                      = true
+}
+
 
 resource "aws_cognito_user_pool_client" "provisioner_client" {
   name         = "${var.namespace}-${var.stage}-provisioner-client"

@@ -110,3 +110,14 @@ output "slack_service_client_secret" {
   description = "The client secret for the slack service."
   value       = aws_cognito_user_pool_client.slack_service_client.client_secret
 }
+
+output "read_only_client_id" {
+  description = "The client ID with read only API access."
+  value       = aws_cognito_user_pool_client.read_only_client.id
+}
+
+output "read_only_client_secret" {
+  description = "The client secret with read only API access."
+  value       = aws_cognito_user_pool_client.read_only_client.client_secret
+}
+
