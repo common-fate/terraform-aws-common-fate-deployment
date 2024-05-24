@@ -206,6 +206,7 @@ module "control_plane" {
   oidc_access_handler_service_client_id      = module.cognito.access_handler_service_client_id
   oidc_provisioner_service_client_id         = module.cognito.provisioner_client_id
   oidc_terraform_client_id                   = module.cognito.terraform_client_id
+  oidc_read_only_client_id                   = module.cognito.read_only_client_id
 }
 
 
