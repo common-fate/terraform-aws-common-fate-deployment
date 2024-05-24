@@ -104,14 +104,21 @@ output "terraform_client_id" {
   description = "terraform client id"
   value       = module.cognito.terraform_client_id
 }
-output "read_only_client_id" {
-  description = "The client ID with read only API access."
-  value       = aws_cognito_user_pool_client.read_only_client.id
-}
 
 output "terraform_client_secret" {
   description = "terraform client secret"
   value       = module.cognito.terraform_client_secret
+  sensitive   = true
+}
+
+output "read_only_client_id" {
+  description = "The client ID with read only API access."
+  value       = module.cognito.read_only_client_id
+}
+
+output "read_only_client_secret" {
+  description = "The client secret with read only API access"
+  value       = module.cognito.read_only_client_id
   sensitive   = true
 }
 
