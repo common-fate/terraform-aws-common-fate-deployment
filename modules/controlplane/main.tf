@@ -785,6 +785,20 @@ resource "aws_lb_target_group" "control_plane_tg" {
     path    = "/health"
   }
 }
+
+resource "aws_lb_target_group" "control_plane_tg_http2" {
+  name             = "${var.namespace}-${var.stage}-control-plane-http2"
+  port             = 8080
+  protocol         = "HTTP"
+  protocol_version = "HTTP2"
+  vpc_id           = var.vpc_id
+  target_type      = "ip"
+  health_check {
+    enabled = true
+    path    = "/health"
+  }
+}
+
 resource "aws_ecs_service" "control_plane_service" {
   name            = "${var.namespace}-${var.stage}-control-plane"
   cluster         = var.ecs_cluster_id
@@ -819,6 +833,12 @@ resource "aws_ecs_service" "control_plane_service" {
 
   load_balancer {
     target_group_arn = aws_lb_target_group.control_plane_tg.arn
+    container_name   = "control-plane-container"
+    container_port   = 8080
+  }
+
+  load_balancer {
+    target_group_arn = aws_lb_target_group.control_plane_tg_http2.arn
     container_name   = "control-plane-container"
     container_port   = 8080
   }
