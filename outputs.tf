@@ -22,7 +22,7 @@ output "outputs" {
     web_client_id                    = module.cognito.web_client_id
     cli_client_id                    = module.cognito.cli_client_id
     terraform_client_id              = module.cognito.terraform_client_id
-    read_only_client_id              = aws_cognito_user_pool_client.read_only_client.id
+    read_only_client_id              = module.cognito.read_only_client_id
     provisioner_client_id            = module.cognito.provisioner_client_id
     control_plane_task_role_arn      = module.control_plane.task_role_arn
     access_handler_security_group_id = module.access_handler.security_group_id
