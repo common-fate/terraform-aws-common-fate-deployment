@@ -787,7 +787,7 @@ resource "aws_lb_target_group" "control_plane_tg" {
 }
 
 resource "aws_lb_target_group" "control_plane_tg_http2" {
-  name             = "${var.namespace}-${var.stage}-control-plane-http2"
+  name             = "${var.namespace}-${var.stage}-cp-http2" // ideally would be 'control-plane-http2', but there is a 32 char limit.
   port             = 8080
   protocol         = "HTTP"
   protocol_version = "HTTP2"
