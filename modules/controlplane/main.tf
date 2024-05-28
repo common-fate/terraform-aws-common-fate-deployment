@@ -351,6 +351,16 @@ data "aws_iam_policy_document" "assume_roles_policy_tagged" {
       values   = ["true"]
     }
   }
+
+  statement {
+    actions   = ["sts:AssumeRole"]
+    resources = ["*"]
+    condition {
+      test     = "StringEquals"
+      variable = "iam:ResourceTag/common-fate-allow-assume-role"
+      values   = ["true"]
+    }
+  }
 }
 resource "aws_iam_policy" "assume_role_tagged" {
   name        = "${var.namespace}-${var.stage}-access-handler-ars-tagged"
