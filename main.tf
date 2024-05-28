@@ -152,14 +152,9 @@ module "control_plane" {
   eventbus_arn                               = module.events.event_bus_arn
   sqs_queue_arn                              = module.events.sqs_queue_arn
   app_url                                    = var.app_url
-  pager_duty_client_id                       = var.pager_duty_client_id
-  pager_duty_client_secret_ps_arn            = var.pager_duty_client_secret_ps_arn
   release_tag                                = var.release_tag
   scim_source                                = var.scim_source
   scim_token_ps_arn                          = var.scim_token_ps_arn
-  slack_client_id                            = var.slack_client_id
-  slack_client_secret_ps_arn                 = var.slack_client_secret_ps_arn
-  slack_signing_secret_ps_arn                = var.slack_signing_secret_ps_arn
   subnet_ids                                 = local.private_subnet_ids
   vpc_id                                     = local.vpc_id
   ecs_cluster_id                             = local.ecs_cluster_id
