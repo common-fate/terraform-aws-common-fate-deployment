@@ -1,5 +1,11 @@
 # @common-fate/terraform-aws-common-fate-deployment
 
+## 1.43.1
+
+### Patch Changes
+
+- 9d2885e: Fix an issue where the S3 Audit Log Destination write role used a confusing tag. The role can now be tagged with 'common-fate-allow-assume-role=true' to allow Common Fate to assume it.
+
 ## 1.43.0
 
 ### Minor Changes
