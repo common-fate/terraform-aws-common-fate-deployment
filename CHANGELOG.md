@@ -1,5 +1,12 @@
 # @common-fate/terraform-aws-common-fate-deployment
 
+## 1.43.3
+
+### Patch Changes
+
+- cb76ab3: Fixes an issue where the migration of users from Authz to the internal postgres database resulted in both names being set to the firstname in some cases.
+- cb76ab3: Fixes an issue where a new user created in v1.42.0..2 may have been created with an incorrect ID
+
 ## 1.43.2
 
 ### Patch Changes
