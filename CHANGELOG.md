@@ -1,5 +1,17 @@
 # @common-fate/terraform-aws-common-fate-deployment
 
+## 1.43.2
+
+### Patch Changes
+
+- 62cf20f: Fix api pagination sometimes returning duplicate results
+- 62cf20f: Fix an issue where the default duration information would flicker in the web console.
+- 62cf20f: Fixes an issue causing slack alerts not to be sent to channels when a request is created
+- 62cf20f: Fix a nil pointer error sometimes observed when listing access requests
+- 62cf20f: Add CF::Principal to resource page to improve debugging
+- 62cf20f: Fixes an issue where CF::User would show up in the resources view twice
+- 62cf20f: Fixes an issue where errors during first time login may not be caught
+
 ## 1.43.1
 
 ### Patch Changes
