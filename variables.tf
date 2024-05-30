@@ -18,7 +18,7 @@ variable "aws_region" {
 variable "release_tag" {
   description = "Override the application release tag to be used in the deployment. As of module version v1.13.0, application versions are bundled into the Terraform module, and so in most cases you should not override this."
   type        = string
-  default     = "v4.0.0"
+  default     = "v4.0.4"
 }
 
 variable "app_certificate_arn" {
@@ -32,6 +32,35 @@ variable "auth_certificate_arn" {
   default     = ""
 }
 
+variable "pager_duty_client_id" {
+  description = "(Deprecated) The private Pager Duty application client ID."
+  default     = ""
+  type        = string
+}
+
+variable "pager_duty_client_secret_ps_arn" {
+  description = "(Deprecated) The AWS Parameter Store ARN for the private Pager Duty application client secret."
+  default     = ""
+  type        = string
+}
+
+variable "slack_client_id" {
+  description = "(Deprecated) The private Slack application client ID."
+  default     = ""
+  type        = string
+}
+
+variable "slack_client_secret_ps_arn" {
+  description = "(Deprecated) The AWS Parameter Store ARN for the private Slack application client secret."
+  default     = ""
+  type        = string
+}
+
+variable "slack_signing_secret_ps_arn" {
+  description = "(Deprecated) The AWS Parameter Store ARN for the private Slack application signing secret."
+  default     = ""
+  type        = string
+}
 
 
 
