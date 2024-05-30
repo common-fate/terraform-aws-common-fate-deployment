@@ -1,5 +1,11 @@
 # @common-fate/terraform-aws-common-fate-deployment
 
+## 1.43.4
+
+### Patch Changes
+
+- 9913154: Fix a login issue affecting some users
+
 ## 1.43.3
 
 ### Patch Changes
