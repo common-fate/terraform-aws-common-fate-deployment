@@ -1,5 +1,42 @@
 # @common-fate/terraform-aws-common-fate-deployment
 
+## 1.43.5
+
+### Patch Changes
+
+- ecf3053: Fix policy migration issue seen in v4.0.1..4
+
+## 1.43.4
+
+### Patch Changes
+
+- 9913154: Fix a login issue affecting some users
+
+## 1.43.3
+
+### Patch Changes
+
+- cb76ab3: Fixes an issue where the migration of users from Authz to the internal postgres database resulted in both names being set to the firstname in some cases.
+- cb76ab3: Fixes an issue where a new user created in v1.42.0..2 may have been created with an incorrect ID
+
+## 1.43.2
+
+### Patch Changes
+
+- 62cf20f: Fix api pagination sometimes returning duplicate results
+- 62cf20f: Fix an issue where the default duration information would flicker in the web console.
+- 62cf20f: Fixes an issue causing slack alerts not to be sent to channels when a request is created
+- 62cf20f: Fix a nil pointer error sometimes observed when listing access requests
+- 62cf20f: Add CF::Principal to resource page to improve debugging
+- 62cf20f: Fixes an issue where CF::User would show up in the resources view twice
+- 62cf20f: Fixes an issue where errors during first time login may not be caught
+
+## 1.43.1
+
+### Patch Changes
+
+- 9d2885e: Fix an issue where the S3 Audit Log Destination write role used a confusing tag. The role can now be tagged with 'common-fate-allow-assume-role=true' to allow Common Fate to assume it.
+
 ## 1.43.0
 
 ### Minor Changes
