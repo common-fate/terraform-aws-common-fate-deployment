@@ -1,5 +1,11 @@
 # @common-fate/terraform-aws-common-fate-deployment
 
+## 1.43.5
+
+### Patch Changes
+
+- ecf3053: Fix policy migration issue seen in v4.0.1..4
+
 ## 1.43.4
 
 ### Patch Changes
