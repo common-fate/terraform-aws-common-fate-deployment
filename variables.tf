@@ -33,31 +33,31 @@ variable "auth_certificate_arn" {
 }
 
 variable "pager_duty_client_id" {
-  description = "The private Pager Duty application client ID."
+  description = "(Deprecated) The private Pager Duty application client ID."
   default     = ""
   type        = string
 }
 
 variable "pager_duty_client_secret_ps_arn" {
-  description = "The AWS Parameter Store ARN for the private Pager Duty application client secret."
+  description = "(Deprecated) The AWS Parameter Store ARN for the private Pager Duty application client secret."
   default     = ""
   type        = string
 }
 
 variable "slack_client_id" {
-  description = "The private Slack application client ID."
+  description = "(Deprecated) The private Slack application client ID."
   default     = ""
   type        = string
 }
 
 variable "slack_client_secret_ps_arn" {
-  description = "The AWS Parameter Store ARN for the private Slack application client secret."
+  description = "(Deprecated) The AWS Parameter Store ARN for the private Slack application client secret."
   default     = ""
   type        = string
 }
 
 variable "slack_signing_secret_ps_arn" {
-  description = "The AWS Parameter Store ARN for the private Slack application signing secret."
+  description = "(Deprecated) The AWS Parameter Store ARN for the private Slack application signing secret."
   default     = ""
   type        = string
 }

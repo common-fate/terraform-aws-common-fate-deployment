@@ -395,14 +395,6 @@ locals {
     },
 
     {
-      name  = "CF_PAGERDUTY_CLIENT_ID",
-      value = var.pager_duty_client_id
-    },
-    {
-      name  = "CF_PAGERDUTY_REDIRECT_URL",
-      value = "${var.app_url}/api/v1/oauth2/callback/pagerduty"
-    },
-    {
       name  = "CF_FRONTEND_URL",
       value = var.app_url
     },
@@ -423,15 +415,7 @@ locals {
       value = var.access_handler_service_connect_address
 
     },
-    {
-      name  = "CF_SLACK_CLIENT_ID",
-      value = var.slack_client_id
-    },
 
-    {
-      name  = "CF_SLACK_REDIRECT_URL",
-      value = "${var.app_url}/api/v1/oauth2/callback/slack"
-    },
     {
       name  = "CF_PG_USER",
       value = var.database_user
@@ -643,18 +627,6 @@ locals {
 
   // Only add these secrets if their values are provided
   control_plane_secrets = concat(
-    var.pager_duty_client_secret_ps_arn != "" ? [{
-      name      = "CF_PAGERDUTY_CLIENT_SECRET",
-      valueFrom = var.pager_duty_client_secret_ps_arn
-    }] : [],
-    var.slack_client_secret_ps_arn != "" ? [{
-      name      = "CF_SLACK_CLIENT_SECRET",
-      valueFrom = var.slack_client_secret_ps_arn
-    }] : [],
-    var.slack_signing_secret_ps_arn != "" ? [{
-      name      = "CF_SLACK_SIGNING_SECRET",
-      valueFrom = var.slack_signing_secret_ps_arn
-    }] : [],
     var.scim_token_ps_arn != "" ? [{
       name      = "CF_SCIM_TOKEN",
       valueFrom = var.scim_token_ps_arn

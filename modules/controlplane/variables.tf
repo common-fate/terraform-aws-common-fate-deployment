@@ -60,33 +60,6 @@ variable "release_tag" {
   type        = string
 }
 
-variable "pager_duty_client_id" {
-  description = "Specifies the private Pager Duty application client ID."
-  type        = string
-}
-
-variable "pager_duty_client_secret_ps_arn" {
-  description = "The AWS Parameter Store ARN for the Pager Duty app client secret."
-  default     = ""
-  type        = string
-}
-
-variable "slack_client_id" {
-  description = "Specifies the private Slack application client ID."
-  type        = string
-}
-
-variable "slack_client_secret_ps_arn" {
-  description = "The AWS Parameter Store ARN for the Slack application client secret."
-  default     = ""
-  type        = string
-}
-
-variable "slack_signing_secret_ps_arn" {
-  description = "The AWS Parameter Store ARN for the Slack application signing secret."
-  default     = ""
-  type        = string
-}
 
 variable "app_url" {
   description = "The app url (e.g., 'https://common-fate.mydomain.com')."
