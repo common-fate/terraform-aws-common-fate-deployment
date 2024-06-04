@@ -93,12 +93,7 @@ resource "aws_cloudwatch_log_resource_policy" "events_policy" {
         "logs:CreateLogStream",
         "logs:PutLogEvents"
         ],
-      "Resource": "${aws_cloudwatch_log_group.event_log_group.arn}",
-      "Condition": {
-        "ArnEquals": {
-          "aws:SourceArn": "${aws_cloudwatch_event_rule.to_cw_logs_rule.arn}"
-        }
-      }
+      "Resource": "${aws_cloudwatch_log_group.event_log_group.arn}:*"
     }
   ]
 }
