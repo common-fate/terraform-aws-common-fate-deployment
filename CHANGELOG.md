@@ -1,5 +1,33 @@
 # @common-fate/terraform-aws-common-fate-deployment
 
+## 1.44.0
+
+### Minor Changes
+
+- a361487: Removes the requirement to configure pager_duty_client_id, pager_duty_client_secret_ps_arn, slack_client_id, slack_client_secret_ps_arn, slack_signing_secret_ps_arn variables in the infrastructure layer. This configuration is now pulled directly from the integration config resources in your application configuration.
+- 1cf453f: Removes the 'cf authz policyset validate' server-side validation command in favor of client-side validation.
+- 1cf453f: Remove the requirement for Slack, PagerDuty and OpsGenie to be configured in the infrastructure layer. Config is now read from the integration resources in terraform.
+- 1cf453f: Support requiring all request actions to be forced to use the CF console.
+- 1cf453f: Implement security headers and conceal server tokens in Nginx.
+
+### Patch Changes
+
+- 1cf453f: Fix api pagination sometimes returning duplicate results
+- 1cf453f: Fix an issue where old Access::LinkedIdentity entities would not be cleared when an AWS IDC User is removed.
+- 1cf453f: Fix an issue where the default duration information would flicker in the web console.
+- 1cf453f: Fixes an issue causing slack alerts not to be sent to channels when a request is created
+- 1cf453f: Fix a nil pointer error sometimes observed when listing access requests
+- 1cf453f: Add CF::Principal to resource page to improve debugging
+- 1cf453f: Fix a login issue affecting some users
+- fbd193a: Fix cloudwatch resource policy conditions not permitting events to be written to cloudwatch log group.
+- 1cf453f: Fixes an issue where the migration of users from Authz to the internal postgres database resulted in both names being set to the firstname.
+- 1cf453f: Fixes an issue where CF::User would show up in the resources view twice
+- 1cf453f: Fixes an issue where a new user created in v1.42.0..2 may have been created with an incorrect ID
+- 1cf453f: Support additional provisioner configuration fields on AWS and GCP integrations
+- 1cf453f: Fix policy migration issue seen in v4.0.1..4
+- 1cf453f: Fix an issue where the `sso_access_portal_url` field would not be used for AWS console links in the web console.
+- 1cf453f: Fixes an issue where errors during first time login may not be caught
+
 ## 1.43.5
 
 ### Patch Changes
