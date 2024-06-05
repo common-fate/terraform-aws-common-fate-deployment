@@ -545,3 +545,9 @@ variable "database_auto_migrate" {
   default     = true
   description = "Whether to run database migrations automatically when the Control Plane service starts. If rolling back to a previous release after a migration has run, set this to `false`."
 }
+
+variable "hierarchy_ui" {
+  type        = bool
+  default     = true
+  description = "Enable new hierarchy tree view to select entitlements."
+}

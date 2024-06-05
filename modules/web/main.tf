@@ -138,6 +138,10 @@ resource "aws_ecs_task_definition" "web_task" {
         name  = "CF_CENTRALISED_SUPPORT",
         value = var.centralised_support ? "true" : "false"
       },
+      {
+        name  = "CF_HIERARCHY_UI",
+        value = var.hierarchy_ui ? "true" : "false"
+      },
     ]
 
     logConfiguration = {
