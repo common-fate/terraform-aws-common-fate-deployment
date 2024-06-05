@@ -140,7 +140,7 @@ resource "aws_ecs_task_definition" "web_task" {
       },
       {
         name  = "CF_HIERARCHY_UI",
-        value = var.hierarchy_ui ? true : false
+        value = var.hierarchy_ui ? "true" : "false"
       },
     ]
 
