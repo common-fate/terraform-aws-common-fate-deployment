@@ -249,6 +249,7 @@ module "web" {
   alb_security_group_id = module.alb.alb_security_group_id
   web_image_repository  = var.web_image_repository
   centralised_support   = var.centralised_support
+  hierarchy_ui          = var.hierarchy_ui
 }
 
 
