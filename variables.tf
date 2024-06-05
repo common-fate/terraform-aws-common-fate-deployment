@@ -174,6 +174,7 @@ variable "ecs_opentelemetry_collector_log_retention_in_days" {
 
 variable "provisioner_aws_idc_config" {
   description = <<EOF
+  (Deprecated)
   Configuration for AWS IDC. The following keys are expected:
   - role_arn: The ARN of the IAM role for the provisioner to assume which hass permissions to provision access in an AWS organization.
   - idc_region: The AWS IDC Region.
@@ -191,6 +192,7 @@ variable "provisioner_aws_idc_config" {
 
 variable "provisioner_gcp_config" {
   description = <<EOF
+  (Deprecated)
   Configuration for GCP. The following keys are expected:
   - service_account_client_json_ps_arn: (Optional) when using service account credentials, this is ARN of the secret credentials.
   - workload_identity_config_json: (Optional) using Workload Identity Federation, this is the config file.
@@ -207,6 +209,7 @@ variable "provisioner_gcp_config" {
 
 variable "provisioner_entra_config" {
   description = <<EOF
+  (Deprecated)
   Configuration for GCP. The following keys are expected:
   - tenant_id: The Entra tenant ID.
   - client_id: The client ID for the Entra App Registration.
@@ -223,6 +226,7 @@ variable "provisioner_entra_config" {
 
 variable "provisioner_aws_rds_config" {
   description = <<EOF
+  (Deprecated)
   Configuration for AWS RDS. The following keys are expected:
   - idc_role_arn: The ARN of the IAM role for the provisioner to assume which hass permissions to provision access in an AWS organization.
   - idc_region: The AWS IDC Region.
@@ -242,6 +246,7 @@ variable "provisioner_aws_rds_config" {
 
 variable "provisioner_okta_config" {
   description = <<EOF
+  (Deprecated)
   Configuration for Okta. The following keys are expected:
   - organization_id: The ID of your Okta organization.
   - api_key_secret_path: The SSM Parameter store secret path for the api key for the Okta organization.
@@ -256,6 +261,7 @@ variable "provisioner_okta_config" {
 
 variable "provisioner_datastax_config" {
   description = <<EOF
+  (Deprecated)
   Configuration for DataStax. The following keys are expected:
   - api_key_secret_path: The SSM Parameter store secret path for the api key for the DataStax organization.
   EOF
@@ -268,6 +274,7 @@ variable "provisioner_datastax_config" {
 
 variable "provisioner_auth0_config" {
   description = <<EOF
+  (Deprecated)
   Configuration for Auth0. The following keys are expected:
   - domain: The Auth0 tenant domain.
   - client_id: The Auth0 application client ID.

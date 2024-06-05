@@ -45,7 +45,9 @@ variable "aws_region" {
   description = "Determines the AWS Region for deployment."
   type        = string
 }
-
+variable "aws_partition" {
+  description = "The AWS partition the module is being deployed to"
+}
 variable "aws_account_id" {
   description = "Determines the AWS account ID for deployment."
   type        = string
@@ -117,118 +119,6 @@ variable "provisioner_service_client_secret" {
 variable "auth_issuer" {
   description = "Specifies the issuer for authentication."
   type        = string
-}
-
-
-variable "aws_idc_config" {
-  description = <<EOF
-  Configuration for AWS IDC. The following keys are expected:
-  - role_arn: The ARN of the IAM role for the provisioner to assume which has permissions to provision access in an AWS organization.
-  - idc_region: The AWS IDC Region.
-  - idc_instance_arn: The AWS Identity Center instance ARN.
-  - idc_identity_store_id: The AWS IAM Identity Center Identity Store ID.
-  EOF
-  type = object({
-    role_arn         = string
-    idc_region       = string
-    idc_instance_arn = string
-
-    // optional for the moment to avoid making breaking changes.
-    idc_identity_store_id = optional(string)
-  })
-  default = null
-}
-
-variable "gcp_config" {
-  description = <<EOF
-  Configuration for GCP. The following keys are expected:
-  - service_account_client_json_ps_arn: (Optional) when using service account credentials, this is ARN of the secret credentials.
-  - workload_identity_config_json: (Optional) using Workload Identity Federation, this is the config file.
-
-  Either `workload_identity_config_json` or `service_account_client_json_ps_arn` must be provided (not both).
-  EOF
-  type = object({
-    service_account_client_json_ps_arn = optional(string)
-    workload_identity_config_json      = optional(string)
-  })
-  default = null
-}
-
-
-variable "entra_config" {
-  description = <<EOF
-  Configuration for GCP. The following keys are expected:
-  - tenant_id: The Entra tenant ID.
-  - client_id: The client ID for the Entra App Registration.
-  - client_secret_secret_path: The SSM Parameter store secret path for the client secret for the Entra App Registration.
-  EOF
-  type = object({
-    tenant_id                 = string
-    client_id                 = string
-    client_secret_secret_path = string
-  })
-  default = null
-}
-
-
-variable "aws_rds_config" {
-  description = <<EOF
-  Configuration for AWS RDS. The following keys are expected:
-  - idc_role_arn: The ARN of the IAM role for the provisioner to assume which has permissions to create and delete permission sets and provision access in an AWS organization.
-  - idc_region: The AWS IDC Region.
-  - idc_instance_arn: The AWS Identity Center instance ARN.
-  - infra_role_name: The name of the IAM role which is deployed each each account containing databases.
-  - should_provision_security_groups: (Optional) Whether or not the provisioner should attempt to provision security groups. Set this to true if you are not using pre deployed security groups.
-  EOF
-  type = object({
-    idc_role_arn                     = string
-    idc_region                       = string
-    idc_instance_arn                 = string
-    infra_role_name                  = string
-    should_provision_security_groups = optional(bool)
-  })
-  default = null
-}
-
-
-variable "okta_config" {
-  description = <<EOF
-  Configuration for Okta. The following keys are expected:
-  - organization_id: The ID of your Okta organization.
-  - api_key_secret_path: The SSM Parameter store secret path for the api key for the Okta organization.
-  EOF
-  type = object({
-    organization_id     = string
-    api_key_secret_path = string
-  })
-  default = null
-}
-
-variable "datastax_config" {
-  description = <<EOF
-  Configuration for DataStax. The following keys are expected:
-  - api_key_secret_path: The SSM Parameter store secret path for the api key for the DataStax organization.
-  EOF
-  type = object({
-    api_key_secret_path = string
-  })
-  default = null
-}
-
-
-variable "auth0_config" {
-  description = <<EOF
-  Configuration for Auth0. The following keys are expected:
-  - domain: The Auth0 tenant domain.
-  - client_id: The Auth0 application client ID.
-  - client_secret_secret_path: The SSM Parameter store secret path for the Auth0 application client secret.
-  EOF
-  type = object({
-    domain                    = string
-    client_id                 = string
-    client_secret_secret_path = string
-  })
-  default = null
 }
 
 variable "assume_role_external_id" {
