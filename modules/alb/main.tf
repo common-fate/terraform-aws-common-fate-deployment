@@ -37,7 +37,7 @@ resource "aws_lb" "main_alb" {
   subnets                          = var.public_subnet_ids
   enable_cross_zone_load_balancing = true
   drop_invalid_header_fields       = true
-
+  idle_timeout                     = 140 // 2 minute 30 seconds aligns with 2 minute timeouts on provisioning
 }
 
 locals {
