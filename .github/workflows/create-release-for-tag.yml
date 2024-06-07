@@ -2,8 +2,7 @@ name: Create Release For Tag
 
 on:
   push:
-    tags: # Set this to the tags you want to release for
-      - "v*"
+    tags: "*"
 
 permissions:
   contents: write
