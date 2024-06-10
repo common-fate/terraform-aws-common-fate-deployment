@@ -158,3 +158,10 @@ variable "centralised_support" {
   description = "Enable the in-app centralised support feature."
 
 }
+
+variable "hierarchy_ui" {
+  type        = bool
+  default     = true
+  description = "Enable new hierarchy tree view to select entitlements."
+
+}
