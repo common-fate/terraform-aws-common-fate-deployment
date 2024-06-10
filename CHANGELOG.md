@@ -1,5 +1,14 @@
 # @common-fate/terraform-aws-common-fate-deployment
 
+## 1.44.1
+
+### Patch Changes
+
+- 51501d5: Fix AWS IAM Identity Center Linked Identity cleanup.
+- 51501d5: Skip attempting deprovisioning if requested resources no longer exist.
+- d3c03f2: Fix an issue causing SCIM Group APIs to fail on update operations.
+- d3c03f2: Refresh audit logs on request detail page every 10 seconds.
+
 ## 1.44.0
 
 ### Minor Changes
