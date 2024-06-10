@@ -130,7 +130,7 @@ resource "aws_iam_policy" "parameter_store_secrets_read_access" {
 
 resource "aws_iam_role_policy_attachment" "provisioner_ecs_task_parameter_store_secrets_read_access_attach" {
   role       = aws_iam_role.provisioner_ecs_execution_role.name
-  policy_arn = aws_iam_policy.parameter_store_secrets_read_access[0].arn
+  policy_arn = aws_iam_policy.parameter_store_secrets_read_access.arn
 }
 
 data "aws_iam_policy_document" "assume_roles_policy_tagged" {
