@@ -15,7 +15,10 @@ jobs:
   changeset:
     name: Changeset
     runs-on: ubuntu-latest
-
+    # Map a step output to a job output
+    outputs:
+      published: ${{ steps.publish.outputs.published }}
+      tag: ${{ steps.publish.outputs.tag }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -44,6 +47,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Publish
+        id: publish
         if: steps.changesets.outputs.hasChangesets == 'false'
         # Push a new tag when changesets have been merged.
         run: |
@@ -51,3 +55,51 @@ jobs:
           pnpm changeset tag
           git push --follow-tags
           echo pushed tags
+          echo "published=true" >> "$GITHUB_OUTPUT"
+          echo "tag=$(git describe --tags --abbrev=0)" >> "$GITHUB_OUTPUT"
+
+  release-notes:
+    name: Publish Release Notes
+    runs-on: ubuntu-latest
+    needs: changeset
+    if: needs.changeset.outputs.published == 'true'
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v3
+        with: # fetch-depth 0 is required so we can get the last tag and extract the changelog from the previous commit
+          fetch-depth: 0
+
+      - name: Get previous tag
+        id: set-tags
+        run: |
+          echo "previous_tag=$(git describe --tags --abbrev=0 ${{ needs.changeset.outputs.tag }}^)" >> $GITHUB_OUTPUT
+
+      - name: Create release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run:
+          | # in this the RELEASE_NOTES are built line by line and +=$ syntax is used so that the \n newlines are correctly interpreted as newlines ratehr than string literals
+          BODY=$(git show HEAD -- CHANGELOG.md | grep '^+[^+]' | sed 's/^+//')
+
+          RELEASE_NOTES="## What's Changed"
+          RELEASE_NOTES+=$'\n'"${BODY}"
+          RELEASE_NOTES+=$'\n\n'"**Full Changelog**: https://github.com/${{ github.repository }}/compare/${{ steps.set-tags.outputs.previous_tag }}...${{ needs.changeset.outputs.tag }}"
+
+          # Echo the tag and the formatted body for debugging purposes
+          echo "Tag: ${{ needs.changeset.outputs.tag }}"
+          echo "Previous Tag: ${{ steps.set-tags.outputs.previous_tag }}"
+          echo "Release Notes: ${RELEASE_NOTES}"
+
+          # Use the GitHub CLI (gh) to create a new release with the formatted release notes
+          gh api \
+            --method POST \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            /repos/${{ github.repository }}/releases \
+            -f "tag_name=${{ needs.changeset.outputs.tag }}" \
+            -f "name=${{ needs.changeset.outputs.tag }}" \
+            -f "body=${RELEASE_NOTES}" \
+            -F "draft=false" \
+            -F "prerelease=false" \
+            -F "generate_release_notes=false"
