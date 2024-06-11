@@ -1,5 +1,28 @@
 # @common-fate/terraform-aws-common-fate-deployment
 
+## 1.45.0
+
+### Minor Changes
+
+- a7b84d7: Provisioner no longer depends on infrastructure configuration for integrations.
+  Teams using AWS or GCP integrations are required to follow the migration guide prior to updating to this release.
+  https://docs.commonfate.io/migration-guide/migration-guide#v1-45-0
+- a7b84d7: For BYOC customers: the `authz` service is no longer used. We plan to remove it in a future release.
+- 57f05c2: deprecate configuring the provisioner via the infrastructure config
+- a7b84d7: New access page for requesting target and role combinations laid out in a tree format
+
+### Patch Changes
+
+- a7b84d7: Fixes an issue that could lead to a denial of service with the policy API if a malformed or forbid all policy was created. The CF::Service::"Terraform" which is service principal assumed by the terraform client credentials is now always permitted to use the policy APIs regardless of the customer policies applied, preventing customers from being unable to revert a bad policy change.
+- a7b84d7: Fix active requests in the requests list not opening the request detail page when clicked
+- 5b53143: Update default idle timeout on the ALB to 2m 30s to accomodate for the retry timeouts in the provisioners
+- 64073c2: Fix AWS IAM Identity Center Linked Identity cleanup.
+- 64073c2: Skip attempting deprovisioning if requested resources no longer exist.
+- a7b84d7: Fix an issue causing SCIM Group APIs to fail on update operations.
+- a7b84d7: improve action button to give more information on what button does
+- a7b84d7: Slack integration will now only show activate button if the user viewing the notification has permissions to activate the grant
+- a7b84d7: Refresh audit logs on request detail page every 10 seconds.
+
 ## 1.44.0
 
 ### Minor Changes
