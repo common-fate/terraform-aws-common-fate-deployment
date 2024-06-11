@@ -1,5 +1,11 @@
 # @common-fate/terraform-aws-common-fate-deployment
 
+## 1.45.1
+
+### Patch Changes
+
+- 991a6aa: Fix an issue causing the activate action not to show in slack DMs
+
 ## 1.45.0
 
 ### Minor Changes
