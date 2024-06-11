@@ -1,5 +1,11 @@
 # @common-fate/terraform-aws-common-fate-deployment
 
+## 1.44.2
+
+### Patch Changes
+
+- 5a25225: Fix an issue where the Common Fate CLI would generate an invalid `credential_process` profile field for AWS accounts with names containing whitespace.
+
 ## 1.44.1
 
 ### Patch Changes
