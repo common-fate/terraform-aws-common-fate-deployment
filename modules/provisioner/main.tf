@@ -128,6 +128,11 @@ resource "aws_iam_policy" "parameter_store_secrets_read_access" {
   })
 }
 
+resource "aws_iam_role_policy_attachment" "otel" {
+  role       = aws_iam_role.provisioner_ecs_task_role.name
+  policy_arn = var.otel_writer_iam_policy_arn
+}
+
 resource "aws_iam_role_policy_attachment" "provisioner_ecs_task_parameter_store_secrets_read_access_attach" {
   role       = aws_iam_role.provisioner_ecs_execution_role.name
   policy_arn = aws_iam_policy.parameter_store_secrets_read_access.arn
@@ -218,7 +223,28 @@ resource "aws_ecs_task_definition" "provisioner_task" {
     linuxParameters = {
       securityGroupIds = [aws_security_group.ecs_provisioner_sg_v2.id]
     }
-  }])
+    },
+    {
+      name      = "aws-otel-collector",
+      image     = "amazon/aws-otel-collector",
+      command   = ["--config=/etc/ecs/ecs-default-config.yaml"],
+      essential = true,
+      logConfiguration = {
+        logDriver = "awslogs",
+        options = {
+          "awslogs-group"         = var.otel_log_group_name,
+          "awslogs-region"        = var.aws_region,
+          "awslogs-stream-prefix" = "provisioner"
+        }
+      },
+      healthCheck = {
+        "command"     = ["/healthcheck"],
+        "interval"    = 5,
+        "timeout"     = 6,
+        "retries"     = 5,
+        "startPeriod" = 1
+      }
+  }, ])
 
 }
 
