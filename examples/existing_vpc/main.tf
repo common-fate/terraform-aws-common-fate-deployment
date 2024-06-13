@@ -143,26 +143,3 @@ module "access_handler" {
   enable_verbose_logging = var.enable_verbose_logging
   app_url                = var.app_url
 }
-
-module "authz" {
-  source                                = "common-fate/common-fate-deployment/aws//modules/authz"
-  version                               = "1.0.0"
-  namespace                             = var.namespace
-  stage                                 = var.stage
-  aws_region                            = var.aws_region
-  eventbus_arn                          = module.events.event_bus_arn
-  release_tag                           = var.release_tag
-  subnet_ids                            = var.private_subnet_ids
-  vpc_id                                = var.vpc_id
-  ecs_cluster_id                        = module.ecs.cluster_id
-  alb_listener_arn                      = module.alb.listener_arn
-  dynamodb_table_name                   = module.authz_db.dynamodb_table_name
-  enable_verbose_logging                = var.enable_verbose_logging
-  dynamodb_table_arn                    = module.authz_db.dynamodb_table_arn
-  app_url                               = var.app_url
-  oidc_trusted_issuer                   = module.cognito.auth_issuer
-  oidc_terraform_client_id              = module.cognito.terraform_client_id
-  oidc_access_handler_service_client_id = module.cognito.access_handler_service_client_id
-  oidc_control_plane_client_id          = module.cognito.control_plane_service_client_id
-}
-
