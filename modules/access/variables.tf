@@ -140,10 +140,6 @@ variable "service_discovery_namespace_arn" {
   description = "namespace arn of service discovery namespace"
 }
 
-variable "authz_service_connect_address" {
-  type        = string
-  description = "the internal address assigned to the authz service by AWS ECS service connect"
-}
 
 variable "worker_security_group_id" {
   type        = string

@@ -188,7 +188,6 @@ module "control_plane" {
   worker_image_repository                    = var.worker_image_repository
   service_discovery_namespace_arn            = module.ecs_base.service_discovery_namespace_arn
   access_handler_security_group_id           = module.access_handler.security_group_id
-  authz_service_connect_address              = module.authz.authz_internal_address
   access_handler_service_connect_address     = module.access_handler.access_handler_internal_address
   xray_monitoring_enabled                    = var.xray_monitoring_enabled
   managed_monitoring_enabled                 = var.managed_monitoring_enabled
@@ -277,7 +276,6 @@ module "access_handler" {
   additional_cors_allowed_origins           = var.additional_cors_allowed_origins
   access_image_repository                   = var.access_image_repository
   service_discovery_namespace_arn           = module.ecs_base.service_discovery_namespace_arn
-  authz_service_connect_address             = module.authz.authz_internal_address
   control_plane_security_group_id           = module.control_plane.security_group_id
   worker_security_group_id                  = module.control_plane.worker_security_group_id
   database_secret_sm_arn                    = module.control_plane_db.secret_arn

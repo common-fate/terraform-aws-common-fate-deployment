@@ -290,11 +290,6 @@ variable "access_handler_security_group_id" {
   description = "The id of the security group for the access handler"
 }
 
-variable "authz_service_connect_address" {
-  type        = string
-  description = "the internal address assigned to the authz service by AWS ECS service connect"
-}
-
 variable "access_handler_service_connect_address" {
   type        = string
   description = "the internal address assigned to the access handler service by AWS ECS service connect"
