@@ -319,3 +319,14 @@ module "provisioner" {
   otel_writer_iam_policy_arn        = module.ecs_base.otel_writer_iam_policy_arn
 
 }
+
+module "authz-legacy" {
+  source    = "./modules/authz-legacy"
+  namespace = var.namespace
+  stage     = var.stage
+}
+
+moved {
+  from = authz.aws_cloudwatch_log_group.authz_log_group
+  to   = authz-legacy.aws_cloudwatch_log_group.authz_log_group
+}
