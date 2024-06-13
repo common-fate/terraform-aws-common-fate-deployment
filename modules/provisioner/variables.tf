@@ -133,3 +133,12 @@ variable "provisioner_image_repository" {
   description = "Docker image repository to use for the Provisioner image"
   default     = "public.ecr.aws/z2x0a3a1/common-fate-deployment/provisioner"
 }
+
+variable "otel_log_group_name" {
+  description = "Log group for OTel collector"
+  type        = string
+}
+variable "otel_writer_iam_policy_arn" {
+  description = "IAM policy for OpenTelemetry"
+  type        = string
+}

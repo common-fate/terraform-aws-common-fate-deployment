@@ -317,4 +317,7 @@ module "provisioner" {
   assume_role_external_id           = var.assume_role_external_id
   provisioner_image_repository      = var.provisioner_image_repository
   aws_partition                     = data.aws_partition.current.id
+  otel_log_group_name               = module.ecs_base.otel_log_group_name
+  otel_writer_iam_policy_arn        = module.ecs_base.otel_writer_iam_policy_arn
+
 }
