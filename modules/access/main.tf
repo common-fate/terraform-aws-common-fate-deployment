@@ -216,10 +216,6 @@ resource "aws_ecs_task_definition" "access_handler_task" {
           value = var.eventbus_arn
         },
         {
-          name  = "CF_AUTHZ_URL",
-          value = var.authz_service_connect_address
-        },
-        {
           name  = "CF_FRONTEND_URL",
           value = var.app_url
         },
