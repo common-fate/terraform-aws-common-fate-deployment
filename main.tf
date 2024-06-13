@@ -296,40 +296,6 @@ module "access_handler" {
 }
 
 
-module "authz" {
-  source                                = "./modules/authz"
-  namespace                             = var.namespace
-  stage                                 = var.stage
-  aws_region                            = var.aws_region
-  aws_account_id                        = data.aws_caller_identity.current.account_id
-  eventbus_arn                          = module.events.event_bus_arn
-  release_tag                           = var.release_tag
-  subnet_ids                            = local.private_subnet_ids
-  vpc_id                                = local.vpc_id
-  ecs_cluster_id                        = local.ecs_cluster_id
-  alb_listener_arn                      = module.alb.listener_arn
-  dynamodb_table_name                   = module.authz_db.dynamodb_table_name
-  log_level                             = var.authz_log_level
-  dynamodb_table_arn                    = module.authz_db.dynamodb_table_arn
-  app_url                               = var.app_url
-  oidc_trusted_issuer                   = module.cognito.auth_issuer
-  oidc_terraform_client_id              = module.cognito.terraform_client_id
-  oidc_access_handler_service_client_id = module.cognito.access_handler_service_client_id
-  oidc_control_plane_client_id          = module.cognito.control_plane_service_client_id
-  oidc_provisioner_service_client_id    = module.cognito.provisioner_client_id
-  oidc_slack_service_client_id          = module.cognito.slack_service_client_id
-  alb_security_group_id                 = module.alb.alb_security_group_id
-  additional_cors_allowed_origins       = var.additional_cors_allowed_origins
-  authz_eval_bucket_arn                 = module.authz_eval_bucket.arn
-  authz_eval_bucket_name                = module.authz_eval_bucket.id
-  authz_image_repository                = var.authz_image_repository
-  access_handler_security_group_id      = module.access_handler.security_group_id
-  service_discovery_namespace_arn       = module.ecs_base.service_discovery_namespace_arn
-  control_plane_security_group_id       = module.control_plane.security_group_id
-  worker_security_group_id              = module.control_plane.worker_security_group_id
-}
-
-
 module "provisioner" {
   source = "./modules/provisioner"
   // A name prefix is used so that this builtin provisioner may be deployed without causing downtime when migrating from an external provisioner deployment
