@@ -1,5 +1,5 @@
 ---
-"@common-fate/terraform-aws-common-fate-deployment": patch
+"@common-fate/terraform-aws-common-fate-deployment": minor
 ---
 
-adds otel container definition to provisioner module
+Add Otel container definition to provisioner module
