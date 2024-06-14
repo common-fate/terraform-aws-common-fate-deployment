@@ -327,6 +327,6 @@ module "authz-legacy" {
 }
 
 moved {
-  from = authz.aws_cloudwatch_log_group.authz_log_group
-  to   = authz-legacy.aws_cloudwatch_log_group.authz_log_group
+  from = module.authz.aws_cloudwatch_log_group.authz_log_group
+  to   = module.authz-legacy.aws_cloudwatch_log_group.authz_log_group
 }
