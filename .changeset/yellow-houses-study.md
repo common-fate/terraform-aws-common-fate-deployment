@@ -2,4 +2,4 @@
 "@common-fate/terraform-aws-common-fate-deployment": patch
 ---
 
-adds monitoring environment variables to provisioner
+Adds centralised monitoring environment variables to the provisioner module
