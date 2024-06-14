@@ -105,6 +105,11 @@ moved {
   to   = module.ecs[0]
 }
 
+moved {
+  from = module.authz.aws_cloudwatch_log_group.authz_log_group
+  to   = module.authz-legacy.aws_cloudwatch_log_group.authz_log_group
+}
+
 module "ecs" {
   count                                 = var.ecs_cluster_id != null ? 0 : 1
   source                                = "terraform-aws-modules/ecs/aws"
@@ -326,7 +331,4 @@ module "authz-legacy" {
   stage     = var.stage
 }
 
-moved {
-  from = module.authz.aws_cloudwatch_log_group.authz_log_group
-  to   = module.authz-legacy.aws_cloudwatch_log_group.authz_log_group
-}
+
