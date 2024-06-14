@@ -105,6 +105,11 @@ moved {
   to   = module.ecs[0]
 }
 
+moved {
+  from = module.authz.aws_cloudwatch_log_group.authz_log_group
+  to   = module.authz-legacy.aws_cloudwatch_log_group.authz_log_group
+}
+
 module "ecs" {
   count                                 = var.ecs_cluster_id != null ? 0 : 1
   source                                = "terraform-aws-modules/ecs/aws"
@@ -319,3 +324,11 @@ module "provisioner" {
   otel_writer_iam_policy_arn        = module.ecs_base.otel_writer_iam_policy_arn
 
 }
+
+module "authz-legacy" {
+  source    = "./modules/authz-legacy"
+  namespace = var.namespace
+  stage     = var.stage
+}
+
+
