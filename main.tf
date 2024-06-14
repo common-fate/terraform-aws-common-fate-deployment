@@ -317,5 +317,11 @@ module "provisioner" {
   aws_partition                     = data.aws_partition.current.id
   otel_log_group_name               = module.ecs_base.otel_log_group_name
   otel_writer_iam_policy_arn        = module.ecs_base.otel_writer_iam_policy_arn
+  licence_key                       = local.licence_key_value
+  xray_monitoring_enabled           = var.xray_monitoring_enabled
+  managed_monitoring_enabled        = var.managed_monitoring_enabled
+  managed_monitoring_endpoint       = var.managed_monitoring_endpoint
+  factory_base_url                  = var.factory_base_url
+  factory_oidc_issuer               = var.factory_oidc_issuer
 
 }
