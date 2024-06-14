@@ -1,5 +1,12 @@
 # @common-fate/terraform-aws-common-fate-deployment
 
+## 1.45.2
+
+### Patch Changes
+
+- b926024: Fix "Open Console" showing on requests for other users in the requests list view.
+- b926024: Fix scrollbar always showing on requests list view
+
 ## 1.45.1
 
 ### Patch Changes
