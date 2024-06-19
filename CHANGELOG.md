@@ -1,5 +1,11 @@
 # @common-fate/terraform-aws-common-fate-deployment
 
+## 1.45.3
+
+### Patch Changes
+
+- 075f19e: Fixes a permissions issue which prevented the provisioner from reading secrets from SSM Parameter store at runtime, for integrations such as Okta, Entra, Auth0
+
 ## 1.45.2
 
 ### Patch Changes
