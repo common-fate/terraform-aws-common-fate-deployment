@@ -20,14 +20,8 @@ variable "name_prefix" {
   #   error_message = "name_prefix should only contain letters, numbers, and hyphens"
   # }
 }
-variable "app_url" {
-  description = "The app url (e.g., 'https://common-fate.mydomain.com')."
-  type        = string
-
-  validation {
-    condition     = can(regex("^https://", var.app_url))
-    error_message = "The app_url must start with 'https://'."
-  }
+variable "access_handler_url" {
+  type = string
 }
 
 variable "vpc_id" {
@@ -92,10 +86,6 @@ variable "enable_verbose_logging" {
 }
 
 
-variable "access_handler_service_connect_address" {
-  type        = string
-  description = "the internal address assigned to the access handler service by AWS ECS service connect"
-}
 
 variable "rds_proxy_service_client_id" {
   description = "Specifies the client ID for the rds proxy service."
@@ -132,4 +122,10 @@ variable "database_connection_string" {
 variable "database_security_group_id" {
   description = "Specifies the ID of the security group for the database."
   type        = string
+}
+variable "database_resource_id" {
+  type = string
+}
+variable "database_user_resource_id" {
+  type = string
 }

@@ -558,3 +558,9 @@ variable "hierarchy_ui" {
   default     = true
   description = "Enable new hierarchy tree view to select entitlements."
 }
+variable "database_resource_id" {
+  type = string
+}
+variable "database_user_resource_id" {
+  type = string
+}

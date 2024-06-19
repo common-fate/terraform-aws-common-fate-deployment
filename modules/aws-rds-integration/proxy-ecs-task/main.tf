@@ -160,7 +160,7 @@ resource "aws_ecs_task_definition" "rds_proxy_task" {
       },
       {
         name  = "CF_ACCESS_URL"
-        value = var.app_url
+        value = var.access_handler_url
       },
       {
         name  = "CF_CLIENT_ID"
@@ -177,6 +177,16 @@ resource "aws_ecs_task_definition" "rds_proxy_task" {
       {
         name  = "CF_DATABASE_CONNECTION_STRING"
         value = var.database_connection_string
+      },
+
+      {
+        name  = "CF_DATABASE_ID"
+        value = var.database_resource_id
+      },
+
+      {
+        name  = "CF_DATABASE_USER_ID"
+        value = var.database_user_resource_id
       },
 
 
