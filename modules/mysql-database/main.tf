@@ -20,7 +20,7 @@ resource "aws_db_instance" "mysql_db" {
   engine_version         = "8.0"
   instance_class         = "db.t3.micro"
   db_name                = "test"
-  username               = "mysql"
+  username               = "test"
   password               = "password"
   skip_final_snapshot    = true
   db_subnet_group_name   = var.subnet_group_id
