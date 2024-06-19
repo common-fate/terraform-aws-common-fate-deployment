@@ -143,6 +143,33 @@ resource "aws_iam_role_policy_attachment" "ecs_task_execution_role_ssm" {
 }
 
 
+data "aws_iam_policy_document" "ssm_permissions" {
+  statement {
+    actions = ["ssmmessages:CreateControlChannel",
+      "ssmmessages:CreateDataChannel",
+      "ssmmessages:OpenControlChannel",
+    "ssmmessages:OpenDataChannel"]
+    resources = ["*"]
+  }
+}
+
+resource "aws_iam_policy" "ssm_permissions_role" {
+  name   = "${local.name_prefix}-ssm-permissions-role"
+  policy = data.aws_iam_policy_document.ssm_permissions.json
+}
+
+resource "aws_iam_role_policy_attachment" "ecs_task_role_ssm_perms" {
+  role       = aws_iam_role.rds_proxy_ecs_task_role.name
+  policy_arn = aws_iam_policy.ssm_permissions_role.arn
+}
+// TODO I think its only the execution role that needs this
+resource "aws_iam_role_policy_attachment" "ecs_task_execution_role_ssm_perms" {
+  role       = aws_iam_role.rds_proxy_ecs_execution_role.name
+  policy_arn = aws_iam_policy.ssm_permissions_role.arn
+}
+
+
+
 resource "aws_ecs_task_definition" "rds_proxy_task" {
   family                   = "${local.name_prefix}-rds-proxy"
   network_mode             = "awsvpc"
