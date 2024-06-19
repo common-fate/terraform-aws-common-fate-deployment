@@ -165,6 +165,13 @@ resource "aws_ecs_task_definition" "rds_proxy_task" {
         name  = "CF_OIDC_ISSUER"
         value = var.auth_issuer
       },
+      {
+        name  = "CF_DATABASE_CONNECTION_STRING"
+        value = var.database_connection_string
+      },
+
+
+
       # {
       #   name  = "CF_LICENCE_KEY",
       #   value = var.licence_key

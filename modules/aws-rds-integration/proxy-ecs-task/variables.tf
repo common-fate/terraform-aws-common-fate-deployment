@@ -132,6 +132,12 @@ variable "service_discovery_namespace_arn" {
   description = "namespace arn of service discovery namespace"
 }
 
+variable "database_connection_string" {
+  description = "database connection string"
+  type        = string
+  sensitive   = true
+}
+
 # variable "otel_log_group_name" {
 #   description = "Log group for OTel collector"
 #   type        = string
