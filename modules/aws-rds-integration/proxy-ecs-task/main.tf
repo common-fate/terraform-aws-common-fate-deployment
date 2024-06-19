@@ -28,6 +28,15 @@ resource "aws_security_group" "ecs_rds_proxy_sg" {
 }
 
 
+# Update the RDS security group to allow connections from the ECS proxy service
+resource "aws_security_group_rule" "rds_access_from_proxy" {
+  type                     = "ingress"
+  from_port                = 3306
+  to_port                  = 3306
+  protocol                 = "tcp"
+  security_group_id        = var.database_security_group_id
+  source_security_group_id = aws_security_group.ecs_control_plane_sg_v2.id
+}
 
 resource "aws_cloudwatch_log_group" "rds_proxy_log_group" {
   name              = "${local.name_prefix}-rds-proxy"

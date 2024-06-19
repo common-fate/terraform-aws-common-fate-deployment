@@ -92,18 +92,10 @@ variable "enable_verbose_logging" {
 }
 
 
-variable "access_handler_sg_id" {
-  description = "The Access Handler security group ID which will be allowed to make API calls to this rds proxy."
+variable "access_handler_service_connect_address" {
   type        = string
+  description = "the internal address assigned to the access handler service by AWS ECS service connect"
 }
-
-
-variable "allow_ingress_from_sg_ids" {
-  description = "The security group IDs which will be allowed to make API calls to this rds proxy."
-  type        = list(string)
-  default     = []
-}
-
 
 variable "rds_proxy_service_client_id" {
   description = "Specifies the client ID for the rds proxy service."
@@ -124,7 +116,7 @@ variable "auth_issuer" {
 variable "rds_proxy_image_repository" {
   type        = string
   description = "Docker image repository to use for the Provisioner image"
-  default     = "public.ecr.aws/z2x0a3a1/common-fate-deployment/aws_rds_proxy"
+  default     = "public.ecr.aws/z2x0a3a1/common-fate-deployment/aws-rds-proxy"
 }
 
 variable "service_discovery_namespace_arn" {
@@ -137,45 +129,7 @@ variable "database_connection_string" {
   type        = string
   sensitive   = true
 }
-
-# variable "otel_log_group_name" {
-#   description = "Log group for OTel collector"
-#   type        = string
-# }
-# variable "otel_writer_iam_policy_arn" {
-#   description = "IAM policy for OpenTelemetry"
-#   type        = string
-# }
-# variable "licence_key" {
-#   description = "The Common Fate licence key."
-#   type        = string
-# }
-# variable "xray_monitoring_enabled" {
-#   description = "If enabled, writes OpenTelemetry monitoring events to AWS X-Ray."
-#   type        = bool
-#   default     = true
-# }
-
-# variable "managed_monitoring_enabled" {
-#   description = "Enables Managed Monitoring for the deployment."
-#   type        = bool
-#   default     = false
-# }
-
-# variable "managed_monitoring_endpoint" {
-#   description = "The Managed Monitoring OpenTelemetry endpoint"
-#   type        = string
-#   default     = "otel.commonfate.io"
-# }
-
-# variable "factory_base_url" {
-#   description = "The Common Fate Factory API Base URL"
-#   type        = string
-#   default     = "https://factory.commonfate.io"
-# }
-
-# variable "factory_oidc_issuer" {
-#   description = "The Common Fate Factory OIDC Issuer"
-#   type        = string
-#   default     = "https://factory.commonfate.io"
-# }
+variable "database_security_group_id" {
+  description = "Specifies the ID of the security group for the database."
+  type        = string
+}

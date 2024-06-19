@@ -338,3 +338,37 @@ module "authz-legacy" {
 }
 
 
+module "mysql_db" {
+  source          = "./modules/mysql-database"
+  namespace       = var.namespace
+  stage           = var.stage
+  vpc_id          = local.vpc_id
+  subnet_group_id = local.database_subnet_group_id
+}
+module "mysql_proxy" {
+  source    = "./modules/aws-rds-integration/proxy-ecs-task"
+  namespace = var.namespace
+  stage     = var.stage
+
+  aws_region                 = var.aws_region
+  aws_account_id             = data.aws_caller_identity.current.account_id
+  aws_partition              = data.aws_partition.current.id
+  database_security_group_id = module.mysql_db.security_group_id
+  app_url                    = var.app_url
+  release_tag                = var.release_tag
+  subnet_ids                 = local.private_subnet_ids
+  vpc_id                     = local.vpc_id
+  ecs_cluster_id             = local.ecs_cluster_id
+  auth_issuer                = module.cognito.auth_issuer
+  enable_verbose_logging     = true
+
+  service_discovery_namespace_arn        = module.ecs_base.service_discovery_namespace_arn
+  access_handler_service_connect_address = module.access_handler.access_handler_internal_address
+
+  rds_proxy_service_client_id     = module.cognito.provisioner_client_id
+  rds_proxy_service_client_secret = module.cognito.provisioner_client_secret
+  database_connection_string      = "mysql:password@tcp(${module.control_plane_db.endpoint}:3306)/mysql"
+  name_prefix                     = "demo"
+
+
+}
