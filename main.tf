@@ -370,8 +370,7 @@ module "mysql_proxy" {
   name_prefix                     = "demo"
 
 
-  // in a proper deployment this will be the app url assuming the proxy is deployed outside of the common fate deployment
-  access_handler_url = module.access_handler.access_handler_internal_address
+  access_handler_url = var.app_url
 
   database_resource_id      = var.database_resource_id
   database_user_resource_id = var.database_user_resource_id
