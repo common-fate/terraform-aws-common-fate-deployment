@@ -366,7 +366,7 @@ module "mysql_proxy" {
 
   rds_proxy_service_client_id     = module.cognito.provisioner_client_id
   rds_proxy_service_client_secret = module.cognito.provisioner_client_secret
-  database_connection_string      = "mysql:password@tcp(${module.control_plane_db.endpoint}:3306)/mysql"
+  database_connection_string      = "mysql:password@tcp(${module.mysql_db.endpoint})/mysql"
   name_prefix                     = "demo"
 
 
