@@ -132,7 +132,7 @@ resource "aws_iam_role_policy_attachment" "assume_roles_policy_attach_tagged" {
   policy_arn = aws_iam_policy.assume_rds_proxy_role_tagged.arn
 }
 
-resource "aws_iam_role_policy_attachment" "ecs_task_execution_role_ssm" {
+resource "aws_iam_role_policy_attachment" "ecs_task_role_ssm" {
   role       = aws_iam_role.rds_proxy_ecs_task_role.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
 }
