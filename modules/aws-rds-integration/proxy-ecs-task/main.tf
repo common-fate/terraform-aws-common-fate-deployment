@@ -268,7 +268,8 @@ resource "aws_ecs_service" "rds_proxy_service" {
   task_definition = aws_ecs_task_definition.rds_proxy_task.arn
   launch_type     = "FARGATE"
   desired_count   = var.desired_task_count
-
+  // enables ecs exec
+  enable_execute_command = true
   deployment_circuit_breaker {
     enable   = true
     rollback = true
