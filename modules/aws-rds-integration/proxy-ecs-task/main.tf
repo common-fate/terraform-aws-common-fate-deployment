@@ -35,7 +35,7 @@ resource "aws_security_group_rule" "rds_access_from_proxy" {
   to_port                  = 3306
   protocol                 = "tcp"
   security_group_id        = var.database_security_group_id
-  source_security_group_id = aws_security_group.ecs_control_plane_sg_v2.id
+  source_security_group_id = aws_security_group.ecs_rds_proxy_sg.id
 }
 
 resource "aws_cloudwatch_log_group" "rds_proxy_log_group" {
@@ -233,7 +233,7 @@ resource "aws_ecs_task_definition" "rds_proxy_task" {
 
     # Link to the security group
     linuxParameters = {
-      securityGroupIds = [aws_security_group.ecs_rds_proxy_sg_v2.id]
+      securityGroupIds = [aws_security_group.ecs_rds_proxy_sg.id]
     }
     },
     # {
@@ -276,7 +276,7 @@ resource "aws_ecs_service" "rds_proxy_service" {
 
   network_configuration {
     subnets         = var.subnet_ids
-    security_groups = [aws_security_group.ecs_rds_proxy_sg_v2.id]
+    security_groups = [aws_security_group.ecs_rds_proxy_sg.id]
   }
 
   service_connect_configuration {
