@@ -138,7 +138,7 @@ resource "aws_iam_role_policy_attachment" "ecs_task_role_ssm" {
 }
 // TODO I think its only the execution role that needs this
 resource "aws_iam_role_policy_attachment" "ecs_task_execution_role_ssm" {
-  role       = aws_iam_role.rds_proxy_ecs_execution_role
+  role       = aws_iam_role.rds_proxy_ecs_execution_role.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
 }
 
