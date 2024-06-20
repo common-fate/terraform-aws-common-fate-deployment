@@ -355,7 +355,7 @@ module "mysql_proxy" {
   aws_partition              = data.aws_partition.current.id
   database_security_group_id = module.mysql_db.security_group_id
   release_tag                = var.release_tag
-  subnet_ids                 = concat(local.public_subnet_ids, local.private_subnet_ids)
+  subnet_ids                 = local.private_subnet_ids
   vpc_id                     = local.vpc_id
   ecs_cluster_id             = local.ecs_cluster_id
   auth_issuer                = module.cognito.auth_issuer

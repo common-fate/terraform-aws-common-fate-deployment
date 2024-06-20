@@ -306,6 +306,7 @@ resource "aws_ecs_service" "rds_proxy_service" {
   task_definition = aws_ecs_task_definition.rds_proxy_task.arn
   launch_type     = "FARGATE"
   desired_count   = var.desired_task_count
+
   // enables ecs exec
   enable_execute_command = true
   deployment_circuit_breaker {
@@ -314,8 +315,9 @@ resource "aws_ecs_service" "rds_proxy_service" {
   }
 
   network_configuration {
-    subnets         = var.subnet_ids
-    security_groups = [aws_security_group.ecs_rds_proxy_sg.id]
+    subnets          = var.subnet_ids
+    security_groups  = [aws_security_group.ecs_rds_proxy_sg.id]
+    assign_public_ip = true
   }
 
   service_connect_configuration {
