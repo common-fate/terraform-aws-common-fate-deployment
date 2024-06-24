@@ -1,5 +1,11 @@
 # @common-fate/terraform-aws-common-fate-deployment
 
+## 1.45.4
+
+### Patch Changes
+
+- 43785b7: Fix logic for creating profiles based on an entitlement requested with batch ensure
+
 ## 1.45.3
 
 ### Patch Changes
