@@ -32,38 +32,6 @@ variable "auth_certificate_arn" {
   default     = ""
 }
 
-variable "pager_duty_client_id" {
-  description = "(Deprecated) The private Pager Duty application client ID."
-  default     = ""
-  type        = string
-}
-
-variable "pager_duty_client_secret_ps_arn" {
-  description = "(Deprecated) The AWS Parameter Store ARN for the private Pager Duty application client secret."
-  default     = ""
-  type        = string
-}
-
-variable "slack_client_id" {
-  description = "(Deprecated) The private Slack application client ID."
-  default     = ""
-  type        = string
-}
-
-variable "slack_client_secret_ps_arn" {
-  description = "(Deprecated) The AWS Parameter Store ARN for the private Slack application client secret."
-  default     = ""
-  type        = string
-}
-
-variable "slack_signing_secret_ps_arn" {
-  description = "(Deprecated) The AWS Parameter Store ARN for the private Slack application signing secret."
-  default     = ""
-  type        = string
-}
-
-
-
 variable "auth_url" {
   description = "The custom auth url (e.g., 'https://auth.mydomain.com'). Provide this and the auth_certificate_arn to configure cognito with a custom domain."
   type        = string
@@ -79,21 +47,17 @@ variable "app_url" {
     error_message = "The app_url must start with 'https://'."
   }
 }
-
 variable "team_name" {
   description = "Specifies the team name used for branding on the frontend."
   default     = "Common Fate"
   type        = string
 }
 
-
-
 variable "logo_url" {
   description = "Specifies a public logo URL for frontend branding."
   default     = ""
   type        = string
 }
-
 variable "saml_provider_name" {
   description = "The name of the identity provider (e.g., 'Entra') displayed on the login screen."
   default     = ""
@@ -153,11 +117,6 @@ variable "control_plane_log_level" {
   default     = "INFO"
 }
 
-variable "authz_log_level" {
-  description = "Log level for Authz service"
-  type        = string
-  default     = "INFO"
-}
 
 variable "additional_cors_allowed_origins" {
   type        = list(string)
@@ -171,142 +130,6 @@ variable "ecs_opentelemetry_collector_log_retention_in_days" {
   type        = number
 }
 
-
-variable "provisioner_aws_idc_config" {
-  description = <<EOF
-  (Deprecated)
-  Configuration for AWS IDC. The following keys are expected:
-  - role_arn: The ARN of the IAM role for the provisioner to assume which hass permissions to provision access in an AWS organization.
-  - idc_region: The AWS IDC Region.
-  - idc_instance_arn: The AWS Identity Center instance ARN.
-  - idc_identity_store_id: The AWS IAM Identity Center Identity Store ID.
-  EOF
-  type = object({
-    role_arn              = string
-    idc_region            = string
-    idc_instance_arn      = string
-    idc_identity_store_id = string
-  })
-  default = null
-}
-
-variable "provisioner_gcp_config" {
-  description = <<EOF
-  (Deprecated)
-  Configuration for GCP. The following keys are expected:
-  - service_account_client_json_ps_arn: (Optional) when using service account credentials, this is ARN of the secret credentials.
-  - workload_identity_config_json: (Optional) using Workload Identity Federation, this is the config file.
-
-  Either `workload_identity_config_json` or `service_account_client_json_ps_arn` must be provided (not both).
-  EOF
-  type = object({
-    service_account_client_json_ps_arn = optional(string)
-    workload_identity_config_json      = optional(string)
-  })
-  default = null
-}
-
-
-variable "provisioner_entra_config" {
-  description = <<EOF
-  (Deprecated)
-  Configuration for GCP. The following keys are expected:
-  - tenant_id: The Entra tenant ID.
-  - client_id: The client ID for the Entra App Registration.
-  - client_secret_secret_path: The SSM Parameter store secret path for the client secret for the Entra App Registration.
-  EOF
-  type = object({
-    tenant_id                 = string
-    client_id                 = string
-    client_secret_secret_path = string
-  })
-  default = null
-}
-
-
-variable "provisioner_aws_rds_config" {
-  description = <<EOF
-  (Deprecated)
-  Configuration for AWS RDS. The following keys are expected:
-  - idc_role_arn: The ARN of the IAM role for the provisioner to assume which hass permissions to provision access in an AWS organization.
-  - idc_region: The AWS IDC Region.
-  - idc_instance_arn: The AWS Identity Center instance ARN.
-  - infra_role_name: The name of the IAM role which is deployed each each account containing databases.
-  - should_provision_security_groups: (Optional) Whether or not the provisioner should attempt to provision security groups. Set this to true if you are not using pre deployed security groups.
-  EOF
-  type = object({
-    idc_role_arn                     = string
-    idc_region                       = string
-    idc_instance_arn                 = string
-    infra_role_name                  = string
-    should_provision_security_groups = optional(bool)
-  })
-  default = null
-}
-
-variable "provisioner_okta_config" {
-  description = <<EOF
-  (Deprecated)
-  Configuration for Okta. The following keys are expected:
-  - organization_id: The ID of your Okta organization.
-  - api_key_secret_path: The SSM Parameter store secret path for the api key for the Okta organization.
-  EOF
-  type = object({
-    organization_id     = string
-    api_key_secret_path = string
-  })
-  default = null
-}
-
-
-variable "provisioner_datastax_config" {
-  description = <<EOF
-  (Deprecated)
-  Configuration for DataStax. The following keys are expected:
-  - api_key_secret_path: The SSM Parameter store secret path for the api key for the DataStax organization.
-  EOF
-  type = object({
-    api_key_secret_path = string
-  })
-  default = null
-}
-
-
-variable "provisioner_auth0_config" {
-  description = <<EOF
-  (Deprecated)
-  Configuration for Auth0. The following keys are expected:
-  - domain: The Auth0 tenant domain.
-  - client_id: The Auth0 application client ID.
-  - client_secret_secret_path: The SSM Parameter store secret path for the Auth0 application client secret.
-  EOF
-  type = object({
-    domain                    = string
-    client_id                 = string
-    client_secret_secret_path = string
-  })
-  default = null
-}
-
-
-
-variable "unstable_enable_feature_least_privilege" {
-  type        = bool
-  default     = false
-  description = "Opt-in to enable Least Privilege Analytics (in early access). This variable will be removed once the feature is released."
-}
-
-variable "unstable_sync_idc_cloudtrail_schedule" {
-  type        = string
-  default     = "13 0 * * *"
-  description = "Least Privilege Analytics: the schedule to sync AWS CloudTrail events on"
-}
-
-variable "unstable_least_privilege_analysis_schedule" {
-  type        = string
-  default     = "13 5 * * *"
-  description = "Least Privilege Analytics: the schedule to build least privilege reports on"
-}
 
 variable "assume_role_external_id" {
   type        = string
@@ -418,11 +241,6 @@ variable "access_image_repository" {
   default     = "public.ecr.aws/z2x0a3a1/common-fate-deployment/access"
 }
 
-variable "authz_image_repository" {
-  type        = string
-  description = "Docker image repository to use for the Authz image"
-  default     = "public.ecr.aws/z2x0a3a1/common-fate-deployment/authz"
-}
 
 variable "provisioner_image_repository" {
   type        = string
@@ -435,9 +253,6 @@ variable "web_image_repository" {
   description = "Docker image repository to use for the Web image"
   default     = "public.ecr.aws/z2x0a3a1/common-fate-deployment/web"
 }
-
-
-
 
 
 variable "rds_db_retention_period" {
@@ -529,23 +344,12 @@ variable "factory_oidc_issuer" {
   default     = "https://factory.commonfate.io"
 }
 
-variable "unstable_feature_embedded_authorizations" {
-  type        = bool
-  default     = true
-  description = "Opt-in to enable Embedded Authorization (in early access). This variable will be removed once the feature is released."
-}
-
 variable "centralised_support" {
   type        = bool
   default     = true
   description = "Enable the in-app centralised support feature."
 }
 
-variable "force_rerun_config_migrations" {
-  type        = bool
-  description = "Whether to force the config migration to rerun on startup of the control plane"
-  default     = false
-}
 
 variable "database_auto_migrate" {
   type        = bool
@@ -553,8 +357,3 @@ variable "database_auto_migrate" {
   description = "Whether to run database migrations automatically when the Control Plane service starts. If rolling back to a previous release after a migration has run, set this to `false`."
 }
 
-variable "hierarchy_ui" {
-  type        = bool
-  default     = true
-  description = "Enable new hierarchy tree view to select entitlements."
-}
