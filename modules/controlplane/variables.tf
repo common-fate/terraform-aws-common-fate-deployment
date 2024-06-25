@@ -215,25 +215,6 @@ variable "additional_cors_allowed_origins" {
   description = "Additional origins to add to the CORS allowlist. By default, the app URL is automatically added."
 }
 
-
-variable "unstable_enable_feature_least_privilege" {
-  type        = bool
-  default     = false
-  description = "Opt-in to enable Least Privilege Analytics (in early access). This variable will be removed once the feature is released."
-}
-
-variable "unstable_sync_idc_cloudtrail_schedule" {
-  type        = string
-  default     = "13 0 * * *"
-  description = "Least Privilege Analytics: the schedule to sync AWS CloudTrail events on"
-}
-
-variable "unstable_least_privilege_analysis_schedule" {
-  type        = string
-  default     = "13 5 * * *"
-  description = "Least Privilege Analytics: the schedule to build least privilege reports on"
-}
-
 variable "report_bucket_arn" {
   type        = string
   description = "ARN of report bucket"
@@ -325,15 +306,6 @@ variable "factory_oidc_issuer" {
   default     = "https://factory.commonfate.io"
 }
 
-variable "unstable_feature_embedded_authorizations" {
-  type        = bool
-  default     = false
-  description = "Opt-in to enable Embedded Authorization (in early access). This variable will be removed once the feature is released."
-}
-variable "force_rerun_config_migrations" {
-  type        = bool
-  description = "Whether to force the config migration to rerun on startup of the control plane"
-}
 variable "database_auto_migrate" {
   type        = bool
   default     = true
