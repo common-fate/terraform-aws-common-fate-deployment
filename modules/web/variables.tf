@@ -76,16 +76,6 @@ variable "auth_url" {
   }
 }
 
-variable "team_name" {
-  description = "Specifies the team name for branding the frontend."
-  type        = string
-}
-
-variable "logo_url" {
-  description = "Specifies a public URL for the logo used in frontend branding."
-  type        = string
-}
-
 variable "auth_authority_url" {
   description = "Specifies the URL used for authentication."
   type        = string

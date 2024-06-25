@@ -47,17 +47,7 @@ variable "app_url" {
     error_message = "The app_url must start with 'https://'."
   }
 }
-variable "team_name" {
-  description = "Specifies the team name used for branding on the frontend."
-  default     = "Common Fate"
-  type        = string
-}
 
-variable "logo_url" {
-  description = "Specifies a public logo URL for frontend branding."
-  default     = ""
-  type        = string
-}
 variable "saml_provider_name" {
   description = "The name of the identity provider (e.g., 'Entra') displayed on the login screen."
   default     = ""
