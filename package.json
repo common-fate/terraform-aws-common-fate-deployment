@@ -1,6 +1,6 @@
 {
   "name": "@common-fate/terraform-aws-common-fate-deployment",
-  "version": "1.45.1",
+  "version": "2.0.0",
   "description": "",
   "main": "index.js",
   "keywords": [],

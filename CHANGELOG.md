@@ -1,5 +1,42 @@
 # @common-fate/terraform-aws-common-fate-deployment
 
+## 2.0.0
+
+### Major Changes
+
+- 5beef23: For BYOC customers: Removes the Authz service, which has been fully deprecated as of application version 4.3.0.
+  The supporting DynamoDB table for this service will remain until a future release when it will be removed.
+  The CloudWatch log group for the Authz service will remain until a future release when it will be removed.
+- e56d0bd: For BYOC Customers: Removes team_name and logo_url variables and support for customising the appearance of the web app.
+- e56d0bd: For BYOC Customers: This change removes the PagerDuty and Slack configuration from the infrastructure stack. These integrations are now entirely configured in the application config.
+- e56d0bd: For BYOC Customers: This change removes the provisioner config variables from the infrastructure stack. To upgrade, you will need to remove any references to these variables in your config. The provisioner is now configured entirely from the application configuration.
+- e56d0bd: For BYOC Customers: This change removes unstable_enable_feature_least_privilege, unstable_sync_idc_cloudtrail_schedule and unstable_least_privilege_analysis_schedule variables as this feature has been removed from the application.
+
+### Minor Changes
+
+- e74c376: Send slack notification to notify users at a preset time before their access expires.
+- 96af06e: Add Otel container definition to provisioner module
+- e74c376: Adds ability to prioritise roles when creating availabilities. The highest priority role will be suggested in the entitlement request UI
+- e74c376: Adds new recently used section to entitlement select tree which displays 3 most frecently used entitlements
+- e74c376: Add event filtering to webhook integration
+- e74c376: Notify slack approvers and channel when breakglass access is used
+- e74c376: Adds support for breakglass access, when enabled, users who have permission will be able to skip approvals for specific entitlements.
+
+### Patch Changes
+
+- 6b3dc4d: Update slack expiry notification to include target and role which are expiring.
+- e74c376: Fix "Open Console" showing on requests for other users in the requests list view.
+- e74c376: Adds OTEL tracing to the Provisioner and improves the tracing for the Control Plane http APIs
+- e74c376: Fix logic for creating profiles based on an entitlement requested with batch ensure
+- d58a647: Fixes a permissions issue which prevented the provisioner from reading secrets from SSM Parameter store at runtime, for integrations such as Okta, Entra, Auth0
+- 9c05918: Fixes a cyclic reference issue when the ALB certificate ARN depends on the output of another Terraform module.
+- e74c376: Add tracing to the Provisoner and emit traces to AWS X-Ray
+- e74c376: Fixes an issue causing the activate button not to be shown on Slack DMs when the approval policy checks for a principal condition.
+- e74c376: Further improvements and fixes to new hierarchy UI to improve search and readability
+- 6b3dc4d: Fix an issue where the Access Request confirmation accordion would not open by default in the web console.
+- e74c376: Fix scrollbar always showing on requests list view
+- f3ccd4b: Adds centralised monitoring environment variables to the provisioner module
+
 ## 1.45.1
 
 ### Patch Changes
