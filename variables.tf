@@ -18,7 +18,7 @@ variable "aws_region" {
 variable "release_tag" {
   description = "Override the application release tag to be used in the deployment. As of module version v1.13.0, application versions are bundled into the Terraform module, and so in most cases you should not override this."
   type        = string
-  default     = "v4.3.1"
+  default     = "v4.3.2"
 }
 
 variable "app_certificate_arn" {
@@ -346,4 +346,3 @@ variable "database_auto_migrate" {
   default     = true
   description = "Whether to run database migrations automatically when the Control Plane service starts. If rolling back to a previous release after a migration has run, set this to `false`."
 }
-
