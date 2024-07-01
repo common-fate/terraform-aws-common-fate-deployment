@@ -137,6 +137,8 @@ variable "databases" {
   type = list(object({
     // the rds instance id
     instance_id = string
+    // the endpoint for the rds instance
+    endpoint = string
     // the name for the AWS::RDS::Database resource
     name = string
     // the name of the database on the instance

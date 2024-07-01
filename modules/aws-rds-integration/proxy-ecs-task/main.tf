@@ -7,6 +7,11 @@ data "aws_caller_identity" "current" {}
 locals {
   name_prefix    = join("-", compact([var.namespace, var.stage, var.name_prefix]))
   databases_json = jsonencode(var.databases)
+  password_secrets_manager_arns = flatten([
+    for db in var.databases : [
+      for user in db.users : user.passwordSecretsManagerARN
+    ]
+  ])
 }
 
 #trivy:ignore:AVD-AWS-0104
@@ -78,8 +83,6 @@ resource "aws_iam_role_policy_attachment" "rds_proxy_ecs_execution_role_policy_a
 }
 
 # TASK ROLE
-# The task role will be configured to have assuem role permissions on specific roles
-# these roles are configured in the terraform config provider along with the webhooks
 resource "aws_iam_role" "rds_proxy_ecs_task_role" {
   name        = "${local.name_prefix}-rds-proxy-ecs-tr"
   description = "The task role assumed by the RDS Proxy task."
@@ -104,69 +107,28 @@ resource "aws_iam_role" "rds_proxy_ecs_task_role" {
     ]
   })
 }
+resource "aws_iam_policy" "database_secrets_read_access" {
+  name        = "${var.namespace}-${var.stage}-rds-proxy-ecs-sm"
+  description = "Allows pull database secret from secrets manager"
 
-# resource "aws_iam_role_policy_attachment" "otel" {
-#   role       = aws_iam_role.rds_proxy_ecs_task_role.name
-#   policy_arn = var.otel_writer_iam_policy_arn
-# }
-
-data "aws_iam_policy_document" "assume_roles_policy_tagged" {
-  statement {
-    actions   = ["sts:AssumeRole"]
-    resources = ["*"]
-    condition {
-      test     = "StringEquals"
-      variable = "iam:ResourceTag/common-fate-aws-integration-provision-role"
-      values   = ["true"]
-    }
-  }
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Effect = "Allow",
+        "Action" : [
+          "secretsmanager:GetSecretValue"
+        ],
+        "Resource" : local.password_secrets_manager_arns
+      }
+    ]
+  })
 }
 
-resource "aws_iam_policy" "assume_rds_proxy_role_tagged" {
-  name        = "${local.name_prefix}-rds-proxy-ar-tagged"
-  description = "A policy allowing sts:AssumeRole on roles tagged with common-fate-aws-integration-provision-role"
-  policy      = data.aws_iam_policy_document.assume_roles_policy_tagged.json
-}
 
-resource "aws_iam_role_policy_attachment" "assume_roles_policy_attach_tagged" {
+resource "aws_iam_role_policy_attachment" "rds_proxy_ecs_task_database_secrets_access_attach" {
   role       = aws_iam_role.rds_proxy_ecs_task_role.name
-  policy_arn = aws_iam_policy.assume_rds_proxy_role_tagged.arn
-}
-
-resource "aws_iam_role_policy_attachment" "ecs_task_role_ssm" {
-  role       = aws_iam_role.rds_proxy_ecs_task_role.name
-  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
-}
-// TODO I think its only the execution role that needs this
-resource "aws_iam_role_policy_attachment" "ecs_task_execution_role_ssm" {
-  role       = aws_iam_role.rds_proxy_ecs_execution_role.name
-  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
-}
-
-
-data "aws_iam_policy_document" "ssm_permissions" {
-  statement {
-    actions = ["ssmmessages:CreateControlChannel",
-      "ssmmessages:CreateDataChannel",
-      "ssmmessages:OpenControlChannel",
-    "ssmmessages:OpenDataChannel"]
-    resources = ["*"]
-  }
-}
-
-resource "aws_iam_policy" "ssm_permissions_role" {
-  name   = "${local.name_prefix}-ssm-permissions-role"
-  policy = data.aws_iam_policy_document.ssm_permissions.json
-}
-
-resource "aws_iam_role_policy_attachment" "ecs_task_role_ssm_perms" {
-  role       = aws_iam_role.rds_proxy_ecs_task_role.name
-  policy_arn = aws_iam_policy.ssm_permissions_role.arn
-}
-// TODO I think its only the execution role that needs this
-resource "aws_iam_role_policy_attachment" "ecs_task_execution_role_ssm_perms" {
-  role       = aws_iam_role.rds_proxy_ecs_execution_role.name
-  policy_arn = aws_iam_policy.ssm_permissions_role.arn
+  policy_arn = aws_iam_policy.database_secrets_read_access.arn
 }
 
 
