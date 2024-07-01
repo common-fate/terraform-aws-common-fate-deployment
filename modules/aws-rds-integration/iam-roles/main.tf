@@ -9,7 +9,7 @@ data "aws_iam_policy_document" "assume_roles_policy" {
 
     principals {
       type        = "AWS"
-      identifiers = [common_fate_aws_account_id]
+      identifiers = [var.common_fate_aws_account_id]
     }
 
 
