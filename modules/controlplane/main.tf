@@ -530,18 +530,6 @@ locals {
       value = "*/5 * * * *"
     },
     {
-      name  = "CF_FEATURE_LEAST_PRIVILEGE_ENABLED",
-      value = var.unstable_enable_feature_least_privilege ? "true" : "false"
-    },
-    {
-      name  = "CF_SYNC_IDC_CLOUDTRAIL_CRON_SCHEDULE",
-      value = var.unstable_sync_idc_cloudtrail_schedule
-    },
-    {
-      name  = "CF_LEAST_PRIVILEGE_ANALYSIS_CRON_SCHEDULE",
-      value = var.unstable_least_privilege_analysis_schedule
-    },
-    {
       name  = "CF_REPORT_S3_BUCKET",
       value = var.report_bucket_name
     },
@@ -592,13 +580,6 @@ locals {
     {
       name  = "CF_DEPLOYMENT_NAME",
       value = var.stage
-    },
-    {
-      name  = "CF_FEATURE_EMBEDDED_AUTHORIZATIONS",
-      value = var.unstable_feature_embedded_authorizations ? "true" : "false"
-
-      name  = "CF_FORCE_CONFIG_MIGRATIONS",
-      value = var.force_rerun_config_migrations ? "true" : "false"
     },
     {
       name  = "CF_TERRAFORM_SERVICE_OIDC_CLIENT_ID",

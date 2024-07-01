@@ -115,14 +115,6 @@ resource "aws_ecs_task_definition" "web_task" {
         value = "${coalesce(var.authz_api_url, var.app_url)}/graph"
       },
       {
-        name  = "CF_TEAM_NAME"
-        value = var.team_name
-      },
-      {
-        name  = "CF_LOGO_URL"
-        value = var.logo_url
-      },
-      {
         name  = "CF_COGNITO_USER_POOL_DOMAIN"
         value = var.auth_url
       },
@@ -138,9 +130,10 @@ resource "aws_ecs_task_definition" "web_task" {
         name  = "CF_CENTRALISED_SUPPORT",
         value = var.centralised_support ? "true" : "false"
       },
+      // @TODO: remove once the flag is removed in the web app
       {
         name  = "CF_HIERARCHY_UI",
-        value = var.hierarchy_ui ? "true" : "false"
+        value = "true"
       },
     ]
 
