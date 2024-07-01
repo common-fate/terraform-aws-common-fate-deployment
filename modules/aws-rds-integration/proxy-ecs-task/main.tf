@@ -217,10 +217,6 @@ resource "aws_ecs_task_definition" "rds_proxy_task" {
         value = var.auth_issuer
       },
       {
-        name  = "CF_DATABASE_CONNECTION_STRING"
-        value = var.database_connection_string
-      },
-      {
         name  = "CF_INTEGRATION_ID"
         value = var.integration_id
       },
