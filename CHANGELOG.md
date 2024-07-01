@@ -1,5 +1,13 @@
 # @common-fate/terraform-aws-common-fate-deployment
 
+## 2.0.1
+
+### Patch Changes
+
+- f503835: Fix an issue preventing Entra users from being linked with Common Fate user accounts.
+- f503835: Fix an issue where the 'Review Requests' panel would be shown when the web console was opened.
+- f503835: Add the grant principal to audit logs for grant actions
+
 ## 2.0.0
 
 ### Major Changes
