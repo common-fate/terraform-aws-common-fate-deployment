@@ -16,16 +16,16 @@ resource "aws_db_instance" "mysql_db" {
   identifier        = "${var.namespace}-${var.stage}-mysql-db"
   allocated_storage = 20
 
-  engine                 = "mysql"
-  engine_version         = "8.0"
-  instance_class         = "db.t3.micro"
-  db_name                = "test"
-  username               = "test"
-  password               = "password"
-  skip_final_snapshot    = true
-  db_subnet_group_name   = var.subnet_group_id
-  vpc_security_group_ids = [aws_security_group.rds_sg.id]
-  apply_immediately      = true
+  engine                      = "mysql"
+  engine_version              = "8.0"
+  instance_class              = "db.t3.micro"
+  db_name                     = "test"
+  username                    = "test"
+  manage_master_user_password = true
+  skip_final_snapshot         = true
+  db_subnet_group_name        = var.subnet_group_id
+  vpc_security_group_ids      = [aws_security_group.rds_sg.id]
+  apply_immediately           = true
 
   lifecycle {
     ignore_changes = [storage_encrypted]

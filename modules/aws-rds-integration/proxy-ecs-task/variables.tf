@@ -120,11 +120,10 @@ variable "service_discovery_namespace_arn" {
   description = "namespace arn of service discovery namespace"
 }
 
-variable "database_connection_string" {
-  description = "database connection string"
-  type        = string
-  sensitive   = true
-}
+
+// @TODO make this an array so multiple databases may be networked
+// It is also reasonable that a team may not want this module to make modifications to their database security group
+// they may want to do that where the security group is defined
 variable "database_security_group_id" {
   description = "Specifies the ID of the security group for the database."
   type        = string
