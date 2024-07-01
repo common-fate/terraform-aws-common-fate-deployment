@@ -2,7 +2,7 @@
 # Outputs
 ######################################################
 
-output "rds_provisioning_role_name" {
-  description = "The name of the rds provisioning role which is deployed in each target account"
-  value       = local.role_name
+output "read_role_arn" {
+  description = "The read role arn"
+  value       = aws_iam_role.read_role.arn
 }

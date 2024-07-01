@@ -347,9 +347,3 @@ variable "database_auto_migrate" {
   description = "Whether to run database migrations automatically when the Control Plane service starts. If rolling back to a previous release after a migration has run, set this to `false`."
 }
 
-variable "database_resource_id" {
-  type = string
-}
-variable "database_user_resource_id" {
-  type = string
-}

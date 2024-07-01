@@ -20,9 +20,17 @@ variable "name_prefix" {
   #   error_message = "name_prefix should only contain letters, numbers, and hyphens"
   # }
 }
-variable "access_handler_url" {
-  type = string
+
+variable "app_url" {
+  description = "The app url (e.g., 'https://common-fate.mydomain.com')."
+  type        = string
+
+  validation {
+    condition     = can(regex("^https://", var.app_url))
+    error_message = "The app_url must start with 'https://'."
+  }
 }
+
 
 variable "vpc_id" {
   description = "Specifies the ID of the VPC."
@@ -85,8 +93,6 @@ variable "enable_verbose_logging" {
   default     = false
 }
 
-
-
 variable "rds_proxy_service_client_id" {
   description = "Specifies the client ID for the rds proxy service."
   type        = string
@@ -123,9 +129,30 @@ variable "database_security_group_id" {
   description = "Specifies the ID of the security group for the database."
   type        = string
 }
-variable "database_resource_id" {
-  type = string
+variable "integration_id" {
+  description = "The ID of the integration in Common Fate."
+  type        = string
 }
-variable "database_user_resource_id" {
-  type = string
+variable "databases" {
+  description = "List of databases"
+  type = list(object({
+    // the rds instance id
+    instance_id = string
+    // the name for the AWS::RDS::Database resource
+    name = string
+    // the name of the database on the instance
+    database = string
+    // the engine of the database on the instance, mysql or postgres
+    engine = string
+
+    users = list(object({
+      // the name for the AWS::RDS::DatabaseUser resource
+      name = string
+      // the username to connect to the database with
+      username = string
+      // the ARN of the password in secrets manager for this user
+      passwordSecretsManagerARN = string
+    }))
+  }))
+
 }

@@ -5,7 +5,8 @@
 data "aws_caller_identity" "current" {}
 
 locals {
-  name_prefix = join("-", compact([var.namespace, var.stage, var.name_prefix]))
+  name_prefix    = join("-", compact([var.namespace, var.stage, var.name_prefix]))
+  databases_json = jsonencode(var.databases)
 }
 
 #trivy:ignore:AVD-AWS-0104
@@ -169,7 +170,6 @@ resource "aws_iam_role_policy_attachment" "ecs_task_execution_role_ssm_perms" {
 }
 
 
-
 resource "aws_ecs_task_definition" "rds_proxy_task" {
   family                   = "${local.name_prefix}-rds-proxy"
   network_mode             = "awsvpc"
@@ -198,7 +198,11 @@ resource "aws_ecs_task_definition" "rds_proxy_task" {
       },
       {
         name  = "CF_ACCESS_URL"
-        value = var.access_handler_url
+        value = var.app_url
+      },
+      {
+        name  = "CF_API_URL"
+        value = var.app_url
       },
       {
         name  = "CF_CLIENT_ID"
@@ -216,46 +220,13 @@ resource "aws_ecs_task_definition" "rds_proxy_task" {
         name  = "CF_DATABASE_CONNECTION_STRING"
         value = var.database_connection_string
       },
-
       {
-        name  = "CF_DATABASE_ID"
-        value = var.database_resource_id
+        name  = "CF_INTEGRATION_ID"
+        value = var.integration_id
       },
-
       {
-        name  = "CF_DATABASE_USER_ID"
-        value = var.database_user_resource_id
-      },
-
-
-
-      # {
-      #   name  = "CF_LICENCE_KEY",
-      #   value = var.licence_key
-      # },
-      # {
-      #   name  = "CF_FACTORY_BASE_URL",
-      #   value = var.factory_base_url
-      # },
-      # {
-      #   name  = "CF_FACTORY_OIDC_ISSUER",
-      #   value = var.factory_oidc_issuer
-      # },
-      # {
-      #   name  = "CF_MONITORING_LOCAL_ENABLED",
-      #   value = var.xray_monitoring_enabled ? "true" : "false"
-      # },
-      # {
-      #   name  = "CF_MONITORING_MANAGED_ENABLED",
-      #   value = var.managed_monitoring_enabled ? "true" : "false"
-      # },
-      # {
-      #   name  = "CF_MONITORING_MANAGED_ENDPOINT",
-      #   value = var.managed_monitoring_endpoint
-      # },
-      {
-        name  = "CF_DEPLOYMENT_NAME",
-        value = var.stage
+        name  = "CF_DATABASES",
+        value = local.databases_json
       },
     ],
 

@@ -20,9 +20,3 @@ variable "assume_role_external_id" {
   type        = string
   default     = ""
 }
-
-variable "organizational_unit_ids" {
-  description = "The organization root ID or organizational unit (OU) IDs to which StackSets deploys the rds provisioning role into"
-  type        = list(string)
-}
-

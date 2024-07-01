@@ -1,130 +1,61 @@
-locals {
-  role_name = "${var.namespace}-${var.stage}-rds-provision-role"
+
+
+
+# This policy allows the trusted principlas if one or more are specified else explicit deny
+data "aws_iam_policy_document" "assume_roles_policy" {
+  statement {
+    actions = ["sts:AssumeRole"]
+    effect  = "Allow"
+
+    principals {
+      type        = "AWS"
+      identifiers = [common_fate_aws_account_id]
+    }
+
+
+    # Optionally apply the external ID to the policy if it is supplied
+    dynamic "condition" {
+      for_each = var.assume_role_external_id != "" ? [1] : []
+      content {
+        test     = "StringEquals"
+        variable = "sts:ExternalId"
+        values   = [var.assume_role_external_id]
+      }
+    }
+  }
 }
-
-
-
-resource "aws_cloudformation_stack_set" "rds_provision_roles" {
-  name = "${var.namespace}-${var.stage}-rds-provision-role-stack"
-  auto_deployment {
-    enabled                          = true
-    retain_stacks_on_account_removal = false
-  }
-
-
-  permission_model = "SERVICE_MANAGED"
-  capabilities     = ["CAPABILITY_IAM", "CAPABILITY_NAMED_IAM"]
-  parameters = {
-    ExternalID        = var.assume_role_external_id
-    CommonFateAccount = var.common_fate_aws_account_id
-    RoleName          = local.role_name
-  }
-
-  // deploy everything in parallel
-  operation_preferences {
-    max_concurrent_percentage    = 100
-    failure_tolerance_percentage = 100
-    region_concurrency_type      = "PARALLEL"
-  }
-  template_body = <<-EOT
-AWSTemplateFormatVersion: "2010-09-09"
-Description: "Deploys an IAM role allowing Common Fate to provision access to an RDS instance in the AWS account"
-Parameters:
-  RoleName:
-    Type: String
-    Description: Name for the IAM role
-    Default: common-fate-provision-rds
-  ExternalID:
-    Type: String
-    Description: The ExternalID to be used in the trust relationship
-  CommonFateAccount:
-    Type: String
-    Description: The AWS account ID that your Common Fate deployment is running in
-
-Metadata:
-  CF::Template: AWSRDSProvisioner
-  CF::Version: 1
-
-Conditions:
-  HasExternalID: !Not [!Equals [!Ref ExternalID, ""]]
-
-Resources:
-  AuditRole:
-    Type: "AWS::IAM::Role"
-    Properties:
-      RoleName: !Ref RoleName
-      AssumeRolePolicyDocument:
-        Version: "2012-10-17"
-        Statement:
-          - Effect: Allow
-            Principal:
-              AWS: !Sub "arn:aws:iam::$${CommonFateAccount}:root"
-            Action: "sts:AssumeRole"
-            Condition: !If [HasExternalID, 
-                          {StringEquals: {"sts:ExternalId": !Ref ExternalID}},
-                          !Ref "AWS::NoValue"]
-      Policies:
-        - PolicyName: EC2RDSPermissions
-          PolicyDocument:
-            Version: "2012-10-17"
-            Statement:
-              - Effect: Allow
-                Action:
-                  - ec2:AuthorizeSecurityGroupIngress
-                  - ec2:CreateSecurityGroup
-                  - ec2:CreateTags
-                  - ec2:DescribeImages
-                  - ec2:DescribeInstances
-                  - ec2:DescribeRouteTables
-                  - ec2:DescribeSecurityGroups
-                  - ec2:DescribeSubnets
-                  - ec2:RevokeSecurityGroupIngress
-                  - ec2:RunInstances
-                  - iam:AddRoleToInstanceProfile
-                  - iam:AttachRolePolicy
-                  - iam:CreateInstanceProfile
-                  - iam:CreatePolicy
-                  - iam:CreateRole
-                  - iam:DeleteInstanceProfile
-                  - iam:DeletePolicy
-                  - iam:DeletePolicyVersion
-                  - iam:DeleteRole
-                  - iam:DetachRolePolicy
-                  - iam:ListPolicyVersions
-                  - iam:PassRole
-                  - iam:RemoveRoleFromInstanceProfile
-                  - iam:Tag*
-                  - rds:DescribeDBInstances
-                  - rds:ModifyDBInstance
-                Resource: "*"
-              - Effect: Allow
-                Action:
-                  - ec2:AssociateIamInstanceProfile
-                  - ec2:DeleteSecurityGroup
-                  - ec2:TerminateInstances
-                Resource: "*"
-                Condition:
-                  StringEquals: #Only instances that are correctly tagged can be terminated
-                    "aws:ResourceTag/common-fate-jit-rds-managed": "true"
-      Tags:
-        - Key: common-fate-aws-integration-provision-role
-          Value: "true"
-
-  EOT
-  lifecycle {
-    ignore_changes = [administration_role_arn]
+resource "aws_iam_role" "read_role" {
+  name               = "${var.namespace}-${var.stage}-ecs-task-reader-role"
+  description        = "A role used by Common Fate to read task IDs in an ECS cluster"
+  assume_role_policy = data.aws_iam_policy_document.assume_roles_policy.json
+  tags = {
+    // this role is currently only used by the provisioner
+    "common-fate-aws-integration-provision-role" = "true"
   }
 }
 
-resource "aws_cloudformation_stack_set_instance" "rds_provision_role_stackset_instance" {
-  deployment_targets {
-    organizational_unit_ids = var.organizational_unit_ids
-  }
-  stack_set_name = aws_cloudformation_stack_set.rds_provision_roles.name
-  operation_preferences {
-    max_concurrent_percentage    = 100
-    failure_tolerance_percentage = 100
-    region_concurrency_type      = "PARALLEL"
-  }
+resource "aws_iam_policy" "ecs_read" {
+  name        = "${var.namespace}-${var.stage}-ecs-task-read"
+  description = "Allows Common Fate to read task IDs in an ECS cluster"
+
+  policy = jsonencode({
+    "Version" : "2012-10-17",
+    "Statement" : [
+      {
+        "Sid" : "ReadECS",
+        "Effect" : "Allow",
+        "Action" : [
+          "ecs:ListTasks",
+          "ecs:DescribeTasks",
+        ],
+        "Resource" : "*"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "read_role_policy_attach" {
+  role       = aws_iam_role.read_role.name
+  policy_arn = aws_iam_policy.ecs_read.arn
 }
 
