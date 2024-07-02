@@ -9,6 +9,10 @@ resource "aws_cognito_user_pool" "cognito_user_pool" {
   admin_create_user_config {
     allow_admin_create_user_only = true
   }
+
+  lifecycle {
+    ignore_changes = [schema]
+  }
 }
 
 
