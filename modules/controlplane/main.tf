@@ -597,6 +597,14 @@ locals {
       name  = "CF_ACCESS_SERVICE_OIDC_CLIENT_ID",
       value = var.oidc_access_handler_service_client_id
     },
+    {
+      name  = "CF_SYNC_SLACK_ENABLED",
+      value = "true"
+    },
+    {
+      name  = "CF_SYNC_SLACK_CRON_SCHEDULE",
+      value = "*/5 * * * *"
+    },
   ]
 
   // Only add these secrets if their values are provided
