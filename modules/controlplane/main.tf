@@ -771,6 +771,8 @@ resource "aws_ecs_service" "control_plane_service" {
   service_connect_configuration {
     enabled   = true
     namespace = var.service_discovery_namespace_arn
+
+
     service {
       discovery_name = "control_plane-grpc"
       port_name      = "control_plane"
@@ -917,6 +919,7 @@ resource "aws_ecs_service" "worker_service" {
   service_connect_configuration {
     enabled   = true
     namespace = var.service_discovery_namespace_arn
+
   }
 
   network_configuration {

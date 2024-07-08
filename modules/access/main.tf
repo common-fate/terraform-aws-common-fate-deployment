@@ -394,6 +394,9 @@ resource "aws_ecs_service" "access_handler_service" {
         port     = 9090
         dns_name = "access.grpc"
       }
+      timeout {
+        per_request_timeout_seconds = 60 * 3
+      }
     }
   }
 }
