@@ -221,6 +221,10 @@ resource "aws_ecs_task_definition" "rds_proxy_task" {
         name  = "CF_DATABASES",
         value = local.databases_json
       },
+      {
+        name  = "CF_ECS_CLUSTER_READ_ROLE_ARN"
+        value = var.ecs_cluster_read_role_arn
+      },
     ],
 
 

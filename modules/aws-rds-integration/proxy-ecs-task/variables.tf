@@ -157,3 +157,7 @@ variable "databases" {
   }))
 
 }
+variable "ecs_cluster_read_role_arn" {
+  description = "The ARN of the IAM role which grants your Common Fate Provisioner read access to the ECS cluster containing this proxy."
+  type        = string
+}
