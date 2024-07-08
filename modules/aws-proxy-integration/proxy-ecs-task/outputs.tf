@@ -15,5 +15,5 @@ output "task_role_name" {
 
 output "security_group_id" {
   description = "The ID of the security group"
-  value       = aws_security_group.ecs_rds_proxy_sg.id
+  value       = aws_security_group.ecs_proxy_sg.id
 }
