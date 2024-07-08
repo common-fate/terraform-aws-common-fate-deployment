@@ -632,6 +632,7 @@ resource "aws_ecs_task_definition" "control_plane_task" {
       portMappings = [{
         containerPort = 8080,
         name          = "control_plane"
+        appProtocol   = "http"
       }],
 
       environment = local.control_plane_environment
@@ -771,15 +772,15 @@ resource "aws_ecs_service" "control_plane_service" {
   service_connect_configuration {
     enabled   = true
     namespace = var.service_discovery_namespace_arn
+
     service {
-      discovery_name = "control_plane-grpc"
+      discovery_name = "control_plane-grpc-v2"
       port_name      = "control_plane"
       client_alias {
         port     = 8080
-        dns_name = "control_plane.grpc"
+        dns_name = "control_plane_v2.grpc"
       }
       timeout {
-        idle_timeout_seconds        = 60 * 3
         per_request_timeout_seconds = 60 * 3
       }
     }
