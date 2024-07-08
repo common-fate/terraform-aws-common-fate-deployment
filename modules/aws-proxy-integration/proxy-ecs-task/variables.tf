@@ -93,13 +93,13 @@ variable "enable_verbose_logging" {
   default     = false
 }
 
-variable "rds_proxy_service_client_id" {
-  description = "Specifies the client ID for the rds proxy service."
+variable "proxy_service_client_id" {
+  description = "Specifies the client ID for the  proxy service."
   type        = string
 }
 
-variable "rds_proxy_service_client_secret" {
-  description = "Specifies the client secret for the rds proxy service."
+variable "proxy_service_client_secret" {
+  description = "Specifies the client secret for the  proxy service."
   type        = string
   sensitive   = true
 }
@@ -109,25 +109,13 @@ variable "auth_issuer" {
   type        = string
 }
 
-variable "rds_proxy_image_repository" {
+variable "proxy_image_repository" {
   type        = string
   description = "Docker image repository to use for the Provisioner image"
   default     = "public.ecr.aws/z2x0a3a1/common-fate-deployment/proxy"
 }
 
-variable "service_discovery_namespace_arn" {
-  type        = string
-  description = "namespace arn of service discovery namespace"
-}
 
-
-// @TODO make this an array so multiple databases may be networked
-// It is also reasonable that a team may not want this module to make modifications to their database security group
-// they may want to do that where the security group is defined
-variable "database_security_group_id" {
-  description = "Specifies the ID of the security group for the database."
-  type        = string
-}
 variable "integration_id" {
   description = "The ID of the integration in Common Fate."
   type        = string
@@ -135,11 +123,11 @@ variable "integration_id" {
 variable "databases" {
   description = "List of databases"
   type = list(object({
-    // the rds instance id
+    // the  instance id
     instance_id = string
-    // the endpoint for the rds instance
+    // the endpoint for the  instance
     endpoint = string
-    // the name for the AWS::RDS::Database resource
+    // the name for the AWS::::Database resource
     name = string
     // the name of the database on the instance
     database = string
@@ -147,7 +135,7 @@ variable "databases" {
     engine = string
 
     users = list(object({
-      // the name for the AWS::RDS::DatabaseUser resource
+      // the name for the AWS::::DatabaseUser resource
       name = string
       // the username to connect to the database with
       username = string

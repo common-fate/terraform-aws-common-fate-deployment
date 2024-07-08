@@ -1,5 +1,5 @@
 ######################################################
-# AWS RDS Proxy ECS Task
+# AWS Proxy ECS Task
 ######################################################
 
 data "aws_caller_identity" "current" {}
@@ -15,9 +15,9 @@ locals {
 }
 
 #trivy:ignore:AVD-AWS-0104
-resource "aws_security_group" "ecs_rds_proxy_sg" {
+resource "aws_security_group" "ecs_proxy_sg" {
   name        = "${local.name_prefix}-proxy"
-  description = "Common Fate RDS Proxy networking"
+  description = "Common Fate Proxy networking"
 
   vpc_id = var.vpc_id
 
@@ -33,18 +33,7 @@ resource "aws_security_group" "ecs_rds_proxy_sg" {
   }
 }
 
-
-# Update the RDS security group to allow connections from the ECS proxy service
-resource "aws_security_group_rule" "rds_access_from_proxy" {
-  type                     = "ingress"
-  from_port                = 3306
-  to_port                  = 3306
-  protocol                 = "tcp"
-  security_group_id        = var.database_security_group_id
-  source_security_group_id = aws_security_group.ecs_rds_proxy_sg.id
-}
-
-resource "aws_cloudwatch_log_group" "rds_proxy_log_group" {
+resource "aws_cloudwatch_log_group" "proxy_log_group" {
   name              = "${local.name_prefix}-proxy"
   retention_in_days = var.log_retention_in_days
 
@@ -52,9 +41,9 @@ resource "aws_cloudwatch_log_group" "rds_proxy_log_group" {
 
 
 
-resource "aws_iam_role" "rds_proxy_ecs_execution_role" {
+resource "aws_iam_role" "proxy_ecs_execution_role" {
   name        = "${local.name_prefix}-proxy-er"
-  description = "The execution role used by ECS to run the RDS Proxy task."
+  description = "The execution role used by ECS to run the Proxy task."
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
     Statement = [
@@ -77,15 +66,15 @@ resource "aws_iam_role" "rds_proxy_ecs_execution_role" {
   })
 
 }
-resource "aws_iam_role_policy_attachment" "rds_proxy_ecs_execution_role_policy_attach" {
-  role       = aws_iam_role.rds_proxy_ecs_execution_role.name
+resource "aws_iam_role_policy_attachment" "proxy_ecs_execution_role_policy_attach" {
+  role       = aws_iam_role.proxy_ecs_execution_role.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
 }
 
 # TASK ROLE
-resource "aws_iam_role" "rds_proxy_ecs_task_role" {
+resource "aws_iam_role" "proxy_ecs_task_role" {
   name        = "${local.name_prefix}-proxy-ecs-tr"
-  description = "The task role assumed by the RDS Proxy task."
+  description = "The task role assumed by the Proxy task."
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
     Statement = [
@@ -127,12 +116,12 @@ resource "aws_iam_policy" "database_secrets_read_access" {
 
 
 resource "aws_iam_role_policy_attachment" "ecs_task_role_ssm" {
-  role       = aws_iam_role.rds_proxy_ecs_task_role.name
+  role       = aws_iam_role.proxy_ecs_task_role.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
 }
 // TODO I think its only the execution role that needs this
 resource "aws_iam_role_policy_attachment" "ecs_task_execution_role_ssm" {
-  role       = aws_iam_role.rds_proxy_ecs_execution_role.name
+  role       = aws_iam_role.proxy_ecs_execution_role.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
 }
 
@@ -153,16 +142,16 @@ resource "aws_iam_policy" "ssm_permissions_role" {
 }
 
 resource "aws_iam_role_policy_attachment" "ecs_task_role_ssm_perms" {
-  role       = aws_iam_role.rds_proxy_ecs_task_role.name
+  role       = aws_iam_role.proxy_ecs_task_role.name
   policy_arn = aws_iam_policy.ssm_permissions_role.arn
 }
 // TODO I think its only the execution role that needs this
 resource "aws_iam_role_policy_attachment" "ecs_task_execution_role_ssm_perms" {
-  role       = aws_iam_role.rds_proxy_ecs_execution_role.name
+  role       = aws_iam_role.proxy_ecs_execution_role.name
   policy_arn = aws_iam_policy.ssm_permissions_role.arn
 }
-resource "aws_iam_role_policy_attachment" "rds_proxy_ecs_task_database_secrets_access_attach" {
-  role       = aws_iam_role.rds_proxy_ecs_task_role.name
+resource "aws_iam_role_policy_attachment" "proxy_ecs_task_database_secrets_access_attach" {
+  role       = aws_iam_role.proxy_ecs_task_role.name
   policy_arn = aws_iam_policy.database_secrets_read_access.arn
 }
 
@@ -174,12 +163,12 @@ resource "aws_ecs_task_definition" "proxy_task" {
   cpu                      = var.ecs_task_cpu
   memory                   = var.ecs_task_memory
 
-  execution_role_arn = aws_iam_role.rds_proxy_ecs_execution_role.arn
-  task_role_arn      = aws_iam_role.rds_proxy_ecs_task_role.arn
+  execution_role_arn = aws_iam_role.proxy_ecs_execution_role.arn
+  task_role_arn      = aws_iam_role.proxy_ecs_task_role.arn
 
   container_definitions = jsonencode([{
     name  = "aws-proxy-container",
-    image = "${var.rds_proxy_image_repository}:${var.release_tag}",
+    image = "${var.proxy_image_repository}:${var.release_tag}",
 
     portMappings = [{
       containerPort = 9999,
@@ -203,11 +192,11 @@ resource "aws_ecs_task_definition" "proxy_task" {
       },
       {
         name  = "CF_CLIENT_ID"
-        value = var.rds_proxy_service_client_id
+        value = var.proxy_service_client_id
       },
       {
         name  = "CF_CLIENT_SECRET"
-        value = var.rds_proxy_service_client_secret
+        value = var.proxy_service_client_secret
       },
       {
         name  = "CF_OIDC_ISSUER"
@@ -231,7 +220,7 @@ resource "aws_ecs_task_definition" "proxy_task" {
     logConfiguration = {
       logDriver = "awslogs",
       options = {
-        "awslogs-group"         = aws_cloudwatch_log_group.rds_proxy_log_group.name,
+        "awslogs-group"         = aws_cloudwatch_log_group.proxy_log_group.name,
         "awslogs-region"        = var.aws_region,
         "awslogs-stream-prefix" = "aws-proxy"
       }
@@ -239,7 +228,7 @@ resource "aws_ecs_task_definition" "proxy_task" {
 
     # Link to the security group
     linuxParameters = {
-      securityGroupIds = [aws_security_group.ecs_rds_proxy_sg.id]
+      securityGroupIds = [aws_security_group.ecs_proxy_sg.id]
     }
     },
     # {
@@ -268,7 +257,7 @@ resource "aws_ecs_task_definition" "proxy_task" {
 }
 
 
-resource "aws_ecs_service" "rds_proxy_service" {
+resource "aws_ecs_service" "proxy_service" {
   name            = "${local.name_prefix}-proxy"
   cluster         = var.ecs_cluster_id
   task_definition = aws_ecs_task_definition.proxy_task.arn
@@ -284,12 +273,7 @@ resource "aws_ecs_service" "rds_proxy_service" {
 
   network_configuration {
     subnets          = var.subnet_ids
-    security_groups  = [aws_security_group.ecs_rds_proxy_sg.id]
+    security_groups  = [aws_security_group.ecs_proxy_sg.id]
     assign_public_ip = true
-  }
-
-  service_connect_configuration {
-    enabled   = true
-    namespace = var.service_discovery_namespace_arn
   }
 }
