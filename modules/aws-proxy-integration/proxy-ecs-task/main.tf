@@ -16,7 +16,7 @@ locals {
 
 #trivy:ignore:AVD-AWS-0104
 resource "aws_security_group" "ecs_rds_proxy_sg" {
-  name        = "${local.name_prefix}-rds-proxy"
+  name        = "${local.name_prefix}-proxy"
   description = "Common Fate RDS Proxy networking"
 
   vpc_id = var.vpc_id
@@ -45,7 +45,7 @@ resource "aws_security_group_rule" "rds_access_from_proxy" {
 }
 
 resource "aws_cloudwatch_log_group" "rds_proxy_log_group" {
-  name              = "${local.name_prefix}-rds-proxy"
+  name              = "${local.name_prefix}-proxy"
   retention_in_days = var.log_retention_in_days
 
 }
@@ -53,7 +53,7 @@ resource "aws_cloudwatch_log_group" "rds_proxy_log_group" {
 
 
 resource "aws_iam_role" "rds_proxy_ecs_execution_role" {
-  name        = "${local.name_prefix}-rds-proxy-er"
+  name        = "${local.name_prefix}-proxy-er"
   description = "The execution role used by ECS to run the RDS Proxy task."
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
@@ -84,7 +84,7 @@ resource "aws_iam_role_policy_attachment" "rds_proxy_ecs_execution_role_policy_a
 
 # TASK ROLE
 resource "aws_iam_role" "rds_proxy_ecs_task_role" {
-  name        = "${local.name_prefix}-rds-proxy-ecs-tr"
+  name        = "${local.name_prefix}-proxy-ecs-tr"
   description = "The task role assumed by the RDS Proxy task."
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
@@ -108,7 +108,7 @@ resource "aws_iam_role" "rds_proxy_ecs_task_role" {
   })
 }
 resource "aws_iam_policy" "database_secrets_read_access" {
-  name        = "${var.namespace}-${var.stage}-rds-proxy-ecs-sm"
+  name        = "${var.namespace}-${var.stage}-proxy-ecs-sm"
   description = "Allows pull database secret from secrets manager"
 
   policy = jsonencode({
@@ -167,8 +167,8 @@ resource "aws_iam_role_policy_attachment" "rds_proxy_ecs_task_database_secrets_a
 }
 
 
-resource "aws_ecs_task_definition" "rds_proxy_task" {
-  family                   = "${local.name_prefix}-rds-proxy"
+resource "aws_ecs_task_definition" "proxy_task" {
+  family                   = "${local.name_prefix}-proxy"
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
   cpu                      = var.ecs_task_cpu
@@ -178,7 +178,7 @@ resource "aws_ecs_task_definition" "rds_proxy_task" {
   task_role_arn      = aws_iam_role.rds_proxy_ecs_task_role.arn
 
   container_definitions = jsonencode([{
-    name  = "aws-rds-proxy-container",
+    name  = "aws-proxy-container",
     image = "${var.rds_proxy_image_repository}:${var.release_tag}",
 
     portMappings = [{
@@ -233,7 +233,7 @@ resource "aws_ecs_task_definition" "rds_proxy_task" {
       options = {
         "awslogs-group"         = aws_cloudwatch_log_group.rds_proxy_log_group.name,
         "awslogs-region"        = var.aws_region,
-        "awslogs-stream-prefix" = "aws-rds-proxy"
+        "awslogs-stream-prefix" = "aws-proxy"
       }
     },
 
@@ -252,7 +252,7 @@ resource "aws_ecs_task_definition" "rds_proxy_task" {
     #     options = {
     #       "awslogs-group"         = var.otel_log_group_name,
     #       "awslogs-region"        = var.aws_region,
-    #       "awslogs-stream-prefix" = "aws-rds-proxy"
+    #       "awslogs-stream-prefix" = "aws-proxy"
     #     }
     #   },
     #   healthCheck = {
@@ -269,9 +269,9 @@ resource "aws_ecs_task_definition" "rds_proxy_task" {
 
 
 resource "aws_ecs_service" "rds_proxy_service" {
-  name            = "${local.name_prefix}-rds-proxy"
+  name            = "${local.name_prefix}-proxy"
   cluster         = var.ecs_cluster_id
-  task_definition = aws_ecs_task_definition.rds_proxy_task.arn
+  task_definition = aws_ecs_task_definition.proxy_task.arn
   launch_type     = "FARGATE"
   desired_count   = var.desired_task_count
 

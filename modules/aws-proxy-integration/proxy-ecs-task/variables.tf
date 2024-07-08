@@ -112,7 +112,7 @@ variable "auth_issuer" {
 variable "rds_proxy_image_repository" {
   type        = string
   description = "Docker image repository to use for the Provisioner image"
-  default     = "public.ecr.aws/z2x0a3a1/common-fate-deployment/aws-rds-proxy"
+  default     = "public.ecr.aws/z2x0a3a1/common-fate-deployment/proxy"
 }
 
 variable "service_discovery_namespace_arn" {
