@@ -1,5 +1,11 @@
 # @common-fate/terraform-aws-common-fate-deployment
 
+## 2.0.2
+
+### Patch Changes
+
+- 24b26c8: Fixes an issue in the Service Connect configuration which was causing a 15 second timeout. This would cause access requests to fail in some instances when multiple entitlements were requested.
+
 ## 2.0.1
 
 ### Patch Changes
