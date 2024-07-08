@@ -773,6 +773,9 @@ resource "aws_ecs_service" "control_plane_service" {
     enabled   = true
     namespace = var.service_discovery_namespace_arn
 
+
+    // named with v2 because we needed to recreate the address to fix a timeout issue
+    // we don;t currently make calls directly to the control plane, if we start doing that, we could change this back to drop the v2 suffix
     service {
       discovery_name = "control_plane-grpc-v2"
       port_name      = "control_plane"
