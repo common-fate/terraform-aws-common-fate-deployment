@@ -632,7 +632,6 @@ resource "aws_ecs_task_definition" "control_plane_task" {
       portMappings = [{
         containerPort = 8080,
         name          = "control_plane"
-        appProtocol   = "http"
       }],
 
       environment = local.control_plane_environment
@@ -774,17 +773,12 @@ resource "aws_ecs_service" "control_plane_service" {
     namespace = var.service_discovery_namespace_arn
 
 
-    // named with v2 because we needed to recreate the address to fix a timeout issue
-    // we don’t currently make calls directly to the control plane, if we start doing that, we could change this back to drop the v2 suffix
     service {
-      discovery_name = "control_plane-grpc-v2"
+      discovery_name = "control_plane-grpc"
       port_name      = "control_plane"
       client_alias {
         port     = 8080
-        dns_name = "control_plane_v2.grpc"
-      }
-      timeout {
-        per_request_timeout_seconds = 60 * 3
+        dns_name = "control_plane.grpc"
       }
     }
   }
