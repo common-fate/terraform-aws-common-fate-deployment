@@ -778,6 +778,10 @@ resource "aws_ecs_service" "control_plane_service" {
         port     = 8080
         dns_name = "control_plane.grpc"
       }
+      timeout {
+        idle_timeout_seconds        = 60 * 3
+        per_request_timeout_seconds = 60 * 3
+      }
     }
   }
 
@@ -917,6 +921,7 @@ resource "aws_ecs_service" "worker_service" {
   service_connect_configuration {
     enabled   = true
     namespace = var.service_discovery_namespace_arn
+
   }
 
   network_configuration {
