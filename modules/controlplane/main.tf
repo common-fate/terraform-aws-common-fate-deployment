@@ -597,6 +597,14 @@ locals {
       name  = "CF_ACCESS_SERVICE_OIDC_CLIENT_ID",
       value = var.oidc_access_handler_service_client_id
     },
+    {
+      name  = "CF_USAGE_REPORTING_ENABLED",
+      value = var.usage_reporting_enabled ? "true" : "false"
+    },
+    {
+      name  = "CF_USAGE_REPORTING_INTERVAL",
+      value = var.usage_reporting_interval
+    },
   ]
 
   // Only add these secrets if their values are provided

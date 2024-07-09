@@ -310,6 +310,18 @@ variable "xray_monitoring_enabled" {
   default     = true
 }
 
+variable "usage_reporting_enabled" {
+  description = "Enables usage reporting for the deployment."
+  type        = bool
+  default     = true
+}
+
+variable "usage_reporting_interval" {
+  description = "The interval to report deployment usage on (e.g. '1h')."
+  type        = string
+  default     = "1h"
+}
+
 variable "managed_monitoring_enabled" {
   description = "Enables Managed Monitoring for the deployment."
   type        = bool

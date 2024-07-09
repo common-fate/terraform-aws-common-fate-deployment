@@ -199,6 +199,8 @@ module "control_plane" {
   oidc_provisioner_service_client_id     = module.cognito.provisioner_client_id
   oidc_terraform_client_id               = module.cognito.terraform_client_id
   oidc_read_only_client_id               = module.cognito.read_only_client_id
+  usage_reporting_enabled                = var.usage_reporting_enabled
+  usage_reporting_interval               = var.usage_reporting_interval
 }
 
 
