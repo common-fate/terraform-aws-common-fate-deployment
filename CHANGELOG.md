@@ -1,5 +1,11 @@
 # @common-fate/terraform-aws-common-fate-deployment
 
+## 2.0.3
+
+### Patch Changes
+
+- b707d12: Fix an issue where Terraform would reset the 'schema' attribute on the Cognito user pool for some deployments.
+
 ## 2.0.2
 
 ### Patch Changes
