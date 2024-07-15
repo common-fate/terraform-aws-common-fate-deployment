@@ -346,3 +346,25 @@ variable "database_auto_migrate" {
   default     = true
   description = "Whether to run database migrations automatically when the Control Plane service starts. If rolling back to a previous release after a migration has run, set this to `false`."
 }
+
+variable "cli_access_token_validity_duration" {
+  description = "Specifies how long the access token in the CLI Cognito client will be valid for. Unit is specified in `web_oidc_token_validity_units` and is in minutes by default."
+  default     = 60
+  type        = number
+}
+
+variable "cli_refresh_token_validity_duration" {
+  description = "Specifies how long the refresh token in the CLI Cognito client will be valid for.  Unit is specified in `web_oidc_token_validity_units` and is in days by default."
+  default     = 30
+  type        = number
+}
+
+variable "cli_access_token_validity_units" {
+  description = "Specifies the duration unit used for the 'cli_access_token_validity_duration' variable. Valid values are seconds, minutes, hours or days."
+  default     = "minutes"
+}
+
+variable "cli_refresh_token_validity_units" {
+  description = "Specifies the duration unit used for the 'cli_refresh_token_validity_duration' variable. Valid values are seconds, minutes, hours or days."
+  default     = "days"
+}

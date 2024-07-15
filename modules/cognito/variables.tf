@@ -52,13 +52,13 @@ variable "saml_metadata_source" {
 }
 
 variable "web_access_token_validity_duration" {
-  description = "Specifies how long the access token in the web cognito client will be valid for. Unit is specified in `web_oidc_token_validity_units` and is in minutes by default."
+  description = "Specifies how long the access token in the web Cognito client will be valid for. Unit is specified in `web_oidc_token_validity_units` and is in minutes by default."
   default     = 10
   type        = number
 }
 
 variable "web_refresh_token_validity_duration" {
-  description = "Specifies how long the refresh token in the web cognito client will be valid for.  Unit is specified in `web_oidc_token_validity_units` and is in days by default."
+  description = "Specifies how long the refresh token in the web Cognito client will be valid for.  Unit is specified in `web_oidc_token_validity_units` and is in days by default."
   default     = 30
   type        = number
 }
@@ -69,6 +69,28 @@ variable "web_access_token_validity_units" {
 }
 
 variable "web_refresh_token_validity_units" {
-  description = "Specifies the duration unit used for the 'web_access_token_validity_duration' variable. Valid values are seconds, minutes, hours or days."
+  description = "Specifies the duration unit used for the 'web_refresh_token_validity_duration' variable. Valid values are seconds, minutes, hours or days."
+  default     = "days"
+}
+
+variable "cli_access_token_validity_duration" {
+  description = "Specifies how long the access token in the CLI Cognito client will be valid for. Unit is specified in `web_oidc_token_validity_units` and is in minutes by default."
+  default     = 60
+  type        = number
+}
+
+variable "cli_refresh_token_validity_duration" {
+  description = "Specifies how long the refresh token in the CLI Cognito client will be valid for.  Unit is specified in `web_oidc_token_validity_units` and is in days by default."
+  default     = 30
+  type        = number
+}
+
+variable "cli_access_token_validity_units" {
+  description = "Specifies the duration unit used for the 'cli_access_token_validity_duration' variable. Valid values are seconds, minutes, hours or days."
+  default     = "minutes"
+}
+
+variable "cli_refresh_token_validity_units" {
+  description = "Specifies the duration unit used for the 'cli_refresh_token_validity_duration' variable. Valid values are seconds, minutes, hours or days."
   default     = "days"
 }
