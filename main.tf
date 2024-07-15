@@ -139,6 +139,10 @@ module "cognito" {
   web_access_token_validity_units     = var.web_access_token_validity_units
   web_refresh_token_validity_duration = var.web_refresh_token_validity_duration
   web_refresh_token_validity_units    = var.web_refresh_token_validity_units
+  cli_access_token_validity_duration  = var.cli_access_token_validity_duration
+  cli_access_token_validity_units     = var.cli_access_token_validity_units
+  cli_refresh_token_validity_duration = var.cli_refresh_token_validity_duration
+  cli_refresh_token_validity_units    = var.cli_refresh_token_validity_units
 }
 
 
