@@ -403,6 +403,12 @@ locals {
       value = var.app_url
     },
     {
+      name  = "CF_ACCESS_URL",
+      value = var.access_handler_service_connect_address
+
+    },
+
+    {
       name  = "CF_PG_USER",
       value = var.database_user
     },
@@ -590,6 +596,14 @@ locals {
       name  = "CF_ACCESS_SERVICE_OIDC_CLIENT_ID",
       value = var.oidc_access_handler_service_client_id
     },
+    {
+      name  = "CF_USAGE_REPORTING_ENABLED",
+      value = var.usage_reporting_enabled ? "true" : "false"
+    },
+    {
+      name  = "CF_USAGE_REPORTING_INTERVAL",
+      value = var.usage_reporting_interval
+    },
   ]
 
   // Only add these secrets if their values are provided
@@ -764,6 +778,7 @@ resource "aws_ecs_service" "control_plane_service" {
   service_connect_configuration {
     enabled   = true
     namespace = var.service_discovery_namespace_arn
+
 
     service {
       discovery_name = "control_plane-grpc"

@@ -1,5 +1,60 @@
 # @common-fate/terraform-aws-common-fate-deployment
 
+## 2.1.0
+
+### Minor Changes
+
+- d7a212f: Users can now select the duration when using the Slack request workflow.
+- d7a212f: Add support for extend access configuration with max extensions and extension duration in access workflows.
+- d7a212f: Add stats page for access requests and privilege reduction
+- d7a212f: Common Fate users are now proactively provisioned for our Slack, AWS IAM Identity Center, and PagerDuty integrations. Common Fate user accounts will be created automatically for user accounts in these integrations.
+
+  This fixes an issue where users would have to wait for an initial integration resource sync before they could request access to entitlements.
+
+- d7a212f: Deprecate TryExtendAfter in favour of ExtensionConditions.
+- d7a212f: fix issue causing incorrect duration to be returned in batch ensure
+- d7a212f: Slack integration messages now include information on who approved the request.
+- d7a212f: The /access command now skips the resource type selector if only one access integration is installed.
+
+### Patch Changes
+
+- d7a212f: Fix the contrast on the menu options when hovering in the preview access page in the web app
+- d7a212f: Don't show breakglass option for a request that is already approved
+- d7a212f: Fix an issue preventing Entra users from being linked with Common Fate user accounts.
+- d7a212f: Fix UI overlap on the breadcrumb component in the web app
+- d7a212f: Add grpc message validation to API middleware
+- d7a212f: Fix an issue where the 'Review Requests' panel would be shown when the web console was opened.
+- d7a212f: fix action button in request list for smaller screen widths
+- d7a212f: Entra SCIM integration now correctly handles the case where a group is a member of another group.
+  Previously all members of groups were treated as users, which meant that nested groups could not be used in access policies correctly.
+- d7a212f: Okta Integration config is now validated on updates from terraform.
+- d7a212f: fix issue causing principal to be incorrect on created grants
+- d7a212f: Fixes an issue which would prevent a grant from being closed if the availability spec was removed while the grant was pending or active
+- d7a212f: Add the grant principal to audit logs for grant actions
+- d7a212f: Don't show the approve button on slack channel messages for requests which were auto approved or breakglass activated.
+- d7a212f: update slack messenger to send push notification updates for important request lifecycle changes
+- d7a212f: Improve the contrast of the authorization graph in light mode
+
+## 2.0.3
+
+### Patch Changes
+
+- b707d12: Fix an issue where Terraform would reset the 'schema' attribute on the Cognito user pool for some deployments.
+
+## 2.0.2
+
+### Patch Changes
+
+- 24b26c8: Fixes an issue in the Service Connect configuration which was causing a 15 second timeout. This would cause access requests to fail in some instances when multiple entitlements were requested.
+
+## 2.0.1
+
+### Patch Changes
+
+- f503835: Fix an issue preventing Entra users from being linked with Common Fate user accounts.
+- f503835: Fix an issue where the 'Review Requests' panel would be shown when the web console was opened.
+- f503835: Add the grant principal to audit logs for grant actions
+
 ## 2.0.0
 
 ### Major Changes

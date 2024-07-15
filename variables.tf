@@ -18,7 +18,7 @@ variable "aws_region" {
 variable "release_tag" {
   description = "Override the application release tag to be used in the deployment. As of module version v1.13.0, application versions are bundled into the Terraform module, and so in most cases you should not override this."
   type        = string
-  default     = "v4.3.1"
+  default     = "v4.4.0"
 }
 
 variable "app_certificate_arn" {
@@ -310,6 +310,18 @@ variable "xray_monitoring_enabled" {
   default     = true
 }
 
+variable "usage_reporting_enabled" {
+  description = "Enables usage reporting for the deployment."
+  type        = bool
+  default     = true
+}
+
+variable "usage_reporting_interval" {
+  description = "The interval to report deployment usage on (e.g. '1h')."
+  type        = string
+  default     = "1h"
+}
+
 variable "managed_monitoring_enabled" {
   description = "Enables Managed Monitoring for the deployment."
   type        = bool
@@ -347,3 +359,24 @@ variable "database_auto_migrate" {
   description = "Whether to run database migrations automatically when the Control Plane service starts. If rolling back to a previous release after a migration has run, set this to `false`."
 }
 
+variable "cli_access_token_validity_duration" {
+  description = "Specifies how long the access token in the CLI Cognito client will be valid for. Unit is specified in `web_oidc_token_validity_units` and is in minutes by default."
+  default     = 60
+  type        = number
+}
+
+variable "cli_refresh_token_validity_duration" {
+  description = "Specifies how long the refresh token in the CLI Cognito client will be valid for.  Unit is specified in `web_oidc_token_validity_units` and is in days by default."
+  default     = 30
+  type        = number
+}
+
+variable "cli_access_token_validity_units" {
+  description = "Specifies the duration unit used for the 'cli_access_token_validity_duration' variable. Valid values are seconds, minutes, hours or days."
+  default     = "minutes"
+}
+
+variable "cli_refresh_token_validity_units" {
+  description = "Specifies the duration unit used for the 'cli_refresh_token_validity_duration' variable. Valid values are seconds, minutes, hours or days."
+  default     = "days"
+}

@@ -9,6 +9,10 @@ resource "aws_cognito_user_pool" "cognito_user_pool" {
   admin_create_user_config {
     allow_admin_create_user_only = true
   }
+
+  lifecycle {
+    ignore_changes = [schema]
+  }
 }
 
 
@@ -93,6 +97,12 @@ resource "aws_cognito_user_pool_client" "cli_client" {
   callback_urls                        = ["http://localhost:18900/auth/callback"]
   depends_on                           = [aws_cognito_identity_provider.saml_idp]
 
+  access_token_validity  = var.cli_access_token_validity_duration
+  refresh_token_validity = var.cli_refresh_token_validity_duration
+  token_validity_units {
+    access_token  = var.cli_access_token_validity_units
+    refresh_token = var.cli_refresh_token_validity_units
+  }
 }
 
 

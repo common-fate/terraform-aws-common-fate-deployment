@@ -139,6 +139,10 @@ module "cognito" {
   web_access_token_validity_units     = var.web_access_token_validity_units
   web_refresh_token_validity_duration = var.web_refresh_token_validity_duration
   web_refresh_token_validity_units    = var.web_refresh_token_validity_units
+  cli_access_token_validity_duration  = var.cli_access_token_validity_duration
+  cli_access_token_validity_units     = var.cli_access_token_validity_units
+  cli_refresh_token_validity_duration = var.cli_refresh_token_validity_duration
+  cli_refresh_token_validity_units    = var.cli_refresh_token_validity_units
 }
 
 
@@ -199,6 +203,8 @@ module "control_plane" {
   oidc_provisioner_service_client_id     = module.cognito.provisioner_client_id
   oidc_terraform_client_id               = module.cognito.terraform_client_id
   oidc_read_only_client_id               = module.cognito.read_only_client_id
+  usage_reporting_enabled                = var.usage_reporting_enabled
+  usage_reporting_interval               = var.usage_reporting_interval
 }
 
 
