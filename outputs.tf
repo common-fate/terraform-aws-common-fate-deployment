@@ -36,6 +36,8 @@ output "outputs" {
     provisioner_task_role_arn        = module.provisioner.task_role_arn
     provisioner_task_role_name       = module.provisioner.task_role_name
     provisioner_url                  = module.provisioner.provisioner_url
+    database_subnet_group_id         = local.database_subnet_group_id
+    service_discovery_namespace_arn  = module.ecs_base.service_discovery_namespace_arn
   }
 }
 

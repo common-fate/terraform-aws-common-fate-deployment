@@ -403,8 +403,7 @@ locals {
       value = var.app_url
     },
     {
-      name = "CF_ACCESS_URL",
-      # value = var.app_url
+      name  = "CF_ACCESS_URL",
       value = var.access_handler_service_connect_address
 
     },
