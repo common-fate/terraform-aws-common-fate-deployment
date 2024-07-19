@@ -380,3 +380,9 @@ variable "cli_refresh_token_validity_units" {
   description = "Specifies the duration unit used for the 'cli_refresh_token_validity_duration' variable. Valid values are seconds, minutes, hours or days."
   default     = "days"
 }
+
+variable "sync_entra_identities_enabled" {
+  description = "Enables the Entra Identities Sync background task"
+  type        = bool
+  default     = true
+}

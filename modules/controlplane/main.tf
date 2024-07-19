@@ -529,6 +529,10 @@ locals {
       value = "*/5 * * * *"
     },
     {
+      name  = "CF_SYNC_ENTRA_IDENTITIES_ENABLED",
+      value = var.sync_entra_identities_enabled ? "true" : "false"
+    },
+    {
       name  = "CF_REPORT_S3_BUCKET",
       value = var.report_bucket_name
     },
