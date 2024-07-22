@@ -686,8 +686,8 @@ resource "aws_ecs_task_definition" "worker_task" {
   family                   = "${var.namespace}-${var.stage}-worker"
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
-  cpu                      = var.ecs_worker_task_cpu
-  memory                   = var.ecs_worker_task_memory
+  cpu                      = var.worker_ecs_task_cpu
+  memory                   = var.worker_ecs_task_memory
   execution_role_arn       = aws_iam_role.control_plane_ecs_execution_role.arn
   task_role_arn            = aws_iam_role.control_plane_ecs_task_role.arn
 

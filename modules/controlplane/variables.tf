@@ -154,13 +154,13 @@ variable "desired_task_count" {
   default     = 1
 }
 
-variable "ecs_worker_task_cpu" {
+variable "worker_ecs_task_cpu" {
   description = "The amount of CPU to allocate for the ECS worker task. Specified in CPU units (1024 units = 1 vCPU)."
   type        = string
   default     = "512" # Example default, adjust as needed
 }
 
-variable "ecs_worker_task_memory" {
+variable "worker_ecs_task_memory" {
   description = "The amount of memory to allocate for the ECS task. Specified in MiB."
   type        = string
   default     = "1024" # Example default, adjust as needed
