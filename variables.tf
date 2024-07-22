@@ -380,3 +380,39 @@ variable "cli_refresh_token_validity_units" {
   description = "Specifies the duration unit used for the 'cli_refresh_token_validity_duration' variable. Valid values are seconds, minutes, hours or days."
   default     = "days"
 }
+
+variable "control_plane_ecs_task_memory" {
+  description = "The amount of memory to allocate for the ECS task. Specified in MiB."
+  type        = string
+  default     = "1024"
+}
+
+variable "control_plane_ecs_task_cpu" {
+  description = "The amount of CPU to allocate for the ECS task. Specified in CPU units (1024 units = 1 vCPU)."
+  type        = string
+  default     = "512"
+}
+
+variable "worker_ecs_task_memory" {
+  description = "The amount of memory to allocate for the ECS task. Specified in MiB."
+  type        = string
+  default     = "1024"
+}
+
+variable "worker_ecs_task_cpu" {
+  description = "The amount of CPU to allocate for the ECS task. Specified in CPU units (1024 units = 1 vCPU)."
+  type        = string
+  default     = "512"
+}
+
+variable "access_hander_ecs_task_memory" {
+  description = "The amount of memory to allocate for the ECS task. Specified in MiB."
+  type        = string
+  default     = "1024"
+}
+
+variable "access_handler_ecs_task_cpu" {
+  description = "The amount of CPU to allocate for the ECS task. Specified in CPU units (1024 units = 1 vCPU)."
+  type        = string
+  default     = "512"
+}
