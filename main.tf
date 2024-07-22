@@ -205,6 +205,10 @@ module "control_plane" {
   oidc_read_only_client_id               = module.cognito.read_only_client_id
   usage_reporting_enabled                = var.usage_reporting_enabled
   usage_reporting_interval               = var.usage_reporting_interval
+  ecs_task_cpu                           = var.control_plane_ecs_task_cpu
+  ecs_task_memory                        = var.control_plane_ecs_task_memory
+  worker_ecs_task_cpu                    = var.worker_ecs_task_cpu
+  worker_ecs_task_memory                 = var.worker_ecs_task_memory
 }
 
 
@@ -291,6 +295,8 @@ module "access_handler" {
   managed_monitoring_endpoint               = var.managed_monitoring_endpoint
   factory_base_url                          = var.factory_base_url
   factory_oidc_issuer                       = var.factory_oidc_issuer
+  ecs_task_cpu                              = var.access_handler_ecs_task_cpu
+  ecs_task_memory                           = var.access_hander_ecs_task_memory
 }
 
 
