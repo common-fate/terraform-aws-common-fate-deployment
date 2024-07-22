@@ -343,3 +343,9 @@ variable "usage_reporting_interval" {
   type        = string
   default     = "1h"
 }
+
+variable "sync_entra_identities_enabled" {
+  description = "Enables the Entra Identities Sync background task"
+  type        = bool
+  default     = true
+}

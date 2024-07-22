@@ -381,6 +381,13 @@ variable "cli_refresh_token_validity_units" {
   default     = "days"
 }
 
+
+variable "sync_entra_identities_enabled" {
+  description = "Enables the Entra Identities Sync background task"
+  type        = bool
+  default     = true
+}
+
 variable "control_plane_ecs_task_memory" {
   description = "The amount of memory to allocate for the ECS task. Specified in MiB."
   type        = string
