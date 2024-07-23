@@ -1,5 +1,5 @@
 ---
-"@common-fate/teams": patch
+"@common-fate/terraform-aws-common-fate-deployment": patch
 ---
 
 For BYOC customers: adds OpenTelemetry instrumentation to provisioning/deprovisioning calls.
