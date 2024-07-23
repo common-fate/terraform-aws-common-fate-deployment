@@ -248,7 +248,7 @@
 
 ### Minor Changes
 
-- fdde12e: @common-fate/teams@3.13.0
+- fdde12e: @common-fate/terraform-aws-common-fate-deployment@3.13.0
   Minor Changes
   03bdf87: For BYOC customers: adds OpenTelemetry instrumentation of write operations to DynamoDB.
   bdc4db3: Adds support for requiring a reason on Access Requests.
