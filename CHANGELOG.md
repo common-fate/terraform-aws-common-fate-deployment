@@ -1,5 +1,43 @@
 # @common-fate/terraform-aws-common-fate-deployment
 
+## 2.2.0
+
+### Minor Changes
+
+- 6a3d6d2: For BYOC customers: adds a configuration flag to enable/disable the pull-based Entra Identities Sync background task.
+- be3fafa: Adds advanced search capability to the new request page including fuzzy search and logical conditions
+- 01df860: Adds configuration variables for usage reporting.
+- be3fafa: The Read-Only client is now permitted to preview user access. You can use this to develop automations that preview user access within Common Fate.
+- be3fafa: Users and groups are now shown in a dedicated directory view in the Common Fate web console.
+- be3fafa: Adds support for force closing Access Requests where deprovisioning has failed. To close these requests, give yourself permission to perform `Access::Action::"ForceClose"`. You will then have the ability in the web console to forcibly close Access Requests.
+- be3fafa: Adds pull-based syncing for Microsoft Entra.
+- be3fafa: Adds 'Department' attribute to users. This attribute is synced with the Okta 'department' attribute.
+- c053d32: For BYOC customers: adds Terraform variables to configure the access and refresh token duration for the CLI client.
+- be3fafa: Adds Open in Console button to slack messages
+- be3fafa: Common Fate deployments now report usage (such as user and integration count) to the Common Fate deployment metadata service.
+
+### Patch Changes
+
+- be3fafa: Fixes an issue which would cause the new request page to lag when searching for an entitlement
+- be3fafa: For BYOC customers: background task diagnostics metrics are now emitted as an OpenTelemetry trace.
+- be3fafa: Fixes a typo in the Preview Access web console text.
+- be3fafa: Populate the names from discovered accounts if name does not exist.
+- be3fafa: Fix pagination handling for Entra ID sync task
+- be3fafa: Make audit_message_type nullable.
+- be3fafa: Fixes a latency issue when viewing Common Fate deployment insights.
+- be3fafa: Correctly handle the case where a workflow is deleted before a grant in closed when returning the results in the Close API
+- be3fafa: Fix an issue where Common Fate would report an Internal Server Error if a workflow was deleted while availabilities were still present.
+- be3fafa: Fixes a caching issue when querying for available entitlements.
+- be3fafa: Improve the efficiency of the Entra ID sync task
+- be3fafa: Fix an issue where the web console would show an error 'override duration cannot be greater than max duration'.
+- be3fafa: fix issue causing long policies to overflow in preview entitlement access
+- be3fafa: Fix an issue where the AWS Organizational Unit icon would not be shown in light mode in the web console.
+- be3fafa: Fixes issue causing increased latency in the web console.
+- be3fafa: For BYOC customers: adds OpenTelemetry instrumentation to provisioning/deprovisioning calls.
+- 78bbdf7: Exposes ecs_task_memory and ecs_task_cpu variables for the control plane, workder and access handler services.
+- be3fafa: Adds principal ID to API otel tracing spans
+- be3fafa: Fixes policy highlighting in the preview debugger when policies have annotations
+
 ## 2.1.0
 
 ### Minor Changes
