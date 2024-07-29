@@ -38,11 +38,10 @@ resource "aws_lb" "main_alb" {
   enable_cross_zone_load_balancing = true
   drop_invalid_header_fields       = true
   idle_timeout                     = 140 // 2 minute 30 seconds aligns with 2 minute timeouts on provisioning
-
 }
 
-// The listener is configured to use SNI for multiple certificates if provided
-// else it will just use a single cert if all provided arns are the same
+# The listener is configured to use SNI for multiple certificates if provided
+# else it will just use a single cert if all provided arns are the same
 resource "aws_lb_listener" "https_listener" {
   load_balancer_arn = aws_lb.main_alb.arn
   port              = 443
@@ -52,24 +51,36 @@ resource "aws_lb_listener" "https_listener" {
   certificate_arn = var.certificate_arn
 
   default_action {
-    type = var.maintenance_mode_enabled ? "fixed-response" : "forward"
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.main.arn
+  }
+}
 
+# Listener rule to handle maintenance mode
+resource "aws_lb_listener_rule" "maintenance_mode" {
+  listener_arn = aws_lb_listener.https_listener.arn
+  priority     = 1
+
+  action {
+    type = "fixed-response"
     fixed_response {
       content_type = "text/plain"
       message_body = var.maintenance_mode_message
       status_code  = "503"
     }
-
-    target_group_arn = var.maintenance_mode_enabled ? null : aws_lb_target_group.main.arn
   }
-}
 
-resource "aws_lb_target_group" "main" {
-  name        = "${var.namespace}-${var.stage}-tg"
-  port        = 80
-  protocol    = "HTTP"
-  vpc_id      = var.vpc_id
-  target_type = "instance"
+  condition {
+    host_header {
+      values = ["*"]
+    }
+  }
+
+  lifecycle {
+    ignore_changes = [condition]
+  }
+
+  count = var.maintenance_mode_enabled ? 1 : 0
 }
 
 # http to https redirect
@@ -88,36 +99,17 @@ resource "aws_lb_listener" "http" {
   }
 }
 
-# resource "aws_lb_listener_rule" "maintenance_mode" {
-#   listener_arn = aws_lb_listener.https_listener.arn
-#   priority     = 1
-
-#   action {
-#     type = "fixed-response"
-#     fixed_response {
-#       content_type = "text/plain"
-#       message_body = var.maintenance_mode_message
-#       status_code  = "503"
-#     }
-#   }
-
-#   condition {
-#     path_pattern {
-#       values = ["/*"]
-#     }
-#   }
-
-#   condition {
-#     query_string {
-#       key   = "maintenance_mode"
-#       value = "true"
-#     }
-#   }
-# }
-
-// if there are any other distinct certificates, add them to the listener
+# if there are any other distinct certificates, add them to the listener
 resource "aws_lb_listener_certificate" "additional_certs" {
   for_each        = var.additional_certificate_arns
   listener_arn    = aws_lb_listener.https_listener.arn
   certificate_arn = each.value
+}
+
+resource "aws_lb_target_group" "main" {
+  name        = "${var.namespace}-${var.stage}-tg"
+  port        = 80
+  protocol    = "HTTP"
+  vpc_id      = var.vpc_id
+  target_type = "instance"
 }
