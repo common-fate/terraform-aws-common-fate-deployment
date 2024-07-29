@@ -51,8 +51,12 @@ resource "aws_lb_listener" "https_listener" {
   certificate_arn = var.certificate_arn
 
   default_action {
-    type             = "forward"
-    target_group_arn = aws_lb_target_group.main.arn
+    type = "fixed-response"
+    fixed_response {
+      content_type = "text/plain"
+      message_body = "Not Found (Common Fate)"
+      status_code  = "404"
+    }
   }
 }
 
