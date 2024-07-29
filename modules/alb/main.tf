@@ -64,39 +64,65 @@ resource "aws_lb_listener" "https_listener" {
 # http to https redirect
 resource "aws_lb_listener" "http" {
   load_balancer_arn = aws_lb.main_alb.arn
-  port              = "80"
-  protocol          = "HTTP"
+  port              = 443
+  protocol          = "HTTPS"
+  ssl_policy        = "ELBSecurityPolicy-TLS-1-2-2017-01"
 
-  default_action {
-    type = "redirect"
-    redirect {
-      port        = "443"
-      protocol    = "HTTPS"
-      status_code = "HTTP_301"
+  certificate_arn = var.certificate_arn
+
+  dynamic "default_action" {
+    for_each = var.maintenance_mode_enabled ? [1] : []
+
+    content {
+      type = "fixed-response"
+      fixed_response {
+        content_type = "text/plain"
+        message_body = var.maintenance_mode_message
+        status_code  = "503"
+      }
+    }
+  }
+
+  dynamic "default_action" {
+    for_each = var.maintenance_mode_enabled ? [] : [1]
+
+    content {
+      type = "fixed-response"
+      fixed_response {
+        content_type = "text/plain"
+        message_body = "Not Found (Common Fate)"
+        status_code  = "404"
+      }
     }
   }
 }
 
-resource "aws_lb_listener_rule" "maintenance_mode" {
-  listener_arn = aws_lb_listener.https_listener.arn
-  priority     = 1
+# resource "aws_lb_listener_rule" "maintenance_mode" {
+#   listener_arn = aws_lb_listener.https_listener.arn
+#   priority     = 1
 
-  action {
-    type = "fixed-response"
-    fixed_response {
-      content_type = "text/plain"
-      message_body = var.maintenance_mode_message
-      status_code  = "503"
-    }
-  }
+#   action {
+#     type = "fixed-response"
+#     fixed_response {
+#       content_type = "text/plain"
+#       message_body = var.maintenance_mode_message
+#       status_code  = "503"
+#     }
+#   }
 
-  condition {
-    query_string {
-      key   = "maintenance_mode"
-      value = "true"
-    }
-  }
-}
+#   condition {
+#     path_pattern {
+#       values = ["/*"]
+#     }
+#   }
+
+#   condition {
+#     query_string {
+#       key   = "maintenance_mode"
+#       value = "true"
+#     }
+#   }
+# }
 
 // if there are any other distinct certificates, add them to the listener
 resource "aws_lb_listener_certificate" "additional_certs" {
