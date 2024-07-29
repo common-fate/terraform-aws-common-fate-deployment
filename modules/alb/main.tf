@@ -26,8 +26,8 @@ resource "aws_security_group" "alb_sg" {
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
-
 }
+
 #trivy:ignore:AVD-AWS-0053 
 resource "aws_lb" "main_alb" {
   name                             = "${var.namespace}-${var.stage}-common-fate"
@@ -54,8 +54,8 @@ resource "aws_lb_listener" "https_listener" {
     type = "fixed-response"
     fixed_response {
       content_type = "text/plain"
-      message_body = "Not Found (Common Fate)"
-      status_code  = "404"
+      message_body = var.maintenance_mode_enabled ? var.maintenance_mode_message : "Not Found (Common Fate)"
+      status_code  = var.maintenance_mode_enabled ? "503" : "404"
     }
   }
 }
@@ -68,17 +68,36 @@ resource "aws_lb_listener" "http" {
 
   default_action {
     type = "redirect"
-
     redirect {
       port        = "443"
       protocol    = "HTTPS"
       status_code = "HTTP_301"
     }
   }
-
 }
 
-// if there are any other distict certificates, add them to the listener
+resource "aws_lb_listener_rule" "maintenance_mode" {
+  listener_arn = aws_lb_listener.https_listener.arn
+  priority     = 1
+
+  action {
+    type = "fixed-response"
+    fixed_response {
+      content_type = "text/plain"
+      message_body = var.maintenance_mode_message
+      status_code  = "503"
+    }
+  }
+
+  condition {
+    query_string {
+      key   = "maintenance_mode"
+      value = "true"
+    }
+  }
+}
+
+// if there are any other distinct certificates, add them to the listener
 resource "aws_lb_listener_certificate" "additional_certs" {
   for_each        = var.additional_certificate_arns
   listener_arn    = aws_lb_listener.https_listener.arn
