@@ -52,47 +52,38 @@ resource "aws_lb_listener" "https_listener" {
   certificate_arn = var.certificate_arn
 
   default_action {
-    type = "fixed-response"
+    type = var.maintenance_mode_enabled ? "fixed-response" : "forward"
+
     fixed_response {
       content_type = "text/plain"
-      message_body = var.maintenance_mode_enabled ? var.maintenance_mode_message : "Not Found (Common Fate)"
-      status_code  = var.maintenance_mode_enabled ? "503" : "404"
+      message_body = var.maintenance_mode_message
+      status_code  = "503"
     }
+
+    target_group_arn = var.maintenance_mode_enabled ? null : aws_lb_target_group.main.arn
   }
+}
+
+resource "aws_lb_target_group" "main" {
+  name        = "${var.namespace}-${var.stage}-tg"
+  port        = 80
+  protocol    = "HTTP"
+  vpc_id      = var.vpc_id
+  target_type = "instance"
 }
 
 # http to https redirect
 resource "aws_lb_listener" "http" {
   load_balancer_arn = aws_lb.main_alb.arn
-  port              = 443
-  protocol          = "HTTPS"
-  ssl_policy        = "ELBSecurityPolicy-TLS-1-2-2017-01"
+  port              = "80"
+  protocol          = "HTTP"
 
-  certificate_arn = var.certificate_arn
-
-  dynamic "default_action" {
-    for_each = var.maintenance_mode_enabled ? [1] : []
-
-    content {
-      type = "fixed-response"
-      fixed_response {
-        content_type = "text/plain"
-        message_body = var.maintenance_mode_message
-        status_code  = "503"
-      }
-    }
-  }
-
-  dynamic "default_action" {
-    for_each = var.maintenance_mode_enabled ? [] : [1]
-
-    content {
-      type = "fixed-response"
-      fixed_response {
-        content_type = "text/plain"
-        message_body = "Not Found (Common Fate)"
-        status_code  = "404"
-      }
+  default_action {
+    type = "redirect"
+    redirect {
+      port        = "443"
+      protocol    = "HTTPS"
+      status_code = "HTTP_301"
     }
   }
 }
