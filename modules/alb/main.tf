@@ -71,8 +71,8 @@ resource "aws_lb_listener_rule" "maintenance_mode" {
   }
 
   condition {
-    host_header {
-      values = ["*"]
+    path_pattern {
+      values = ["/*"]
     }
   }
 
