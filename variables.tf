@@ -191,6 +191,19 @@ variable "use_internal_load_balancer" {
   description = "If 'true', the provisioned load balancer will be internal rather than external. Use this when you want to restrict network access to Common Fate to be behind a VPN only."
   default     = false
 }
+
+variable "maintenance_mode_enabled" {
+  description = "If 'true', the ALB will return a fixed response indicating that Common Fate is in maintenance mode."
+  type        = bool
+  default     = false
+}
+
+variable "maintenance_mode_message" {
+  description = "The message to display when maintenance mode is enabled. This can be overridden to provide a custom maintenance message."
+  type        = string
+  default     = "Common Fate is currently down for maintenance"
+}
+
 variable "web_access_token_validity_duration" {
   description = "Specifies how long the access token in the web cognito client will be valid for. Unit is in minutes"
   default     = 10

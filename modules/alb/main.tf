@@ -38,6 +38,7 @@ resource "aws_lb" "main_alb" {
   enable_cross_zone_load_balancing = true
   drop_invalid_header_fields       = true
   idle_timeout                     = 140 // 2 minute 30 seconds aligns with 2 minute timeouts on provisioning
+
 }
 
 // The listener is configured to use SNI for multiple certificates if provided
