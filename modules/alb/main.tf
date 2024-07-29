@@ -71,9 +71,8 @@ resource "aws_lb_listener_rule" "maintenance_mode" {
   }
 
   condition {
-    http_header {
-      http_header_name = "X-Maintenance-Mode"
-      values           = ["true"]
+    host_header {
+      values = ["*"]
     }
   }
 
