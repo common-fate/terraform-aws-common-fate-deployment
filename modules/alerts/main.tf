@@ -169,7 +169,7 @@ resource "aws_cloudwatch_metric_alarm" "elb_unhealthy_hostcount_alarm" {
   alarm_description   = "Alarm when UnHealthyHostCount exceeds 1 for 2 consecutive periods"
 
   dimensions = {
-    LoadBalancerName = aws_lb.main_alb.name
+    LoadBalancerName = "${var.namespace}-${var.stage}-common-fate"
   }
 
   alarm_actions = [aws_sns_topic.load_balancer_alerts.arn]
@@ -186,7 +186,7 @@ resource "aws_cloudwatch_metric_alarm" "elb_latency_alarm" {
   alarm_description   = "Alarm when Latency exceeds 0.1 seconds for 2 consecutive periods"
 
   dimensions = {
-    LoadBalancerName = aws_lb.main_alb.name
+    LoadBalancerName = "${var.namespace}-${var.stage}-common-fate"
   }
 
   alarm_actions = [aws_sns_topic.load_balancer_alerts.arn]
@@ -204,7 +204,7 @@ resource "aws_cloudwatch_metric_alarm" "elb_5xx_alarm" {
   alarm_description   = "Alarm when the number of 5xx errors on the ELB exceeds 10 for 2 consecutive periods"
 
   dimensions = {
-    LoadBalancerName = aws_lb.main_alb.name
+    LoadBalancerName = "${var.namespace}-${var.stage}-common-fate"
   }
 
   alarm_actions = [aws_sns_topic.load_balancer_alerts.arn]
@@ -234,7 +234,7 @@ resource "aws_cloudwatch_metric_alarm" "sql_database_cpu_alarm" {
   alarm_description   = "Alarm when CPU utilization exceeds 80% for 2 consecutive periods"
 
   dimensions = {
-    DBInstanceIdentifier = aws_db_instance.pg_db.identifier
+    DBInstanceIdentifier = "${var.namespace}-${var.stage}-pg-db"
   }
 
   alarm_actions = [aws_sns_topic.database_alerts.arn]
@@ -252,7 +252,7 @@ resource "aws_cloudwatch_metric_alarm" "freeable_memory_alarm" {
   alarm_description   = "Alarm when Freeable Memory is less than 1GB for 2 consecutive periods"
 
   dimensions = {
-    DBInstanceIdentifier = aws_db_instance.pg_db.identifier
+    DBInstanceIdentifier = "${var.namespace}-${var.stage}-pg-db"
   }
 
   alarm_actions = [aws_sns_topic.database_alerts.arn]
@@ -270,7 +270,7 @@ resource "aws_cloudwatch_metric_alarm" "read_iops_alarm" {
   alarm_description   = "Alarm when Read IOPS exceeds 100 for 2 consecutive periods"
 
   dimensions = {
-    DBInstanceIdentifier = aws_db_instance.pg_db.identifier
+    DBInstanceIdentifier = "${var.namespace}-${var.stage}-pg-db"
   }
 
   alarm_actions = [aws_sns_topic.database_alerts.arn]
@@ -288,7 +288,7 @@ resource "aws_cloudwatch_metric_alarm" "free_storage_space_alarm" {
   alarm_description   = "Alarm when Free Storage Space is less than 1GB for 2 consecutive periods"
 
   dimensions = {
-    DBInstanceIdentifier = aws_db_instance.pg_db.identifier
+    DBInstanceIdentifier = "${var.namespace}-${var.stage}-pg-db"
   }
 
   alarm_actions = [aws_sns_topic.database_alerts.arn]
@@ -318,7 +318,7 @@ resource "aws_cloudwatch_metric_alarm" "sqs_queues_monitored_alarm" {
   alarm_description   = "Alarm when 100 messages are older than 5000 seconds for 2 consecutive periods"
 
   dimensions = {
-    QueueName = aws_sqs_queue.event_queue.name
+    QueueName = "${var.namespace}-${var.stage}-event-queue"
   }
 
   alarm_actions = [aws_sns_topic.sqs_alerts.arn]
