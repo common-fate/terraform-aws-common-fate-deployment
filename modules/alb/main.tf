@@ -71,13 +71,10 @@ resource "aws_lb_listener_rule" "maintenance_mode" {
   }
 
   condition {
-    host_header {
-      values = ["*"]
+    http_header {
+      http_header_name = "X-Maintenance-Mode"
+      values           = ["true"]
     }
-  }
-
-  lifecycle {
-    ignore_changes = [condition]
   }
 
   count = var.maintenance_mode_enabled ? 1 : 0
