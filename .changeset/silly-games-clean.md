@@ -2,4 +2,4 @@
 "@common-fate/terraform-aws-common-fate-deployment": minor
 ---
 
-Implemented ALB maintenance mode feature with customizable message.
+Added maintenance_mode_enabled and maintenance_mode_message variables to control the maintenance mode with customizable message.
