@@ -201,7 +201,7 @@ variable "maintenance_mode_enabled" {
 variable "maintenance_mode_message" {
   description = "The message to display when maintenance mode is enabled. This can be overridden to provide a custom maintenance message."
   type        = string
-  default     = "Common Fate is currently down for maintenance"
+  default     = "Common Fate is currently down for maintenance. You can get in touch with us at support@commonfate.io."
 }
 
 variable "web_access_token_validity_duration" {
