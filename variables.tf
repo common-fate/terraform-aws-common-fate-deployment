@@ -338,7 +338,7 @@ variable "usage_reporting_interval" {
 variable "managed_monitoring_enabled" {
   description = "Enables Managed Monitoring for the deployment."
   type        = bool
-  default     = false
+  default     = true
 }
 
 variable "managed_monitoring_endpoint" {
