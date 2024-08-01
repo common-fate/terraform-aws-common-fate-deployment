@@ -11,6 +11,8 @@ resource "aws_cognito_user_pool" "cognito_user_pool" {
     invite_message_template {
       email_subject = "You've been invited to Common Fate"
       email_message = local.inviteEmailTemplate
+      // sms is unused but terraform forces it to be defined
+      sms_message = "Your username is {username}. Sign in at {####} "
     }
   }
 
