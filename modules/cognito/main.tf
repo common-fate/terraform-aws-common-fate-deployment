@@ -8,11 +8,16 @@ resource "aws_cognito_user_pool" "cognito_user_pool" {
   // disables self serve signup
   admin_create_user_config {
     allow_admin_create_user_only = true
+    invite_message_template {
+      email_subject = "You've been invited to Common Fate"
+      email_message = local.inviteEmailTemplate
+    }
   }
 
   lifecycle {
     ignore_changes = [schema]
   }
+
 }
 
 
