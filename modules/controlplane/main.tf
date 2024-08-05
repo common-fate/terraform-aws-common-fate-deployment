@@ -514,7 +514,7 @@ locals {
     },
     {
       name  = "CF_SYNC_OKTA_ENABLED",
-      value = "true"
+      value = var.sync_okta_enabled ? "true" : "false"
     },
     {
       name  = "CF_SYNC_OKTA_CRON_SCHEDULE",

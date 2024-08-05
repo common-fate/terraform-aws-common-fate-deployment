@@ -394,9 +394,14 @@ variable "cli_refresh_token_validity_units" {
   default     = "days"
 }
 
-
 variable "sync_entra_identities_enabled" {
   description = "Enables the Entra Identities Sync background task"
+  type        = bool
+  default     = true
+}
+
+variable "sync_okta_enabled" {
+  description = "Enables the Okta Sync background task"
   type        = bool
   default     = true
 }
