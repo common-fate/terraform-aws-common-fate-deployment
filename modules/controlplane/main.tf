@@ -608,6 +608,14 @@ locals {
       name  = "CF_USAGE_REPORTING_INTERVAL",
       value = var.usage_reporting_interval
     },
+    {
+      name  = "CF_COGNITO_SAML_ACS_URL",
+      value = var.saml_acs_url
+    },
+    {
+      name  = "CF_COGNITO_SAML_ENTITY_ID",
+      value = var.saml_entity_id
+    },
   ]
 
   // Only add these secrets if their values are provided
