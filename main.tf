@@ -211,6 +211,8 @@ module "control_plane" {
   ecs_task_memory                        = var.control_plane_ecs_task_memory
   worker_ecs_task_cpu                    = var.worker_ecs_task_cpu
   worker_ecs_task_memory                 = var.worker_ecs_task_memory
+  saml_acs_url                           = module.cognito.saml_acs_url
+  saml_entity_id                         = module.cognito.saml_entity_id
 }
 
 
