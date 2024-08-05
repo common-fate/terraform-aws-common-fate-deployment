@@ -350,6 +350,11 @@ variable "sync_entra_identities_enabled" {
   default     = true
 }
 
+variable "sync_okta_enabled" {
+  description = "Enables the Okta Sync background task"
+  type        = bool
+  default     = true
+}
 
 variable "saml_entity_id" {
   description = "The Cognito entity ID required for SAML configuration."
