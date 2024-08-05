@@ -1,5 +1,11 @@
 # @common-fate/terraform-aws-common-fate-deployment
 
+## 2.3.1
+
+### Patch Changes
+
+- 75fd002: Fixes an issue preventing requests being made via the Console when the user is not permitted to use the GetResource API
+
 ## 2.3.0
 
 ### Minor Changes
