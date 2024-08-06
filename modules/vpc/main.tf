@@ -9,7 +9,7 @@ locals {
   // in our original stack, the vpc was mistakingly named without the namespace and stage
   // we need the stage so that multiple deployments in the same account are possible
   // the check instends to discover whether the vpc is already deployed, if it is, it means that it has the 
-  vpc_name = var.use_pre_3_0_0_vpc_name ? "common-fate" : "${var.namespace}-${var.stage}-vpc"
+  vpc_name = var.use_pre_3_0_0_vpc_name ? "common_fate" : "${var.namespace}-${var.stage}-vpc"
 }
 
 module "vpc" {
