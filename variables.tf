@@ -441,3 +441,8 @@ variable "access_handler_ecs_task_cpu" {
   type        = string
   default     = "512"
 }
+
+variable "use_pre_3_0_0_vpc_name" {
+  default     = false
+  description = "Whether to use the original VPC name common-fate which is required for all deployments which were created pre 3.0.0"
+}
