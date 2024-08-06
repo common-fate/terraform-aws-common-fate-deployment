@@ -26,3 +26,8 @@ variable "one_nat_gateway_per_az" {
   default     = true
   description = "Should be false if you want to provision a single shared NAT Gateway for the deployment."
 }
+variable "vpc_name_suffix" {
+  description = "In cases where you need to deploy more than one Common Fate stack intothe same account, the VPC will need to be suffixed."
+  type        = string
+  default     = ""
+}

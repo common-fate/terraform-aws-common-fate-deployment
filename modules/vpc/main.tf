@@ -6,7 +6,7 @@ module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
   version = "5.1.1"
 
-  name                         = "common_fate"
+  name                         = "common_fate" + var.vpc_name_suffix
   cidr                         = "10.0.0.0/17"
   azs                          = ["${var.aws_region}a", "${var.aws_region}b", "${var.aws_region}c"]
   public_subnets               = ["10.0.0.0/21", "10.0.8.0/21", "10.0.16.0/21"]

@@ -441,3 +441,9 @@ variable "access_handler_ecs_task_cpu" {
   type        = string
   default     = "512"
 }
+
+variable "vpc_name_suffix" {
+  description = "In cases where you need to deploy more than one Common Fate stack intothe same account, the VPC will need to be suffixed."
+  type        = string
+  default     = ""
+}

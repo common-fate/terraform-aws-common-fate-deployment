@@ -42,6 +42,7 @@ module "vpc" {
   aws_region             = var.aws_region
   one_nat_gateway_per_az = var.one_nat_gateway_per_az
   single_nat_gateway     = var.single_nat_gateway
+  vpc_name_suffix        = var.vpc_name_suffix
 }
 
 module "alb" {
