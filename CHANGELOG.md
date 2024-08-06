@@ -1,5 +1,11 @@
 # @common-fate/terraform-aws-common-fate-deployment
 
+## 2.3.2
+
+### Patch Changes
+
+- 87eea29: Fixes Role Name not showing in the new request checkout
+
 ## 2.3.1
 
 ### Patch Changes
