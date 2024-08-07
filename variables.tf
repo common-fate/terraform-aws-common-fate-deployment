@@ -441,3 +441,9 @@ variable "access_handler_ecs_task_cpu" {
   type        = string
   default     = "512"
 }
+
+variable "additional_certificate_arns" {
+  description = "The Amazon Certificate Manager (ACM) certificate ARN for the domains served by this load balancer"
+  type        = set(string)
+  default     = []
+}
