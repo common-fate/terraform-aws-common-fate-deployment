@@ -514,7 +514,7 @@ locals {
     },
     {
       name  = "CF_SYNC_OKTA_ENABLED",
-      value = "true"
+      value = var.sync_okta_enabled ? "true" : "false"
     },
     {
       name  = "CF_SYNC_OKTA_CRON_SCHEDULE",
@@ -607,6 +607,14 @@ locals {
     {
       name  = "CF_USAGE_REPORTING_INTERVAL",
       value = var.usage_reporting_interval
+    },
+    {
+      name  = "CF_COGNITO_SAML_ACS_URL",
+      value = var.saml_acs_url
+    },
+    {
+      name  = "CF_COGNITO_SAML_ENTITY_ID",
+      value = var.saml_entity_id
     },
   ]
 

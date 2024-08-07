@@ -1,5 +1,47 @@
 # @common-fate/terraform-aws-common-fate-deployment
 
+## 2.3.1
+
+### Patch Changes
+
+- 75fd002: Fixes an issue preventing requests being made via the Console when the user is not permitted to use the GetResource API
+
+## 2.3.0
+
+### Minor Changes
+
+- 9e38ba2: Add Common Fate styling to the cognito invite email
+- c818f0d: Adds resource syncing support for AWS. Initially, our resource syncing implementation syncs S3 buckets.
+- c818f0d: Adds Dynamic role provisioning for AWS S3 Buckets. Users may now request access to particular S3 Buckets in an account and have a single role provisioned with the requested level of access for each Bucket.
+- c818f0d: Adds identity syncing for OpsGenie and Datastax
+- 23891d3: Managed Monitoring for deployments is now enabled by default (https://docs.commonfate.io/setup/managed-monitoring).
+- c818f0d: The Resources tab and APIs are now gated behind the action CF::Directory::Action::"GetResource" which is part of the CF::Admin::Action::"Read" action group. Users without these permissions will no longer be able to view this page.
+- 85ff085: Added maintenance_mode_enabled and maintenance_mode_message variables to control the maintenance mode with customizable message.
+
+### Patch Changes
+
+- c818f0d: Improve concurrency when provisioning multiple grants on a request.
+- c818f0d: Removes extend button from slack channel notifications
+- c818f0d: The ID of each integration is now shown in the web console Integrations page.
+- c818f0d: Fixes an issue with displaying error messages when setup fails for a Slack or PagerDuty integration
+- c818f0d: Fixes an issue that would force a user to use breakglass to activate via the web console if both breakglass and regular activation were permitted actions.
+- 3122209: Fix an issue where the Common Fate API would return a internal server error when trying to update a Slack Alert that no longer exists.
+- c818f0d: Fixes an issue when updating the path of a secret from PagerDuty or Slack during setup, the complete setup URL would point to an integration ID which does not exist, requiring you to remove and recreate the resource in terraform.
+- 3122209: fix issue causing extension conditions to always require updating in Terraform
+- c818f0d: Fix AWS Account names not shown when they contained S3 buckets
+- c818f0d: Fixes an issue which may cause the Okta identity sync task to fail due to mishandled pagination parameter
+- c818f0d: For BYOC customers: adds OpenTelemetry instrumentation to database migrations.
+- c818f0d: Prevents issues with PagerDuty sync failing due to Expired Token errors
+- c818f0d: Add RDS icon for RDS Databases
+- c818f0d: Nest RDS Databases under their AWS Account in the new request page
+- c818f0d: Fix eventbridge errors when requesting more than 5 entitlements at a time
+- 37f5b61: Pass the cognito SAML configuration through to the control plane service
+- 3122209: Adds a background task to monitor for any differences in authorization ahead of a migration to Connected Identities for authorization descisions
+- c818f0d: Fixes insights access hours calculation showing 0 hours reduced
+- c818f0d: Fix an issue where Common Fate would report an internal server error is a workflow was deleted and Slack Alerts were still present
+- c818f0d: Include OpenTelemetry trace ID in internal server errors
+- 3122209: Improve tracing on Okta sync workflows
+
 ## 2.2.0
 
 ### Minor Changes

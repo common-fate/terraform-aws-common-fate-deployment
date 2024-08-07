@@ -212,9 +212,11 @@ module "control_plane" {
   ecs_task_memory                        = var.control_plane_ecs_task_memory
   worker_ecs_task_cpu                    = var.worker_ecs_task_cpu
   worker_ecs_task_memory                 = var.worker_ecs_task_memory
+  saml_acs_url                           = module.cognito.saml_acs_url
+  saml_entity_id                         = module.cognito.saml_entity_id
+  sync_entra_identities_enabled          = var.sync_entra_identities_enabled
+  sync_okta_enabled                      = var.sync_okta_enabled
 }
-
-
 
 module "report_bucket" {
   source         = "./modules/s3bucket"
@@ -340,5 +342,3 @@ module "authz-legacy" {
   namespace = var.namespace
   stage     = var.stage
 }
-
-

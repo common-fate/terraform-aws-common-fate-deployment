@@ -18,7 +18,7 @@ variable "aws_region" {
 variable "release_tag" {
   description = "Override the application release tag to be used in the deployment. As of module version v1.13.0, application versions are bundled into the Terraform module, and so in most cases you should not override this."
   type        = string
-  default     = "v4.5.0"
+  default     = "v4.6.3"
 }
 
 variable "app_certificate_arn" {
@@ -338,7 +338,7 @@ variable "usage_reporting_interval" {
 variable "managed_monitoring_enabled" {
   description = "Enables Managed Monitoring for the deployment."
   type        = bool
-  default     = false
+  default     = true
 }
 
 variable "managed_monitoring_endpoint" {
@@ -394,9 +394,14 @@ variable "cli_refresh_token_validity_units" {
   default     = "days"
 }
 
-
 variable "sync_entra_identities_enabled" {
   description = "Enables the Entra Identities Sync background task"
+  type        = bool
+  default     = true
+}
+
+variable "sync_okta_enabled" {
+  description = "Enables the Okta Sync background task"
   type        = bool
   default     = true
 }
