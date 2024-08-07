@@ -52,6 +52,8 @@ module "alb" {
   public_subnet_ids          = local.public_subnet_ids
   vpc_id                     = local.vpc_id
   use_internal_load_balancer = var.use_internal_load_balancer
+  maintenance_mode_enabled   = var.maintenance_mode_enabled
+  maintenance_mode_message   = var.maintenance_mode_message
 }
 
 module "control_plane_db" {
