@@ -94,6 +94,7 @@ module "alerts" {
   aws_region     = var.aws_region
   alert_metadata = var.alert_metadata
   event_bus_name = module.events.event_bus_name
+  alb_arn_suffix = module.alb.alb_arn_suffix
 }
 
 

@@ -159,7 +159,7 @@ resource "aws_sns_topic" "load_balancer_alerts" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "elb_unhealthy_hostcount_alarm" {
-  alarm_name          = "elb-unhealthy-hostcount-alarm"
+  alarm_name          = "${var.namespace}-${var.stage}-alb-unhealthy-hostcount-alarm"
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = 2
   metric_name         = "UnHealthyHostCount"
@@ -169,14 +169,14 @@ resource "aws_cloudwatch_metric_alarm" "elb_unhealthy_hostcount_alarm" {
   alarm_description   = "Alarm when UnHealthyHostCount exceeds 1 for 2 consecutive periods"
 
   dimensions = {
-    LoadBalancerName = "${var.namespace}-${var.stage}-common-fate"
+    LoadBalancerName = var.alb_arn_suffix
   }
 
   alarm_actions = [aws_sns_topic.load_balancer_alerts.arn]
 }
 
 resource "aws_cloudwatch_metric_alarm" "elb_latency_alarm" {
-  alarm_name          = "elb-latency-alarm"
+  alarm_name          = "${var.namespace}-${var.stage}-alb-latency-alarm"
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = 2
   metric_name         = "Latency"
@@ -186,14 +186,14 @@ resource "aws_cloudwatch_metric_alarm" "elb_latency_alarm" {
   alarm_description   = "Alarm when Latency exceeds 0.1 seconds for 2 consecutive periods"
 
   dimensions = {
-    LoadBalancerName = "${var.namespace}-${var.stage}-common-fate"
+    LoadBalancerName = var.alb_arn_suffix
   }
 
   alarm_actions = [aws_sns_topic.load_balancer_alerts.arn]
 }
 
 resource "aws_cloudwatch_metric_alarm" "elb_5xx_alarm" {
-  alarm_name          = "elb-5xx-alarm"
+  alarm_name          = "${var.namespace}-${var.stage}-alb-5xx-alarm"
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = 2
   metric_name         = "HTTPCode_ELB_5XX"
@@ -204,7 +204,7 @@ resource "aws_cloudwatch_metric_alarm" "elb_5xx_alarm" {
   alarm_description   = "Alarm when the number of 5xx errors on the ELB exceeds 10 for 2 consecutive periods"
 
   dimensions = {
-    LoadBalancerName = "${var.namespace}-${var.stage}-common-fate"
+    LoadBalancerName = var.alb_arn_suffix
   }
 
   alarm_actions = [aws_sns_topic.load_balancer_alerts.arn]
@@ -223,7 +223,7 @@ resource "aws_sns_topic" "database_alerts" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "sql_database_cpu_alarm" {
-  alarm_name          = "rds-cpu-utilization-alarm"
+  alarm_name          = "${var.namespace}-${var.stage}-rds-cpu-utilization-alarm"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = 2
   metric_name         = "CPUUtilization"
@@ -241,15 +241,15 @@ resource "aws_cloudwatch_metric_alarm" "sql_database_cpu_alarm" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "freeable_memory_alarm" {
-  alarm_name          = "mysql-freeable-memory-alarm"
+  alarm_name          = "${var.namespace}-${var.stage}-pg-db-freeable-memory-alarm"
   comparison_operator = "LessThanThreshold"
   evaluation_periods  = 2
   metric_name         = "FreeableMemory"
   namespace           = "AWS/RDS"
   period              = 300 # 5 minutes
   statistic           = "Average"
-  threshold           = 1000000000
-  alarm_description   = "Alarm when Freeable Memory is less than 1GB for 2 consecutive periods"
+  threshold           = 10000000
+  alarm_description   = "Alarm when Freeable Memory is less than 10MB for 2 consecutive periods"
 
   dimensions = {
     DBInstanceIdentifier = "${var.namespace}-${var.stage}-pg-db"
@@ -259,7 +259,7 @@ resource "aws_cloudwatch_metric_alarm" "freeable_memory_alarm" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "read_iops_alarm" {
-  alarm_name          = "mysql-read-iops-alarm"
+  alarm_name          = "${var.namespace}-${var.stage}-pg-db-read-iops-alarm"
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = 2
   metric_name         = "ReadIOPS"
@@ -277,7 +277,7 @@ resource "aws_cloudwatch_metric_alarm" "read_iops_alarm" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "free_storage_space_alarm" {
-  alarm_name          = "mysql-free-storage-space-alarm"
+  alarm_name          = "${var.namespace}-${var.stage}-pg-db-free-storage-space-alarm"
   comparison_operator = "LessThanThreshold"
   evaluation_periods  = 2
   metric_name         = "FreeStorageSpace"
@@ -307,7 +307,7 @@ resource "aws_sns_topic" "sqs_alerts" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "sqs_queues_monitored_alarm" {
-  alarm_name          = "sqs-queues-monitored-alarm"
+  alarm_name          = "${var.namespace}-${var.stage}-sqs-queues-monitored-alarm"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = 2
   metric_name         = "ApproximateAgeOfOldestMessage"

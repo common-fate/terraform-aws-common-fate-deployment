@@ -16,3 +16,8 @@ output "alb_security_group_id" {
   description = "the id for the security group managing the alb"
   value = aws_security_group.alb_sg.id
 }
+
+output "alb_arn_suffix" {
+  description = "The arn suffix of the load balancer"
+  value = aws_lb.main_alb.arn_suffix
+}
