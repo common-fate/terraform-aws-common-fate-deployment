@@ -1,6 +1,13 @@
 ######################################################
 # Load Balancer
 ######################################################
+
+// Ensure that the app certificate is ready before updating the ALB
+resource "aws_acm_certificate_validation" "app_certificate_validation" {
+  certificate_arn = var.certificate_arn
+}
+
+
 #trivy:ignore:AVD-AWS-0104
 #trivy:ignore:AVD-AWS-0107
 resource "aws_security_group" "alb_sg" {
@@ -48,7 +55,7 @@ resource "aws_lb_listener" "https_listener" {
   protocol          = "HTTPS"
   ssl_policy        = "ELBSecurityPolicy-TLS-1-2-2017-01"
 
-  certificate_arn = var.certificate_arn
+  certificate_arn = aws_acm_certificate_validation.app_certificate_validation.certificate_arn
 
   default_action {
     type = "fixed-response"
