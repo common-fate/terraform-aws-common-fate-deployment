@@ -163,7 +163,7 @@ resource "aws_cloudwatch_metric_alarm" "elb_unhealthy_hostcount_alarm" {
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = 2
   metric_name         = "UnHealthyHostCount"
-  namespace           = "AWS/ELB"
+  namespace           = "AWS/ApplicationELB"
   period              = 60 # 1 minute
   statistic           = "Sum"
   alarm_description   = "Alarm when UnHealthyHostCount exceeds 1 for 2 consecutive periods"
@@ -180,7 +180,7 @@ resource "aws_cloudwatch_metric_alarm" "elb_latency_alarm" {
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = 2
   metric_name         = "Latency"
-  namespace           = "AWS/ELB"
+  namespace           = "AWS/ApplicationELB"
   period              = 60 # 1 minute
   statistic           = "Average"
   alarm_description   = "Alarm when Latency exceeds 0.1 seconds for 2 consecutive periods"
@@ -197,7 +197,7 @@ resource "aws_cloudwatch_metric_alarm" "elb_5xx_alarm" {
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = 2
   metric_name         = "HTTPCode_ELB_5XX"
-  namespace           = "AWS/ELB"
+  namespace           = "AWS/ApplicationELB"
   period              = 60 # 1 minute
   statistic           = "Sum"
   threshold           = 10 # Adjust threshold based on your requirement
@@ -266,7 +266,7 @@ resource "aws_cloudwatch_metric_alarm" "read_iops_alarm" {
   namespace           = "AWS/RDS"
   period              = 300 # 5 minutes
   statistic           = "Average"
-  threshold           = 100 
+  threshold           = 100
   alarm_description   = "Alarm when Read IOPS exceeds 100 for 2 consecutive periods"
 
   dimensions = {
