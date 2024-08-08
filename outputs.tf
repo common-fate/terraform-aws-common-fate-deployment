@@ -205,3 +205,8 @@ output "alert_topics" {
   description = "SNS topic ARNs of alerts used for monitoring a Common Fate deployment"
   value       = module.alerts.alert_topics
 }
+
+output "load_balancer_arn" {
+  description = "ARN of the load balancer."
+  value       = module.alb.load_balancer_arn
+}
