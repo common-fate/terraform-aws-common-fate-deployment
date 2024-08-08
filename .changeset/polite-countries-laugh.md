@@ -1,5 +1,5 @@
 ---
-"@common-fate/terraform-aws-common-fate-deployment": minor
+"@common-fate/terraform-aws-common-fate-deployment": patch
 ---
 
-Adds configuration variable to disable Okta Sync background task.
+For BYOC customers: the Okta Sync background task can now be disabled.
