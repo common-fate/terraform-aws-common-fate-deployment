@@ -298,6 +298,10 @@ resource "aws_ecs_task_definition" "access_handler_task" {
           name  = "CF_DEPLOYMENT_NAME",
           value = var.stage
         },
+        {
+          name  = "CF_FACTORY_MONITORING",
+          value = var.factory_monitoring
+        },
       ],
       secrets = [
         {

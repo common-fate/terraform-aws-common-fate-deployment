@@ -366,3 +366,9 @@ variable "saml_acs_url" {
   description = "The Cognito Assertion Consumer Service (ACS) URL required for SAML configuration."
   type        = string
 }
+
+variable "factory_monitoring" {
+  description = "Enables ecs task reporting to Common Fate"
+  type        = bool
+  default     = true
+}
