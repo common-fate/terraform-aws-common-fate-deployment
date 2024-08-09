@@ -169,46 +169,50 @@ resource "aws_cloudwatch_metric_alarm" "elb_unhealthy_hostcount_alarm" {
   alarm_description   = "Alarm when UnHealthyHostCount exceeds 1 for 2 consecutive periods"
 
   dimensions = {
-    LoadBalancerName = var.alb_arn_suffix
+    LoadBalancer = var.alb_arn_suffix
+    TargetGroup = var.control_plane_tg_arn_suffix
   }
 
   alarm_actions = [aws_sns_topic.load_balancer_alerts.arn]
 }
 
-resource "aws_cloudwatch_metric_alarm" "elb_latency_alarm" {
-  alarm_name          = "${var.namespace}-${var.stage}-alb-latency-alarm"
+resource "aws_cloudwatch_metric_alarm" "alb_target_response_time_alarm" {
+  alarm_name          = "${var.namespace}-${var.stage}-alb-target-response-time-alarm"
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = 2
-  metric_name         = "Latency"
+  metric_name         = "TargetResponseTime"
   namespace           = "AWS/ApplicationELB"
-  period              = 60 # 1 minute
+  period              = 60  # 1 minute
   statistic           = "Average"
-  alarm_description   = "Alarm when Latency exceeds 0.1 seconds for 2 consecutive periods"
+  threshold           = 0.1
+  alarm_description   = "Alarm when TargetResponseTime exceeds 0.1 seconds for 2 consecutive periods"
 
   dimensions = {
-    LoadBalancerName = var.alb_arn_suffix
+    LoadBalancer = var.alb_arn_suffix
   }
 
   alarm_actions = [aws_sns_topic.load_balancer_alerts.arn]
 }
 
-resource "aws_cloudwatch_metric_alarm" "elb_5xx_alarm" {
+
+resource "aws_cloudwatch_metric_alarm" "alb_5xx_alarm" {
   alarm_name          = "${var.namespace}-${var.stage}-alb-5xx-alarm"
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = 2
-  metric_name         = "HTTPCode_ELB_5XX"
+  metric_name         = "HTTPCode_ELB_5XX_Count"
   namespace           = "AWS/ApplicationELB"
   period              = 60 # 1 minute
   statistic           = "Sum"
-  threshold           = 10 # Adjust threshold based on your requirement
-  alarm_description   = "Alarm when the number of 5xx errors on the ELB exceeds 10 for 2 consecutive periods"
+  threshold           = 10
+  alarm_description   = "Alarm when the number of 5xx errors on the ALB exceeds 10 for 2 consecutive periods"
 
   dimensions = {
-    LoadBalancerName = var.alb_arn_suffix
+    LoadBalancer = var.alb_arn_suffix
   }
 
   alarm_actions = [aws_sns_topic.load_balancer_alerts.arn]
 }
+
 
 ######################################################
 # Database Alerts

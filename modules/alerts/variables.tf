@@ -43,3 +43,8 @@ variable "alb_arn_suffix" {
   description = "The arn suffix of the load balancer"
   type = string
 }
+
+variable "control_plane_tg_arn_suffix" {
+  description = "The arn suffix of the control plane target group"
+  type = string
+}
