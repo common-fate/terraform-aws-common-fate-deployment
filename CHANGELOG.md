@@ -1,5 +1,20 @@
 # @common-fate/terraform-aws-common-fate-deployment
 
+## 2.3.3
+
+### Patch Changes
+
+- e52bd84: The Access::Action::"ForceClose" action will now only be evaluated if the force close option is provided in the API request. This change reduces excess policy authorization noise in the authorization log for authorization results that are never used.
+- e52bd84: Improve observability of Pager Duty sync tasks and add an expiry window of 5 minutes to the PagerDuty token refresh process
+- 73e84c3: Add an output for the Application Load Balancer ARN.
+- d6f3459: Fixes Role Name not showing in the new request checkout.
+- e52bd84: Fixed an issue causing creating access workflows to fail when extension conditions was not set
+- b22710a: For BYOC customers: the Okta Sync background task can now be disabled.
+- e52bd84: Improve the tracing on Ops Genie sync and update retry logic
+- e52bd84: Prevent panic when calling DebugEntitlementsAccess due to concurrent map writes error
+- e52bd84: Update open telemetry middleware to correctly capture panics
+- e52bd84: The AWS resource sync task now correctly handles access denied errors when syncing tags for buckets fails
+
 ## 2.3.1
 
 ### Patch Changes
