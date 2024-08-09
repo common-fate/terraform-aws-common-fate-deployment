@@ -20,3 +20,8 @@ output "load_balancer_arn" {
   description = "ARN of the load balancer."
   value       = aws_lb.main_alb.arn
 }
+
+output "alb_arn_suffix" {
+  description = "The arn suffix of the load balancer"
+  value = aws_lb.main_alb.arn_suffix
+}

@@ -38,3 +38,8 @@ variable "alert_metadata" {
   nullable    = true
   default     = null
 }
+
+variable "alb_arn_suffix" {
+  description = "The arn suffix of the load balancer"
+  type = string
+}
