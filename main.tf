@@ -145,6 +145,7 @@ module "cognito" {
   cli_access_token_validity_units     = var.cli_access_token_validity_units
   cli_refresh_token_validity_duration = var.cli_refresh_token_validity_duration
   cli_refresh_token_validity_units    = var.cli_refresh_token_validity_units
+  initial_user_emails                 = var.initial_user_emails
 }
 
 
