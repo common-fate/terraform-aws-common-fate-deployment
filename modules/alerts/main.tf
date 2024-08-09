@@ -184,8 +184,8 @@ resource "aws_cloudwatch_metric_alarm" "alb_target_response_time_alarm" {
   namespace           = "AWS/ApplicationELB"
   period              = 60  # 1 minute
   statistic           = "Average"
-  threshold           = 0.1
-  alarm_description   = "Alarm when TargetResponseTime exceeds 0.1 seconds for 2 consecutive periods"
+  threshold           = 60
+  alarm_description   = "Alarm when TargetResponseTime exceeds 60 seconds for 2 consecutive periods"
 
   dimensions = {
     LoadBalancer = var.alb_arn_suffix
