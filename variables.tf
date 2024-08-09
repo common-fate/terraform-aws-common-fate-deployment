@@ -441,3 +441,9 @@ variable "access_handler_ecs_task_cpu" {
   type        = string
   default     = "512"
 }
+
+variable "factory_monitoring" {
+  description = "Enables ecs task reporting to Common Fate"
+  type        = bool
+  default     = true
+}
