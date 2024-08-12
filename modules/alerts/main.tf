@@ -174,6 +174,7 @@ resource "aws_cloudwatch_metric_alarm" "elb_unhealthy_hostcount_alarm" {
   }
 
   alarm_actions = [aws_sns_topic.load_balancer_alerts.arn]
+  ok_actions = [aws_sns_topic.load_balancer_alerts.arn]
 }
 
 resource "aws_cloudwatch_metric_alarm" "alb_target_response_time_alarm" {
@@ -192,6 +193,7 @@ resource "aws_cloudwatch_metric_alarm" "alb_target_response_time_alarm" {
   }
 
   alarm_actions = [aws_sns_topic.load_balancer_alerts.arn]
+  ok_actions = [aws_sns_topic.load_balancer_alerts.arn]
 }
 
 
@@ -211,6 +213,7 @@ resource "aws_cloudwatch_metric_alarm" "alb_5xx_alarm" {
   }
 
   alarm_actions = [aws_sns_topic.load_balancer_alerts.arn]
+  ok_actions = [aws_sns_topic.load_balancer_alerts.arn]
 }
 
 
@@ -242,6 +245,7 @@ resource "aws_cloudwatch_metric_alarm" "sql_database_cpu_alarm" {
   }
 
   alarm_actions = [aws_sns_topic.database_alerts.arn]
+  ok_actions = [aws_sns_topic.database_alerts.arn]
 }
 
 resource "aws_cloudwatch_metric_alarm" "freeable_memory_alarm" {
@@ -260,6 +264,7 @@ resource "aws_cloudwatch_metric_alarm" "freeable_memory_alarm" {
   }
 
   alarm_actions = [aws_sns_topic.database_alerts.arn]
+  ok_actions = [aws_sns_topic.database_alerts.arn]
 }
 
 resource "aws_cloudwatch_metric_alarm" "read_iops_alarm" {
@@ -278,6 +283,7 @@ resource "aws_cloudwatch_metric_alarm" "read_iops_alarm" {
   }
 
   alarm_actions = [aws_sns_topic.database_alerts.arn]
+  ok_actions = [aws_sns_topic.database_alerts.arn]
 }
 
 resource "aws_cloudwatch_metric_alarm" "free_storage_space_alarm" {
@@ -296,6 +302,7 @@ resource "aws_cloudwatch_metric_alarm" "free_storage_space_alarm" {
   }
 
   alarm_actions = [aws_sns_topic.database_alerts.arn]
+  ok_actions = [aws_sns_topic.database_alerts.arn]
 }
 
 ######################################################
@@ -326,4 +333,5 @@ resource "aws_cloudwatch_metric_alarm" "sqs_queues_monitored_alarm" {
   }
 
   alarm_actions = [aws_sns_topic.sqs_alerts.arn]
+  ok_actions = [aws_sns_topic.sqs_alerts.arn]
 }
