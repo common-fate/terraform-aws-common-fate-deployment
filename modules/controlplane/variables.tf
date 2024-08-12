@@ -366,3 +366,19 @@ variable "saml_acs_url" {
   description = "The Cognito Assertion Consumer Service (ACS) URL required for SAML configuration."
   type        = string
 }
+
+variable "terraform_service_client_secret" {
+  description = "Specifies the client secret for the terraform service."
+  type        = string
+  sensitive   = true
+}
+variable "provisioner_service_client_secret" {
+  description = "Specifies the client secret for the provisioner service."
+  type        = string
+  sensitive   = true
+}
+variable "read_only_service_client_secret" {
+  description = "Specifies the client secret for the read_only service."
+  type        = string
+  sensitive   = true
+}
