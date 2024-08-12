@@ -366,3 +366,8 @@ variable "saml_acs_url" {
   description = "The Cognito Assertion Consumer Service (ACS) URL required for SAML configuration."
   type        = string
 }
+
+variable "certificate_arn" {
+  description = "The Amazon Certificate Manager (ACM) certificate ARN for the domains served by this load balancer"
+  type        = string
+}

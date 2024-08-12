@@ -185,7 +185,13 @@ resource "aws_ecs_service" "web_service" {
     container_port   = 80
   }
 }
+// Ensure that the app certificate is ready before updating the ALB
+resource "aws_acm_certificate_validation" "app_certificate_validation" {
+  certificate_arn = var.certificate_arn
+}
+
 resource "aws_lb_listener_rule" "service_rule" {
+  depends_on   = [aws_acm_certificate_validation.app_certificate_validation]
   listener_arn = var.alb_listener_arn
   priority     = var.alb_listener_rule_priority
   action {

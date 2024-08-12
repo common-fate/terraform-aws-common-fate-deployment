@@ -820,8 +820,13 @@ resource "aws_ecs_service" "control_plane_service" {
     container_port   = 8080
   }
 }
-
+// Ensure that the app certificate is ready before updating the ALB
+resource "aws_acm_certificate_validation" "app_certificate_validation" {
+  certificate_arn = var.certificate_arn
+}
 resource "aws_lb_listener_rule" "service_rule" {
+  depends_on = [aws_acm_certificate_validation.app_certificate_validation]
+
   listener_arn = var.alb_listener_arn
   priority     = 90
   action {
@@ -846,6 +851,8 @@ resource "aws_lb_listener_rule" "service_rule" {
 // This rule temporarily redirects some access service RPCs to the control plane
 // split into query and preview because there is a limit to 5 conditions per rule
 resource "aws_lb_listener_rule" "service_rule_access_redirect_query" {
+  depends_on = [aws_acm_certificate_validation.app_certificate_validation]
+
   listener_arn = var.alb_listener_arn
   priority     = 55 // lower that the access handler
   action {
@@ -873,6 +880,8 @@ resource "aws_lb_listener_rule" "service_rule_access_redirect_query" {
 // This rule temporarily redirects some access service RPCs to the control plane
 // split into query and preview because there is a limit to 5 conditions per rule
 resource "aws_lb_listener_rule" "service_rule_access_redirect_preview" {
+  depends_on = [aws_acm_certificate_validation.app_certificate_validation]
+
   listener_arn = var.alb_listener_arn
   priority     = 56 // lower that the access handler
   action {
@@ -897,6 +906,8 @@ resource "aws_lb_listener_rule" "service_rule_access_redirect_preview" {
 }
 
 resource "aws_lb_listener_rule" "service_rule_access_redirect_policyset" {
+  depends_on = [aws_acm_certificate_validation.app_certificate_validation]
+
   listener_arn = var.alb_listener_arn
   priority     = 57 // lower than authz
 

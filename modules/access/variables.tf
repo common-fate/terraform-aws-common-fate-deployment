@@ -218,3 +218,8 @@ variable "factory_oidc_issuer" {
   default     = "https://factory.commonfate.io"
 }
 
+
+variable "certificate_arn" {
+  description = "The Amazon Certificate Manager (ACM) certificate ARN for the domains served by this load balancer"
+  type        = string
+}

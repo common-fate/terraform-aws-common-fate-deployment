@@ -216,6 +216,7 @@ module "control_plane" {
   saml_entity_id                         = module.cognito.saml_entity_id
   sync_entra_identities_enabled          = var.sync_entra_identities_enabled
   sync_okta_enabled                      = var.sync_okta_enabled
+  certificate_arn                        = var.app_certificate_arn
 }
 
 module "report_bucket" {
@@ -259,6 +260,7 @@ module "web" {
   alb_security_group_id = module.alb.alb_security_group_id
   web_image_repository  = var.web_image_repository
   centralised_support   = var.centralised_support
+  certificate_arn       = var.app_certificate_arn
 }
 
 
@@ -302,6 +304,7 @@ module "access_handler" {
   factory_oidc_issuer                       = var.factory_oidc_issuer
   ecs_task_cpu                              = var.access_handler_ecs_task_cpu
   ecs_task_memory                           = var.access_hander_ecs_task_memory
+  certificate_arn                           = var.app_certificate_arn
 }
 
 
