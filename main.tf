@@ -216,6 +216,7 @@ module "control_plane" {
   saml_entity_id                         = module.cognito.saml_entity_id
   sync_entra_identities_enabled          = var.sync_entra_identities_enabled
   sync_okta_enabled                      = var.sync_okta_enabled
+  factory_monitoring                     = var.factory_monitoring
 }
 
 module "report_bucket" {
@@ -302,6 +303,8 @@ module "access_handler" {
   factory_oidc_issuer                       = var.factory_oidc_issuer
   ecs_task_cpu                              = var.access_handler_ecs_task_cpu
   ecs_task_memory                           = var.access_hander_ecs_task_memory
+  factory_monitoring                        = var.factory_monitoring
+
 }
 
 
@@ -334,6 +337,8 @@ module "provisioner" {
   managed_monitoring_endpoint       = var.managed_monitoring_endpoint
   factory_base_url                  = var.factory_base_url
   factory_oidc_issuer               = var.factory_oidc_issuer
+  factory_monitoring                = var.factory_monitoring
+
 
 }
 

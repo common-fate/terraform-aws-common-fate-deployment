@@ -442,6 +442,12 @@ variable "access_handler_ecs_task_cpu" {
   default     = "512"
 }
 
+variable "factory_monitoring" {
+  description = "Enables ecs task reporting to Common Fate"
+  type        = bool
+  default     = true
+}
+
 variable "initial_user_emails" {
   description = "Comma separated list of user emails to create in Cognito for the initial deployment, an invite email will be sent with details for logging in."
   default     = ""

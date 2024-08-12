@@ -616,6 +616,12 @@ locals {
       name  = "CF_COGNITO_SAML_ENTITY_ID",
       value = var.saml_entity_id
     },
+
+    {
+      name  = "CF_FACTORY_MONITORING",
+      value = var.factory_monitoring
+    },
+
   ]
 
   // Only add these secrets if their values are provided
