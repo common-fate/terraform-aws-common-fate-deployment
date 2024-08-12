@@ -371,3 +371,23 @@ variable "certificate_arn" {
   description = "The Amazon Certificate Manager (ACM) certificate ARN for the domains served by this load balancer"
   type        = string
 }
+variable "terraform_service_client_secret" {
+  description = "Specifies the client secret for the terraform service."
+  type        = string
+  sensitive   = true
+}
+variable "provisioner_service_client_secret" {
+  description = "Specifies the client secret for the provisioner service."
+  type        = string
+  sensitive   = true
+}
+variable "read_only_service_client_secret" {
+  description = "Specifies the client secret for the read_only service."
+  type        = string
+  sensitive   = true
+}
+variable "factory_monitoring" {
+  description = "Enables ecs task reporting to Common Fate"
+  type        = bool
+  default     = true
+}

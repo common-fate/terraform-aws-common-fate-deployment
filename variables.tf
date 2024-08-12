@@ -18,7 +18,7 @@ variable "aws_region" {
 variable "release_tag" {
   description = "Override the application release tag to be used in the deployment. As of module version v1.13.0, application versions are bundled into the Terraform module, and so in most cases you should not override this."
   type        = string
-  default     = "v4.6.3"
+  default     = "v4.6.4"
 }
 
 variable "app_certificate_arn" {
@@ -440,4 +440,16 @@ variable "access_handler_ecs_task_cpu" {
   description = "The amount of CPU to allocate for the ECS task. Specified in CPU units (1024 units = 1 vCPU)."
   type        = string
   default     = "512"
+}
+
+variable "factory_monitoring" {
+  description = "Enables ecs task reporting to Common Fate"
+  type        = bool
+  default     = true
+}
+
+variable "initial_user_emails" {
+  description = "Comma separated list of user emails to create in Cognito for the initial deployment, an invite email will be sent with details for logging in."
+  default     = ""
+  type        = string
 }

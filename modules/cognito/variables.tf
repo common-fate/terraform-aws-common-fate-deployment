@@ -94,3 +94,8 @@ variable "cli_refresh_token_validity_units" {
   description = "Specifies the duration unit used for the 'cli_refresh_token_validity_duration' variable. Valid values are seconds, minutes, hours or days."
   default     = "days"
 }
+variable "initial_user_emails" {
+  description = "Comma separated list of user emails to create in Cognito for the initial deployment, an invite email will be sent with details for logging in."
+  default     = ""
+  type        = string
+}

@@ -223,3 +223,8 @@ variable "certificate_arn" {
   description = "The Amazon Certificate Manager (ACM) certificate ARN for the domains served by this load balancer"
   type        = string
 }
+variable "factory_monitoring" {
+  description = "Enables ecs task reporting to Common Fate"
+  type        = bool
+  default     = true
+}

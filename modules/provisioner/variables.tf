@@ -177,3 +177,8 @@ variable "factory_oidc_issuer" {
 }
 
 
+variable "factory_monitoring" {
+  description = "Enables ecs task reporting to Common Fate"
+  type        = bool
+  default     = true
+}
