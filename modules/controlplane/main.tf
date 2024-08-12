@@ -632,7 +632,7 @@ locals {
 
     {
       name  = "CF_FACTORY_MONITORING",
-      value = var.factory_monitoring
+      value = var.factory_monitoring ? "true" : "false"
     },
   ]
 
