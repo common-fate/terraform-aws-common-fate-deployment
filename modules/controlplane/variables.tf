@@ -367,6 +367,22 @@ variable "saml_acs_url" {
   type        = string
 }
 
+
+variable "terraform_service_client_secret" {
+  description = "Specifies the client secret for the terraform service."
+  type        = string
+  sensitive   = true
+}
+variable "provisioner_service_client_secret" {
+  description = "Specifies the client secret for the provisioner service."
+  type        = string
+  sensitive   = true
+}
+variable "read_only_service_client_secret" {
+  description = "Specifies the client secret for the read_only service."
+  type        = string
+  sensitive   = true
+}
 variable "factory_monitoring" {
   description = "Enables ecs task reporting to Common Fate"
   type        = bool

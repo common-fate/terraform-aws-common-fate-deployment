@@ -216,6 +216,9 @@ module "control_plane" {
   saml_entity_id                         = module.cognito.saml_entity_id
   sync_entra_identities_enabled          = var.sync_entra_identities_enabled
   sync_okta_enabled                      = var.sync_okta_enabled
+  terraform_service_client_secret        = module.cognito.terraform_client_secret
+  provisioner_service_client_secret      = module.cognito.provisioner_client_secret
+  read_only_service_client_secret        = module.cognito.read_only_client_secret
   factory_monitoring                     = var.factory_monitoring
 }
 
