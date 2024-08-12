@@ -616,6 +616,7 @@ locals {
       name  = "CF_COGNITO_SAML_ENTITY_ID",
       value = var.saml_entity_id
     },
+
     {
       name  = "CF_TERRAFORM_SERVICE_OIDC_CLIENT_SECRET",
       value = var.terraform_service_client_secret
@@ -627,7 +628,12 @@ locals {
     {
       name  = "CF_READ_ONLY_SERVICE_OIDC_CLIENT_SECRET",
       value = var.read_only_service_client_secret
-    }
+    },
+
+    {
+      name  = "CF_FACTORY_MONITORING",
+      value = var.factory_monitoring
+    },
   ]
 
   // Only add these secrets if their values are provided

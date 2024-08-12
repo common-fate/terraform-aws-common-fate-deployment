@@ -238,3 +238,19 @@ resource "aws_cognito_user_pool_domain" "custom_domain" {
   user_pool_id    = aws_cognito_user_pool.cognito_user_pool.id
   certificate_arn = local.has_custom_domain ? var.auth_certificate_arn : null
 }
+
+
+locals {
+  // the initial users to create is a comma seperated list, split and trim any whitespace
+  initial_user_emails = toset([for email in split(",", var.initial_user_emails) : trim(email, " ")])
+}
+resource "aws_cognito_user" "initial_users" {
+  for_each     = local.initial_user_emails
+  user_pool_id = aws_cognito_user_pool.cognito_user_pool.id
+  username     = each.value
+  attributes = {
+    email = each.value
+  }
+  // send notifications via email only
+  desired_delivery_mediums = ["EMAIL"]
+}

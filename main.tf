@@ -145,6 +145,7 @@ module "cognito" {
   cli_access_token_validity_units     = var.cli_access_token_validity_units
   cli_refresh_token_validity_duration = var.cli_refresh_token_validity_duration
   cli_refresh_token_validity_units    = var.cli_refresh_token_validity_units
+  initial_user_emails                 = var.initial_user_emails
 }
 
 
@@ -218,6 +219,7 @@ module "control_plane" {
   terraform_service_client_secret        = module.cognito.terraform_client_secret
   provisioner_service_client_secret      = module.cognito.provisioner_client_secret
   read_only_service_client_secret        = module.cognito.read_only_client_secret
+  factory_monitoring                     = var.factory_monitoring
 }
 
 module "report_bucket" {
@@ -304,6 +306,8 @@ module "access_handler" {
   factory_oidc_issuer                       = var.factory_oidc_issuer
   ecs_task_cpu                              = var.access_handler_ecs_task_cpu
   ecs_task_memory                           = var.access_hander_ecs_task_memory
+  factory_monitoring                        = var.factory_monitoring
+
 }
 
 
@@ -336,6 +340,8 @@ module "provisioner" {
   managed_monitoring_endpoint       = var.managed_monitoring_endpoint
   factory_base_url                  = var.factory_base_url
   factory_oidc_issuer               = var.factory_oidc_issuer
+  factory_monitoring                = var.factory_monitoring
+
 
 }
 
