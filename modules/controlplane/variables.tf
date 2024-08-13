@@ -367,7 +367,6 @@ variable "saml_acs_url" {
   type        = string
 }
 
-
 variable "terraform_service_client_secret" {
   description = "Specifies the client secret for the terraform service."
   type        = string
@@ -387,4 +386,9 @@ variable "factory_monitoring" {
   description = "Enables ecs task reporting to Common Fate"
   type        = bool
   default     = true
+}
+variable "administrator_emails" {
+  description = "List of user emails to assign the administrator role. Users will also be invited to the initial cognito user pool. The administrator role can also be assigned via the console. Note, users defined by this variable will always be assigned to the administrator role at startup of the control plane service."
+  default     = []
+  type        = list(string)
 }

@@ -11,6 +11,7 @@ locals {
   private_subnet_ids       = var.vpc_id != null ? var.private_subnet_ids : module.vpc[0].private_subnet_ids
   database_subnet_group_id = var.vpc_id != null ? var.database_subnet_group_id : module.vpc[0].database_subnet_group_id
   ecs_cluster_id           = var.ecs_cluster_id != null ? var.ecs_cluster_id : module.ecs[0].cluster_id
+
 }
 
 moved {
@@ -88,15 +89,15 @@ module "events" {
 
 
 module "alerts" {
-  source         = "./modules/alerts"
-  namespace      = var.namespace
-  stage          = var.stage
-  aws_account_id = data.aws_caller_identity.current.account_id
-  ecs_cluster_id = local.ecs_cluster_id
-  aws_region     = var.aws_region
-  alert_metadata = var.alert_metadata
-  event_bus_name = module.events.event_bus_name
-  alb_arn_suffix = module.alb.alb_arn_suffix
+  source                      = "./modules/alerts"
+  namespace                   = var.namespace
+  stage                       = var.stage
+  aws_account_id              = data.aws_caller_identity.current.account_id
+  ecs_cluster_id              = local.ecs_cluster_id
+  aws_region                  = var.aws_region
+  alert_metadata              = var.alert_metadata
+  event_bus_name              = module.events.event_bus_name
+  alb_arn_suffix              = module.alb.alb_arn_suffix
   control_plane_tg_arn_suffix = module.control_plane.control_plane_tg_arn_suffix
 }
 
@@ -147,7 +148,8 @@ module "cognito" {
   cli_access_token_validity_units     = var.cli_access_token_validity_units
   cli_refresh_token_validity_duration = var.cli_refresh_token_validity_duration
   cli_refresh_token_validity_units    = var.cli_refresh_token_validity_units
-  initial_user_emails                 = var.initial_user_emails
+
+  invite_user_emails = var.administrator_emails
 }
 
 
@@ -222,6 +224,7 @@ module "control_plane" {
   provisioner_service_client_secret      = module.cognito.provisioner_client_secret
   read_only_service_client_secret        = module.cognito.read_only_client_secret
   factory_monitoring                     = var.factory_monitoring
+  administrator_emails                   = var.administrator_emails
 }
 
 module "report_bucket" {
@@ -308,8 +311,6 @@ module "access_handler" {
   factory_oidc_issuer                       = var.factory_oidc_issuer
   ecs_task_cpu                              = var.access_handler_ecs_task_cpu
   ecs_task_memory                           = var.access_hander_ecs_task_memory
-  factory_monitoring                        = var.factory_monitoring
-
 }
 
 

@@ -634,6 +634,12 @@ locals {
       name  = "CF_FACTORY_MONITORING",
       value = var.factory_monitoring ? "true" : "false"
     },
+
+    {
+      name  = "CF_ADMINISTRATORS",
+      value = join(",", var.administrator_emails)
+    },
+
   ]
 
   // Only add these secrets if their values are provided
