@@ -637,7 +637,7 @@ locals {
 
     {
       name  = "CF_ADMINISTRATORS",
-      value = var.administrator_emails
+      value = join(",", var.administrator_emails)
     },
 
   ]

@@ -95,7 +95,7 @@ variable "cli_refresh_token_validity_units" {
   default     = "days"
 }
 variable "invite_user_emails" {
-  description = "Comma separated list of user emails to create in the default Cognito user pool, an invite email will be sent with details for logging in."
-  default     = ""
-  type        = string
+  description = "List of user emails to create in the default Cognito user pool, an invite email will be sent with details for logging in."
+  default     = []
+  type        = list(string)
 }

@@ -450,7 +450,7 @@ variable "factory_monitoring" {
 
 
 variable "administrator_emails" {
-  description = "Comma separated list of user emails to assign the administrator role. Users will also be invited to the initial cognito user pool. The administrator role can also be assigned via the console. Note, users defined by this variable will always be assigned to the administrator role at startup of the control plane service."
-  default     = ""
-  type        = string
+  description = "List of user emails to assign the administrator role. Users will also be invited to the initial cognito user pool. The administrator role can also be assigned via the console. Note, users defined by this variable will always be assigned to the administrator role at startup of the control plane service."
+  default     = []
+  type        = list(string)
 }
