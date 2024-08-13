@@ -448,8 +448,9 @@ variable "factory_monitoring" {
   default     = true
 }
 
-variable "initial_user_emails" {
-  description = "Comma separated list of user emails to create in Cognito for the initial deployment, an invite email will be sent with details for logging in."
+
+variable "initial_administrator_emails" {
+  description = "Comma separated list of user emails to create in the initial deployment and assign to the administrator role."
   default     = ""
   type        = string
 }
