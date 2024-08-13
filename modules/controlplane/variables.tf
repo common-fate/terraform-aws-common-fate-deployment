@@ -367,10 +367,6 @@ variable "saml_acs_url" {
   type        = string
 }
 
-variable "certificate_arn" {
-  description = "The Amazon Certificate Manager (ACM) certificate ARN for the domains served by this load balancer"
-  type        = string
-}
 variable "terraform_service_client_secret" {
   description = "Specifies the client secret for the terraform service."
   type        = string

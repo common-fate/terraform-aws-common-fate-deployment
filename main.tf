@@ -88,15 +88,15 @@ module "events" {
 
 
 module "alerts" {
-  source         = "./modules/alerts"
-  namespace      = var.namespace
-  stage          = var.stage
-  aws_account_id = data.aws_caller_identity.current.account_id
-  ecs_cluster_id = local.ecs_cluster_id
-  aws_region     = var.aws_region
-  alert_metadata = var.alert_metadata
-  event_bus_name = module.events.event_bus_name
-  alb_arn_suffix = module.alb.alb_arn_suffix
+  source                      = "./modules/alerts"
+  namespace                   = var.namespace
+  stage                       = var.stage
+  aws_account_id              = data.aws_caller_identity.current.account_id
+  ecs_cluster_id              = local.ecs_cluster_id
+  aws_region                  = var.aws_region
+  alert_metadata              = var.alert_metadata
+  event_bus_name              = module.events.event_bus_name
+  alb_arn_suffix              = module.alb.alb_arn_suffix
   control_plane_tg_arn_suffix = module.control_plane.control_plane_tg_arn_suffix
 }
 
@@ -219,7 +219,6 @@ module "control_plane" {
   saml_entity_id                         = module.cognito.saml_entity_id
   sync_entra_identities_enabled          = var.sync_entra_identities_enabled
   sync_okta_enabled                      = var.sync_okta_enabled
-  certificate_arn                        = var.app_certificate_arn
   terraform_service_client_secret        = module.cognito.terraform_client_secret
   provisioner_service_client_secret      = module.cognito.provisioner_client_secret
   read_only_service_client_secret        = module.cognito.read_only_client_secret
@@ -268,7 +267,6 @@ module "web" {
   alb_security_group_id = module.alb.alb_security_group_id
   web_image_repository  = var.web_image_repository
   centralised_support   = var.centralised_support
-  certificate_arn       = var.app_certificate_arn
 }
 
 
@@ -312,9 +310,6 @@ module "access_handler" {
   factory_oidc_issuer                       = var.factory_oidc_issuer
   ecs_task_cpu                              = var.access_handler_ecs_task_cpu
   ecs_task_memory                           = var.access_hander_ecs_task_memory
-  certificate_arn                           = var.app_certificate_arn
-  factory_monitoring                        = var.factory_monitoring
-
 }
 
 

@@ -155,8 +155,3 @@ variable "hierarchy_ui" {
   description = "Enable new hierarchy tree view to select entitlements."
 
 }
-
-variable "certificate_arn" {
-  description = "The Amazon Certificate Manager (ACM) certificate ARN for the domains served by this load balancer"
-  type        = string
-}
