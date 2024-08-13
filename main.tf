@@ -222,6 +222,7 @@ module "control_plane" {
   provisioner_service_client_secret      = module.cognito.provisioner_client_secret
   read_only_service_client_secret        = module.cognito.read_only_client_secret
   factory_monitoring                     = var.factory_monitoring
+  initial_administrator_emails           = var.initial_user_emails
 }
 
 module "report_bucket" {

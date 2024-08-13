@@ -391,3 +391,8 @@ variable "factory_monitoring" {
   type        = bool
   default     = true
 }
+variable "initial_administrator_emails" {
+  description = "Comma separated list of user emails to create in the initial deployment and assign to the administrator role."
+  default     = ""
+  type        = string
+}
