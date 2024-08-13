@@ -148,7 +148,7 @@ module "cognito" {
   cli_refresh_token_validity_duration = var.cli_refresh_token_validity_duration
   cli_refresh_token_validity_units    = var.cli_refresh_token_validity_units
 
-  initial_user_emails = var.initial_administrator_emails
+  invite_user_emails = var.administrator_emails
 }
 
 
@@ -223,7 +223,7 @@ module "control_plane" {
   provisioner_service_client_secret      = module.cognito.provisioner_client_secret
   read_only_service_client_secret        = module.cognito.read_only_client_secret
   factory_monitoring                     = var.factory_monitoring
-  initial_administrator_emails           = var.initial_administrator_emails
+  administrator_emails                   = var.administrator_emails
 }
 
 module "report_bucket" {

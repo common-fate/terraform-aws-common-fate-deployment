@@ -636,8 +636,8 @@ locals {
     },
 
     {
-      name  = "CF_INITIAL_ADMINISTRATORS",
-      value = var.initial_administrator_emails
+      name  = "CF_ADMINISTRATORS",
+      value = var.administrator_emails
     },
 
   ]

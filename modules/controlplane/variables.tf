@@ -387,8 +387,8 @@ variable "factory_monitoring" {
   type        = bool
   default     = true
 }
-variable "initial_administrator_emails" {
-  description = "Comma separated list of user emails to create in the initial deployment and assign to the administrator role."
+variable "administrator_emails" {
+  description = "Comma separated list of user emails to assign the administrator role. Users will also be invited to the initial cognito user pool. The administrator role can also be assigned via the console. Note, users defined by this variable will always be assigned to the administrator role at startup of the control plane service."
   default     = ""
   type        = string
 }
