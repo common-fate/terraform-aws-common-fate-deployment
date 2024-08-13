@@ -242,7 +242,7 @@ resource "aws_cognito_user_pool_domain" "custom_domain" {
 
 
 resource "aws_cognito_user" "initial_users" {
-  for_each     = var.invite_user_emails
+  for_each     = toset(var.invite_user_emails)
   user_pool_id = aws_cognito_user_pool.cognito_user_pool.id
   username     = each.value
   attributes = {
