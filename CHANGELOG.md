@@ -1,5 +1,11 @@
 # @common-fate/terraform-aws-common-fate-deployment
 
+## 2.4.1
+
+### Patch Changes
+
+- 42de9f4: Fixes an issue in the Worker task which could cause it to fail on the first deployment of version 2.4.0
+
 ## 2.4.0
 
 ### Minor Changes
