@@ -5,7 +5,7 @@
   "fixed": [],
   "linked": [],
   "access": "restricted",
-  "baseBranch": "release/2.4.0",
+  "baseBranch": "main",
   "updateInternalDependencies": "patch",
   "ignore": [],
   "privatePackages": { "version": false, "tag": false }
