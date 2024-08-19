@@ -48,3 +48,8 @@ variable "control_plane_tg_arn_suffix" {
   description = "The arn suffix of the control plane target group"
   type = string
 }
+
+variable "use_opsgenie_format" {
+  description = "Set to true if you connecting the alerts to opsgenie"
+  type = bool
+}

@@ -40,19 +40,24 @@ resource "aws_cloudwatch_event_target" "deployment_failures" {
   target_id = "${var.namespace}-${var.stage}-deployment-failures-to-sns"
   arn       = aws_sns_topic.deployment_failures.arn
 
-  input_transformer {
-    input_paths = {
-      reason        = "$.detail.reason"
-      deployment_id = "$.detail.deploymentId"
-    }
-    input_template = <<EOF
-    {
+dynamic "input_transformer" {
+    for_each = var.use_opsgenie_format ? [] : [1]
+
+    content {
+      input_paths = {
+        reason        = "$.detail.reason"
+        deployment_id = "$.detail.deploymentId"
+      }
+
+      input_template = <<EOF
+      {
       "title": "ECS service deployment has failed",
       "description": "<reason>",
       "metadata": ${jsonencode(var.alert_metadata)},
       "event": <aws.events.event.json>
+      }
+      EOF
     }
-    EOF
   }
 }
 
@@ -105,20 +110,25 @@ resource "aws_cloudwatch_event_target" "job_failures" {
   arn            = aws_sns_topic.job_failures.arn
   event_bus_name = var.event_bus_name
 
-  input_transformer {
-    input_paths = {
+  dynamic "input_transformer" {
+    for_each = var.use_opsgenie_format ? [] : [1]
+
+    content {
+      input_paths = {
       job_kind = "$.detail.job_kind"
       job_id   = "$.detail.job_id"
       error    = "$.detail.error"
-    }
-    input_template = <<EOF
-    {
+      }
+
+      input_template = <<EOF
+      {
       "title": "Job <job_kind> has failed",
       "description": "Job <job_id> failed with error: `<error>`.",
       "metadata": ${jsonencode(var.alert_metadata)},
       "event": <aws.events.event.json>
+      }
+      EOF
     }
-    EOF
   }
 }
 
