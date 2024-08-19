@@ -1,5 +1,37 @@
 # @common-fate/terraform-aws-common-fate-deployment
 
+## 2.4.0
+
+### Minor Changes
+
+- d3903e9: Adds a healthcheck to the centralised monitoring service which reports on service health.
+- d3903e9: Adds the ability for the builtin Administrator role to fetch API Client secrets via the API
+- d3903e9: Extensions are only allowed after 50% of duration had elapsed.
+- 47e7747: Adds cloudwatch alarms for ALB, database and SQS
+- ad678b7: Adds support for inviting an initial set of users to Common Fate when Cognito is used as the login provider. initial_user_emails is a comma seperated list of emails which will be created in Cognito and have an initial invite email sent.
+- d3903e9: Adds tags and tag_keys attributes to AWS::IDC::PermissionSet resources which can be used to restrict access in Cedar policies
+- d012909: Administrative users can now be added to the deployment, these users will be automatically assigned to the administrative role in Common Fate. On an initial deployment, they will also be invited to cognito.
+- d3903e9: Built-in roles can now be requested using the JIT request workflow with access governed by cedar policies. For new deployments, an initial policy is created which permits access to the administrative role. In existing deployments, no default access is create, teams can add the cedar policy to expose this role if required.
+- d3903e9: Add default Cedar policies which prevent users being able to request access to resources when they do not have the required linked identity.
+- d3903e9: Adds built-in roles for managing Common Fate. Initially an Administrator role has been added which is permitted to access OIDC secrets and configure integrations.
+
+### Patch Changes
+
+- d3903e9: The Access::Action::"ForceClose" action will now only be evaluated if the force close option is provided in the API request. This change reduces excess policy authorization noise in the authorization log for authorization results that are never used.
+- d3903e9: Improve observability of Pager Duty sync tasks and add an expiry window of 5 minutes to the PagerDuty token refresh process
+- d012909: Add a validation check for the ALB certificate which waits for it to be issued.
+- d3903e9: Fixes an issue where Target and Role options would not load for some Access Requests in Slack.
+- dded0d1: Expose the API client secrets to the control plane for the administrative API
+- 5e35d44: add environment variables for configuring factory monitoring
+- d3903e9: Fixes an issue which prevented using BatchEnsure to activate an approved request when a duration was provided
+- d3903e9: Fixed an issue causing creating access workflows to fail when extension conditions was not set
+- d3903e9: Fixes an issue causing duration to not be shown on slack messages for access requests
+- d3903e9: Improve the tracing on Ops Genie sync and update retry logic
+- d3903e9: Adds deployment configuration page to the setting tab in the web console. Exposes configuration parameters required to configure a deployment. This page is only available to users assigned the CF::Admin::Action::"Read" action
+- d3903e9: Prevent panic when calling DebugEntitlementsAccess due to concurrent map writes error
+- d3903e9: Update open telemetry middleware to correctly capture panics
+- d3903e9: The AWS resource sync task now correctly handles access denied errors when syncing tags for buckets fails
+
 ## 2.3.3
 
 ### Patch Changes
