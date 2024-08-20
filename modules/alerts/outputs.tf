@@ -19,3 +19,24 @@ output "alert_topics" {
     }
   }
 }
+
+// Topics that use the CloudWatch format for alerts
+output "cloudwatch_alarm_topics" {
+  description = "SNS topic ARNs of alerts for resources monitored with CloudWatch"
+  value = {
+    load_balancer_alerts = {
+      emitted_when  = "Issues with the ALB load balancer"
+      sns_topic_arn = aws_sns_topic.load_balancer_alerts.arn
+    }
+
+    load_balancer_alerts = {
+      emitted_when  = "Issues with the database"
+      sns_topic_arn = aws_sns_topic.database_alerts.arn
+    }
+
+    sqs_alerts = {
+      emitted_when  = "Issues with SQS"
+      sns_topic_arn = aws_sns_topic.sqs_alerts.arn
+    }
+  }
+}
