@@ -206,6 +206,11 @@ output "alert_topics" {
   value       = module.alerts.alert_topics
 }
 
+output "cloudwatch_alarm_topics" {
+  description = "SNS topic ARNs of alerts for resources monitored with CloudWatch"
+  value       = module.alerts.cloudwatch_alarm_topics
+}
+
 output "load_balancer_arn" {
   description = "ARN of the load balancer."
   value       = module.alb.load_balancer_arn
