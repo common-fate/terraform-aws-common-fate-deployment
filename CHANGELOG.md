@@ -1,5 +1,11 @@
 # @common-fate/terraform-aws-common-fate-deployment
 
+## 2.4.2
+
+### Patch Changes
+
+- f908555: Fix an issue where CloudWatch based alerting topics were not exposed as an output
+
 ## 2.4.1
 
 ### Patch Changes
