@@ -25,7 +25,7 @@ output "cloudwatch_alarm_topics" {
   description = "SNS topic ARNs of alerts for resources monitored with CloudWatch"
   value = {
     load_balancer_alerts = {
-      emitted_when  = "Issues with the Loadbalancer"
+      emitted_when  = "Issues with the ALB load balancer"
       sns_topic_arn = aws_sns_topic.load_balancer_alerts.arn
     }
 
