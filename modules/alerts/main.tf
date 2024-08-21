@@ -108,30 +108,32 @@ resource "aws_cloudwatch_event_rule" "job_failures" {
   )
 }
 
-resource "aws_cloudwatch_event_target" "deployment_failures" {
+
+resource "aws_cloudwatch_event_target" "job_failures" {
   # Only define aws_cloudwatch_event_target when use_opsgenie_format is false
   count = var.use_opsgenie_format ? 0 : 1
 
-  rule      = aws_cloudwatch_event_rule.deployment_failures.name
-  target_id = "${var.namespace}-${var.stage}-deployment-failures-to-sns"
-  arn       = aws_sns_topic.deployment_failures.arn
+  rule           = aws_cloudwatch_event_rule.job_failures.name
+  target_id      = "${var.namespace}-${var.stage}-job-failures"
+  arn            = aws_sns_topic.job_failures.arn
+  event_bus_name = var.event_bus_name
 
   input_transformer {
     input_paths = {
-      reason        = "$.detail.reason"
-      deployment_id = "$.detail.deploymentId"
+      job_kind = "$.detail.job_kind"
+      job_id   = "$.detail.job_id"
+      error    = "$.detail.error"
     }
     input_template = <<EOF
     {
-      "title": "ECS service deployment has failed",
-      "description": "<reason>",
+      "title": "Job <job_kind> has failed",
+      "description": "Job <job_id> failed with error: `<error>`.",
       "metadata": ${jsonencode(var.alert_metadata)},
       "event": <aws.events.event.json>
     }
     EOF
   }
 }
-
 resource "aws_sns_topic" "job_failures" {
   name         = "${var.namespace}-${var.stage}-job-alerts"
   display_name = "Alerts for Common Fate background jobs"
