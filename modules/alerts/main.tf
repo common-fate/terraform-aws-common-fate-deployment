@@ -134,6 +134,7 @@ resource "aws_cloudwatch_event_target" "job_failures" {
     EOF
   }
 }
+
 resource "aws_sns_topic" "job_failures" {
   name         = "${var.namespace}-${var.stage}-job-alerts"
   display_name = "Alerts for Common Fate background jobs"
