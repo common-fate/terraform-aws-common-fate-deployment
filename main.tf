@@ -99,6 +99,7 @@ module "alerts" {
   event_bus_name              = module.events.event_bus_name
   alb_arn_suffix              = module.alb.alb_arn_suffix
   control_plane_tg_arn_suffix = module.control_plane.control_plane_tg_arn_suffix
+  use_opsgenie_format = var.use_opsgenie_format
 }
 
 

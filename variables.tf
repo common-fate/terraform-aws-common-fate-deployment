@@ -454,3 +454,9 @@ variable "administrator_emails" {
   default     = []
   type        = list(string)
 }
+
+variable "use_opsgenie_format" {
+ description = "Set to true if you connecting the alerts to opsgenie"
+  type = bool
+  default = false
+}
