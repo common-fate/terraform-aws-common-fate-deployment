@@ -39,7 +39,7 @@ resource "aws_cloudwatch_event_rule" "deployment_failures" {
 }
 
 resource "aws_cloudwatch_event_target" "deployment_failures" {
-  rule      = aws_cloudwatch_event_rule.deployment_failures[0].name
+  rule = var.use_opsgenie_format ? null : aws_cloudwatch_event_rule.deployment_failures[0].name
   target_id = "${var.namespace}-${var.stage}-deployment-failures-to-sns"
   arn       = aws_sns_topic.deployment_failures.arn
 
@@ -113,7 +113,7 @@ resource "aws_cloudwatch_event_rule" "job_failures" {
 
 resource "aws_cloudwatch_event_target" "job_failures" {
 
-  rule           = aws_cloudwatch_event_rule.job_failures[0].name
+  rule = var.use_opsgenie_format ? null : aws_cloudwatch_event_rule.job_failures[0].name
   target_id      = "${var.namespace}-${var.stage}-job-failures"
   arn            = aws_sns_topic.job_failures.arn
   event_bus_name = var.event_bus_name
