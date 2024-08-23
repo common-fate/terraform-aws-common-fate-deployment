@@ -1,5 +1,15 @@
 # @common-fate/terraform-aws-common-fate-deployment
 
+## 2.4.3
+
+### Patch Changes
+
+- d2c3801: Fixes an issue where email casing was not ignored in the connected identities sync which could result in duplicate users being created and identities not being linked correctly.
+- d2c3801: Fix issue where both default duration and max duration error messages appear when duration is set to zero.
+- d2c3801: Add grant_id and access_request_id to otel traces in provisioner.
+- d2c3801: Fixes an issue where the access handler would skip deprovisioning RDS proxy access in cases where the proxy config had been changed while a grant was active. Now, regardless of the config changing, the access handler will always attempt to remove the Permission Set that was created to grant access.
+- d2c3801: Fix an issue where a broken navigation link was shown in the user profile menu.
+
 ## 2.4.2
 
 ### Patch Changes
