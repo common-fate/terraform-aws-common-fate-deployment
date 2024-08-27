@@ -1,5 +1,11 @@
 # @common-fate/terraform-aws-common-fate-deployment
 
+## 2.4.4
+
+### Patch Changes
+
+- f3f1c13: Fix issue where S3 audit log export continually rewrites the last event.
+
 ## 2.4.3
 
 ### Patch Changes
