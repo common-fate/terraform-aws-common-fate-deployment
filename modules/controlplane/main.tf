@@ -404,6 +404,14 @@ resource "aws_iam_role_policy_attachment" "assume_roles_policy_attach_tagged" {
 locals {
   control_plane_environment = [
     {
+      name  = "CF_NAMESPACE"
+      value = var.namespace
+    },
+    {
+      name  = "CF_STAGE"
+      value = var.stage
+    },
+    {
       name  = "CF_SCIM_SOURCE",
       value = var.scim_source
     },
