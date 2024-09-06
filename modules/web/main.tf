@@ -180,7 +180,8 @@ resource "aws_ecs_service" "web_service" {
   }
 
   load_balancer {
-    target_group_arn = aws_lb_target_group.web_tg.arn
+    for_each = toset(local.web_target_group_arns)
+    target_group_arn = each.value
     container_name   = "web_container"
     container_port   = 80
   }
@@ -199,4 +200,7 @@ resource "aws_lb_listener_rule" "service_rule" {
     }
   }
 
+}
+locals {
+  web_target_group_arns = var.additional_target_groups != [] ? concat([aws_lb_target_group.web_tg.arn], var.additional_target_groups) : [aws_lb_target_group.web_tg.arn]
 }

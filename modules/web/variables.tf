@@ -155,3 +155,9 @@ variable "hierarchy_ui" {
   description = "Enable new hierarchy tree view to select entitlements."
 
 }
+
+variable "additional_target_groups" {
+  type        = list(string)
+  description = "Additional target groups to attach the service to."
+  default     = []
+}

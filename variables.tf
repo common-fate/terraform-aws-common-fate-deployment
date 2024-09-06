@@ -454,3 +454,11 @@ variable "administrator_emails" {
   default     = []
   type        = list(string)
 }
+
+variable "web_target_group_arns" {
+  description = "ARN of supplemental target groups for the web service."
+  default = []
+  type list(string)
+}
+
+variable ""
