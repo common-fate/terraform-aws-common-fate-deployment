@@ -179,11 +179,13 @@ resource "aws_ecs_service" "web_service" {
     security_groups = [aws_security_group.ecs_web_sg_v2.id]
   }
 
-  load_balancer {
+  dynamic "load_balancer" {
     for_each = toset(local.web_target_group_arns)
-    target_group_arn = each.value
-    container_name   = "web_container"
-    container_port   = 80
+    content {
+      target_group_arn = each.value
+      container_name   = "web_container"
+      container_port   = 80
+    }
   }
 }
 resource "aws_lb_listener_rule" "service_rule" {
