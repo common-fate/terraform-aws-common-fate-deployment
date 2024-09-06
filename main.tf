@@ -229,6 +229,8 @@ module "control_plane" {
   read_only_service_client_secret        = module.cognito.read_only_client_secret
   factory_monitoring                     = var.factory_monitoring
   administrator_emails                   = var.administrator_emails
+  additional_target_groups               = var.control_plane_target_group_arns
+  additional_target_groups_http2         = var.control_plane_target_group_arns_http_2
 }
 
 module "report_bucket" {
@@ -316,6 +318,7 @@ module "access_handler" {
   factory_oidc_issuer                       = var.factory_oidc_issuer
   ecs_task_cpu                              = var.access_handler_ecs_task_cpu
   ecs_task_memory                           = var.access_hander_ecs_task_memory
+  additional_target_groups                  = var.access_target_group_arns
 }
 
 

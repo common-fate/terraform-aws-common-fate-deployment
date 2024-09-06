@@ -224,3 +224,9 @@ variable "factory_monitoring" {
   type        = bool
   default     = true
 }
+
+variable "additional_target_groups" {
+  type        = list(string)
+  description = "Additional target groups to attach the service to."
+  default     = []
+}
