@@ -230,7 +230,6 @@ module "control_plane" {
   factory_monitoring                     = var.factory_monitoring
   administrator_emails                   = var.administrator_emails
   additional_target_groups               = var.control_plane_target_group_arns
-  additional_target_groups_http2         = var.control_plane_target_group_arns_http_2
 }
 
 module "report_bucket" {
