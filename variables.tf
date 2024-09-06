@@ -458,7 +458,5 @@ variable "administrator_emails" {
 variable "web_target_group_arns" {
   description = "ARN of supplemental target groups for the web service."
   default = []
-  type list(string)
+  type = list(string)
 }
-
-variable ""
