@@ -472,9 +472,3 @@ variable "control_plane_target_group_arns" {
   default = []
   type = list(string)
 }
-
-variable "control_plane_target_group_arns_http_2" {
-  description = "ARNs of supplemental target groups for the control plane service that support HTTP/2."
-  default = []
-  type = list(string)
-}
