@@ -182,7 +182,7 @@ resource "aws_ecs_service" "web_service" {
   dynamic "load_balancer" {
     for_each = toset(local.web_target_group_arns)
     content {
-      target_group_arn = each.value
+      target_group_arn = load_balancer.value
       container_name   = "web_container"
       container_port   = 80
     }
