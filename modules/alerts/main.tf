@@ -16,6 +16,9 @@ locals {
 ######################################################
 
 resource "aws_cloudwatch_event_rule" "deployment_failures" {
+  # Only define aws_cloudwatch_event_rule when use_opsgenie_format is false
+  count = var.use_opsgenie_format ? 0 : 1
+
   name        = "${var.namespace}-${var.stage}-deployment-failures"
   description = "Common Fate service deployment failures"
 
@@ -36,23 +39,28 @@ resource "aws_cloudwatch_event_rule" "deployment_failures" {
 }
 
 resource "aws_cloudwatch_event_target" "deployment_failures" {
-  rule      = aws_cloudwatch_event_rule.deployment_failures.name
+  rule = var.use_opsgenie_format ? null : aws_cloudwatch_event_rule.deployment_failures[0].name
   target_id = "${var.namespace}-${var.stage}-deployment-failures-to-sns"
   arn       = aws_sns_topic.deployment_failures.arn
 
-  input_transformer {
-    input_paths = {
-      reason        = "$.detail.reason"
-      deployment_id = "$.detail.deploymentId"
-    }
-    input_template = <<EOF
-    {
+  dynamic "input_transformer" {
+    for_each = var.use_opsgenie_format ? [] : [1]
+
+    content {
+      input_paths = {
+        reason        = "$.detail.reason"
+        deployment_id = "$.detail.deploymentId"
+      }
+
+      input_template = <<EOF
+      {
       "title": "ECS service deployment has failed",
       "description": "<reason>",
       "metadata": ${jsonencode(var.alert_metadata)},
       "event": <aws.events.event.json>
+      }
+      EOF
     }
-    EOF
   }
 }
 
@@ -88,6 +96,9 @@ resource "aws_sns_topic_policy" "deployment_failures" {
 ######################################################
 
 resource "aws_cloudwatch_event_rule" "job_failures" {
+  # Only define event_pattern when use_opsgenie_format is false
+  count = var.use_opsgenie_format ? 0 : 1
+
   name           = "${var.namespace}-${var.stage}-job-failures"
   description    = "Alerts for Common Fate background job failures"
   event_bus_name = var.event_bus_name
@@ -99,27 +110,34 @@ resource "aws_cloudwatch_event_rule" "job_failures" {
   )
 }
 
+
 resource "aws_cloudwatch_event_target" "job_failures" {
-  rule           = aws_cloudwatch_event_rule.job_failures.name
+
+  rule = var.use_opsgenie_format ? null : aws_cloudwatch_event_rule.job_failures[0].name
   target_id      = "${var.namespace}-${var.stage}-job-failures"
   arn            = aws_sns_topic.job_failures.arn
   event_bus_name = var.event_bus_name
 
-  input_transformer {
-    input_paths = {
+ dynamic "input_transformer" {
+    for_each = var.use_opsgenie_format ? [] : [1]
+
+    content {
+      input_paths = {
       job_kind = "$.detail.job_kind"
       job_id   = "$.detail.job_id"
       error    = "$.detail.error"
-    }
-    input_template = <<EOF
-    {
+      }
+
+      input_template = <<EOF
+      {
       "title": "Job <job_kind> has failed",
       "description": "Job <job_id> failed with error: `<error>`.",
       "metadata": ${jsonencode(var.alert_metadata)},
       "event": <aws.events.event.json>
+      }
+      EOF
     }
-    EOF
-  }
+}
 }
 
 resource "aws_sns_topic" "job_failures" {
