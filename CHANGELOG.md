@@ -1,5 +1,33 @@
 # @common-fate/terraform-aws-common-fate-deployment
 
+## 2.5.0
+
+### Minor Changes
+
+- 0f892af: Add user-configurable opt-in/opt-out settings for Slack DM notifications.
+- 0f892af: Adds additional authorization log filtering capability to the API, the filter API now supports a boolean condition on entity filters and adds entity type filters.
+- 0f892af: Adds a new page in the settings to view and debug Selectors. A selector playground is also added to test selectors in real time before deploying the selector.
+- 0f892af: Adds a basic policy page to the Settings tab which allows for viewing and deleting access policies
+- 0f892af: Integrations can now be configured and updated via ClickOps in the Common Fate Console.
+- 0f892af: Adds an additional principal type filter to the authz eval page in the console. Logs can now be filtered by User or Service.
+- 0f892af: A new page has been added showing the users own access requests, rather than all access requests. The request page has also been updated with a tab for pending, active and closed requests, making it easier to find what you are looking for.
+- 0f892af: The AWS RDS Proxy integration has been overhauled to seperate database configuration from the proxy infrastructure. This change improves the reliability of the AWS proxy and makes it easier to configure where teams have databases deployed in different terraform stacks.
+
+  This is a breaking change for the AWS RDS Proxy, teams using the previous version of the proxy will need to redeploy the proxy and add databases as seperate modules in terraform.
+
+### Patch Changes
+
+- 19fd33f: Add namespace and stage environment variables to the control plane
+- 0f892af: Add help documentation for advanced search features on the new request page
+- 0f892af: Adds the ability to filter all access requests by principal, approver, closer as well as by status pending, active and closed
+- ba1c8db: Removes the hardcoded AWS provider block in the module. Fixes an issue where the module could not be destroyed due to the provider block being present.
+- 0f892af: Fixes an issue where provisioning would fail for S3 bucket access when a provisioner webhook was configured in the config but not with the dynamic access capability.
+- 2d753cd: Adds permission for the Control Plane to write parameters to SSM under the /{namespace}/{stage}/\* namespace
+- 0f892af: Fix issue where S3 audit log export continually rewrites the last event.
+- 0f892af: Adds permission checks to the integration page in the settings UI, this and other application configuration pages will only be viewable if the user has is an administrator or has a policy permitting the CF::Admin::Action::"Read" action.
+- 0f892af: Adds syntax highlighting for cedar policies and json entities in the access debugger and authorization logs.
+- 0f892af: Fix a concurrency issue which could lead to panics when loading entities
+
 ## 2.4.4
 
 ### Patch Changes
