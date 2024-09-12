@@ -1,5 +1,16 @@
 # @common-fate/terraform-aws-common-fate-deployment
 
+## 2.5.1
+
+### Patch Changes
+
+- 17e8c01: Adds cedar action CF::Authz::PolicyService::Action::"DeletePolicySet" to allow the action to be forbidden except for the terraform service.
+- 17e8c01: Fixed an issue which prevented bulk request actions working on the access request table due to a 404 not found error. Additionally fixed a styling issue with the force close prompt.
+- 17e8c01: Fixes an issue where the edit integration feature flag would not be set to enabled despite the user having the admin role.
+- 17e8c01: Fixes an issue where the ListIntegrations rpc was not marked as a read only operation in authz logs.
+- 17e8c01: AWS IDC integration now only syncs active accounts.
+- 17e8c01: Fixes an issue where JIT requests to the Common Fate administrator role would not be correctly revoked.
+
 ## 2.5.0
 
 ### Minor Changes
