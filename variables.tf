@@ -454,3 +454,8 @@ variable "administrator_emails" {
   default     = []
   type        = list(string)
 }
+variable "snapshot_identifier" {
+  description = "(Optional) Specifies whether or not to create this database from a snapshot. This correlates to the snapshot ID you'd find in the RDS console, e.g: rds:production-2015-06-26-06-05."
+  type        = string
+  default     = null
+}
