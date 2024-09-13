@@ -37,6 +37,7 @@ resource "aws_db_instance" "pg_db" {
   multi_az                     = var.rds_multi_az
   apply_immediately            = var.apply_immediately
   snapshot_identifier          = var.snapshot_identifier
+  identifier_prefix            = var.prefix
 
   dynamic "restore_to_point_in_time" {
     for_each = var.restore_to_point_in_time != null ? [1] : []

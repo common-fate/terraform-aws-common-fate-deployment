@@ -459,3 +459,9 @@ variable "snapshot_identifier" {
   type        = string
   default     = null
 }
+
+variable "rds-prefix" {
+  description = "(Optional) adds a prefix to the database identifier"
+  type        = string
+  default     = null
+}

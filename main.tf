@@ -74,6 +74,7 @@ module "control_plane_db" {
   rds_multi_az             = var.rds_multi_az
   apply_immediately        = var.rds_apply_immediately
   snapshot_identifier      = var.snapshot_identifier
+  prefix                   = var.rds-prefix
 }
 
 

@@ -68,3 +68,9 @@ variable "snapshot_identifier" {
   type        = string
   default     = null
 }
+
+variable "prefix" {
+  description = "(Optional) adds a prefix to the database identifier"
+  type        = string
+  default     = null
+}
