@@ -18,7 +18,7 @@ resource "aws_db_parameter_group" "postgres_db" {
 
 #trivy:ignore:AVD-AWS-0080
 resource "aws_db_instance" "pg_db" {
-  identifier                   = "${var.namespace}-${var.stage}-pg-db"
+  identifier                   = "${var.namespace}-${var.stage}-pg-db${var.suffix}"
   allocated_storage            = 20
   engine                       = "postgres"
   engine_version               = "15"
@@ -37,7 +37,7 @@ resource "aws_db_instance" "pg_db" {
   multi_az                     = var.rds_multi_az
   apply_immediately            = var.apply_immediately
   snapshot_identifier          = var.snapshot_identifier
-  identifier_prefix            = var.prefix
+
 
   dynamic "restore_to_point_in_time" {
     for_each = var.restore_to_point_in_time != null ? [1] : []
