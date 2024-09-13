@@ -4,7 +4,7 @@
 ######################################################
 
 locals {
-  control_plane_target_groups = var.additional_target_groups != [] ? concat([aws_lb_target_group.control_plane_tg.arn, aws_lb_target_group.control_plane_tg_http2.arn], var.additional_target_groups) : [aws_lb_target_group.control_plane_tg.arn, aws_lb_target_group.control_plane_tg_http2.arn]
+  control_plane_target_groups = var.control_plane_target_group_arns != [] ? concat([aws_lb_target_group.control_plane_tg.arn, aws_lb_target_group.control_plane_tg_http2.arn], var.control_plane_target_group_arns) : [aws_lb_target_group.control_plane_tg.arn, aws_lb_target_group.control_plane_tg_http2.arn]
 }
 
 #trivy:ignore:AVD-AWS-0104

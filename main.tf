@@ -229,7 +229,7 @@ module "control_plane" {
   read_only_service_client_secret        = module.cognito.read_only_client_secret
   factory_monitoring                     = var.factory_monitoring
   administrator_emails                   = var.administrator_emails
-  additional_target_groups               = var.control_plane_target_group_arns
+  control_plane_target_group_arns        = var.control_plane_target_group_arns
 }
 
 module "report_bucket" {
@@ -254,26 +254,26 @@ module "authz_eval_bucket" {
 
 
 module "web" {
-  source                   = "./modules/web"
-  namespace                = var.namespace
-  stage                    = var.stage
-  aws_region               = var.aws_region
-  aws_account_id           = data.aws_caller_identity.current.account_id
-  release_tag              = var.release_tag
-  subnet_ids               = local.private_subnet_ids
-  vpc_id                   = local.vpc_id
-  auth_authority_url       = module.cognito.auth_authority_url
-  auth_cli_client_id       = module.cognito.cli_client_id
-  auth_url                 = module.cognito.auth_url
-  auth_web_client_id       = module.cognito.web_client_id
-  ecs_cluster_id           = local.ecs_cluster_id
-  alb_listener_arn         = module.alb.listener_arn
-  app_url                  = var.app_url
-  auth_issuer              = module.cognito.auth_issuer
-  alb_security_group_id    = module.alb.alb_security_group_id
-  web_image_repository     = var.web_image_repository
-  centralised_support      = var.centralised_support
-  additional_target_groups = var.web_target_group_arns
+  source                = "./modules/web"
+  namespace             = var.namespace
+  stage                 = var.stage
+  aws_region            = var.aws_region
+  aws_account_id        = data.aws_caller_identity.current.account_id
+  release_tag           = var.release_tag
+  subnet_ids            = local.private_subnet_ids
+  vpc_id                = local.vpc_id
+  auth_authority_url    = module.cognito.auth_authority_url
+  auth_cli_client_id    = module.cognito.cli_client_id
+  auth_url              = module.cognito.auth_url
+  auth_web_client_id    = module.cognito.web_client_id
+  ecs_cluster_id        = local.ecs_cluster_id
+  alb_listener_arn      = module.alb.listener_arn
+  app_url               = var.app_url
+  auth_issuer           = module.cognito.auth_issuer
+  alb_security_group_id = module.alb.alb_security_group_id
+  web_image_repository  = var.web_image_repository
+  centralised_support   = var.centralised_support
+  web_target_group_arns = var.web_target_group_arns
 }
 
 
@@ -317,7 +317,7 @@ module "access_handler" {
   factory_oidc_issuer                       = var.factory_oidc_issuer
   ecs_task_cpu                              = var.access_handler_ecs_task_cpu
   ecs_task_memory                           = var.access_hander_ecs_task_memory
-  additional_target_groups                  = var.access_target_group_arns
+  access_target_group_arns                  = var.access_target_group_arns
 }
 
 

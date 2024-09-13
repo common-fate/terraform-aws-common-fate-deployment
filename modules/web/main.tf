@@ -204,5 +204,5 @@ resource "aws_lb_listener_rule" "service_rule" {
 
 }
 locals {
-  web_target_group_arns = var.additional_target_groups != [] ? concat([aws_lb_target_group.web_tg.arn], var.additional_target_groups) : [aws_lb_target_group.web_tg.arn]
+  web_target_group_arns = var.web_target_group_arns != [] ? concat([aws_lb_target_group.web_tg.arn], var.web_target_group_arns) : [aws_lb_target_group.web_tg.arn]
 }

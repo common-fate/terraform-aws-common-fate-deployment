@@ -1,6 +1,6 @@
 
 locals {
-  access_target_group_arns = var.additional_target_groups != [] ? concat([aws_lb_target_group.access_handler_tg.arn], var.additional_target_groups) : [aws_lb_target_group.access_handler_tg.arn]
+  access_target_group_arns = var.access_target_group_arns != [] ? concat([aws_lb_target_group.access_handler_tg.arn], var.access_target_group_arns) : [aws_lb_target_group.access_handler_tg.arn]
 }
 
 #trivy:ignore:AVD-AWS-0104

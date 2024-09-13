@@ -156,7 +156,7 @@ variable "hierarchy_ui" {
 
 }
 
-variable "additional_target_groups" {
+variable "web_target_group_arns" {
   type        = list(string)
   description = "Additional target groups to attach the service to."
   default     = []

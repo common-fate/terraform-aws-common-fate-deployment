@@ -393,7 +393,7 @@ variable "administrator_emails" {
   type        = list(string)
 }
 
-variable "additional_target_groups" {
+variable "control_plane_target_group_arns" {
   type        = list(string)
   description = "Additional target groups to attach the service to."
   default     = []

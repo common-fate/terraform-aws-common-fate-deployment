@@ -225,7 +225,7 @@ variable "factory_monitoring" {
   default     = true
 }
 
-variable "additional_target_groups" {
+variable "access_target_group_arns" {
   type        = list(string)
   description = "Additional target groups to attach the service to."
   default     = []
