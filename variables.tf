@@ -454,3 +454,21 @@ variable "administrator_emails" {
   default     = []
   type        = list(string)
 }
+
+variable "web_target_group_arns" {
+  description = "ARNs of supplemental target groups for the web service."
+  default = []
+  type = list(string)
+}
+
+variable "access_target_group_arns" {
+  description = "ARNs of supplemental target groups for the access handler service."
+  default = []
+  type = list(string)
+}
+
+variable "control_plane_target_group_arns" {
+  description = "ARNs of supplemental target groups for the control plane service."
+  default = []
+  type = list(string)
+}
