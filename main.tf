@@ -73,7 +73,7 @@ module "control_plane_db" {
   restore_to_point_in_time = var.restore_to_point_in_time
   rds_multi_az             = var.rds_multi_az
   apply_immediately        = var.rds_apply_immediately
-  snapshot_identifier      = var.snapshot_identifier
+  snapshot_identifier      = var.rds_snapshot_identifier
   suffix                   = var.rds-suffix
 }
 
