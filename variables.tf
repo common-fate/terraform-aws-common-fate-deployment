@@ -460,7 +460,7 @@ variable "rds_snapshot_identifier" {
   default     = null
 }
 
-variable "rds-suffix" {
+variable "rds_suffix" {
   description = "(Optional) adds a suffix to the database identifier"
   type        = string
   default     = null
