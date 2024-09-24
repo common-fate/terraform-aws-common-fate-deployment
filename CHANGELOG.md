@@ -1,5 +1,14 @@
 # @common-fate/terraform-aws-common-fate-deployment
 
+## 2.5.2
+
+### Patch Changes
+
+- 5aa2b10: Fixes an issue with GCP access de-provisioning where a request for multiple roles on the same target, such as a Project or Folder, could result in one of the roles not being removed when the request was closed.
+- e86589a: Adds snapshot identifer and suffix for rds instance to enable creating rds instance from snapshot
+- bc1e5f9: Makes target groups to ECS services configurable, allowing additional load balancers to be added to a Common Fate deployment.
+- 5aa2b10: Fixes an issue where JIT requests to the Common Fate administrator role would not be correctly revoked.
+
 ## 2.5.1
 
 ### Patch Changes
