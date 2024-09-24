@@ -1,4 +1,8 @@
 
+locals {
+  access_target_group_arns = var.access_target_group_arns != [] ? concat([aws_lb_target_group.access_handler_tg.arn], var.access_target_group_arns) : [aws_lb_target_group.access_handler_tg.arn]
+}
+
 #trivy:ignore:AVD-AWS-0104
 resource "aws_security_group" "ecs_access_handler_sg_v2" {
   name        = "${var.namespace}-${var.stage}-access-handler"
@@ -377,10 +381,13 @@ resource "aws_ecs_service" "access_handler_service" {
     security_groups = [aws_security_group.ecs_access_handler_sg_v2.id]
   }
 
-  load_balancer {
-    target_group_arn = aws_lb_target_group.access_handler_tg.arn
-    container_name   = "access-handler-container"
-    container_port   = 9090
+  dynamic "load_balancer" {
+    for_each = toset(local.access_target_group_arns)
+    content {
+      target_group_arn = load_balancer.value
+      container_name   = "access-handler-container"
+      container_port   = 9090
+    }
   }
 
   deployment_circuit_breaker {

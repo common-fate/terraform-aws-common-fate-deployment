@@ -16,7 +16,6 @@ locals {
   private_subnet_ids       = var.vpc_id != null ? var.private_subnet_ids : module.vpc[0].private_subnet_ids
   database_subnet_group_id = var.vpc_id != null ? var.database_subnet_group_id : module.vpc[0].database_subnet_group_id
   ecs_cluster_id           = var.ecs_cluster_id != null ? var.ecs_cluster_id : module.ecs[0].cluster_id
-
 }
 
 moved {
@@ -232,6 +231,7 @@ module "control_plane" {
   read_only_service_client_secret        = module.cognito.read_only_client_secret
   factory_monitoring                     = var.factory_monitoring
   administrator_emails                   = var.administrator_emails
+  control_plane_target_group_arns        = var.control_plane_target_group_arns
 }
 
 module "report_bucket" {
@@ -275,6 +275,7 @@ module "web" {
   alb_security_group_id = module.alb.alb_security_group_id
   web_image_repository  = var.web_image_repository
   centralised_support   = var.centralised_support
+  web_target_group_arns = var.web_target_group_arns
 }
 
 
@@ -318,6 +319,7 @@ module "access_handler" {
   factory_oidc_issuer                       = var.factory_oidc_issuer
   ecs_task_cpu                              = var.access_handler_ecs_task_cpu
   ecs_task_memory                           = var.access_hander_ecs_task_memory
+  access_target_group_arns                  = var.access_target_group_arns
 }
 
 

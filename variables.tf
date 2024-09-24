@@ -18,7 +18,7 @@ variable "aws_region" {
 variable "release_tag" {
   description = "Override the application release tag to be used in the deployment. As of module version v1.13.0, application versions are bundled into the Terraform module, and so in most cases you should not override this."
   type        = string
-  default     = "v4.8.3"
+  default     = "v4.8.4"
 }
 
 variable "app_certificate_arn" {
@@ -464,4 +464,22 @@ variable "rds-suffix" {
   description = "(Optional) adds a suffix to the database identifier"
   type        = string
   default     = null
+
+}
+variable "web_target_group_arns" {
+  description = "ARNs of supplemental target groups for the web service."
+  default     = []
+  type        = list(string)
+}
+
+variable "access_target_group_arns" {
+  description = "ARNs of supplemental target groups for the access handler service."
+  default     = []
+  type        = list(string)
+}
+
+variable "control_plane_target_group_arns" {
+  description = "ARNs of supplemental target groups for the control plane service."
+  default     = []
+  type        = list(string)
 }

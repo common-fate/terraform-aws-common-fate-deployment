@@ -3,6 +3,10 @@
 # Control Plane
 ######################################################
 
+locals {
+  control_plane_target_groups = var.control_plane_target_group_arns != [] ? concat([aws_lb_target_group.control_plane_tg.arn, aws_lb_target_group.control_plane_tg_http2.arn], var.control_plane_target_group_arns) : [aws_lb_target_group.control_plane_tg.arn, aws_lb_target_group.control_plane_tg_http2.arn]
+}
+
 #trivy:ignore:AVD-AWS-0104
 resource "aws_security_group" "ecs_control_plane_sg_v2" {
   name        = "${var.namespace}-${var.stage}-control-plane"
@@ -867,17 +871,16 @@ resource "aws_ecs_service" "control_plane_service" {
     assign_public_ip = true
   }
 
-  load_balancer {
-    target_group_arn = aws_lb_target_group.control_plane_tg.arn
-    container_name   = "control-plane-container"
-    container_port   = 8080
+  dynamic "load_balancer" {
+    for_each = local.control_plane_target_groups
+
+    content {
+      target_group_arn = load_balancer.value
+      container_name   = "control-plane-container"
+      container_port   = 8080
+    }
   }
 
-  load_balancer {
-    target_group_arn = aws_lb_target_group.control_plane_tg_http2.arn
-    container_name   = "control-plane-container"
-    container_port   = 8080
-  }
 }
 
 resource "aws_lb_listener_rule" "service_rule" {
