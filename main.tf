@@ -62,18 +62,18 @@ module "alb" {
 }
 
 module "control_plane_db" {
-  source                   = "./modules/database"
-  namespace                = var.namespace
-  stage                    = var.stage
-  vpc_id                   = local.vpc_id
-  subnet_group_id          = local.database_subnet_group_id
-  deletion_protection      = var.database_deletion_protection
-  rds_db_retention_period  = var.rds_db_retention_period
-  restore_to_point_in_time = var.restore_to_point_in_time
-  rds_multi_az             = var.rds_multi_az
-  apply_immediately        = var.rds_apply_immediately
-  snapshot_identifier      = var.rds_snapshot_identifier
-  rds_suffix               = var.rds_suffix
+  source                         = "./modules/database"
+  namespace                      = var.namespace
+  stage                          = var.stage
+  vpc_id                         = local.vpc_id
+  subnet_group_id                = local.database_subnet_group_id
+  deletion_protection            = var.database_deletion_protection
+  rds_db_retention_period        = var.rds_db_retention_period
+  restore_to_point_in_time       = var.restore_to_point_in_time
+  rds_multi_az                   = var.rds_multi_az
+  apply_immediately              = var.rds_apply_immediately
+  snapshot_identifier            = var.rds_snapshot_identifier
+  rds_instance_identifier_suffix = var.rds_instance_identifier_suffix
 }
 
 
