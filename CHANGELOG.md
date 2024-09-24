@@ -1,5 +1,24 @@
 # @common-fate/terraform-aws-common-fate-deployment
 
+## 2.6.0
+
+### Minor Changes
+
+- 6ea25f1: A reason is now required when using breakglass to activate an access request
+- 6ea25f1: Create View for all access request statuses in My Access Requests Page.
+- 6ea25f1: Admins can now delete users from the users list table
+- 6ea25f1: Integrations now have their own detail page where config can be reviewed/edited and background tasks relating to integrations can be inspected
+
+### Patch Changes
+
+- 6ea25f1: Fixes an issue with GCP access de-provisioning where a request for multiple roles on the same target, such as a Project or Folder, could result in one of the roles not being removed when the request was closed.
+- 6ea25f1: Added the AWS account number to the target field in Slack messages.
+- 6ea25f1: Add additional validation to availability spec apis to make sure domain identities cannot be empty
+- 6ea25f1: Fix issue causing large target and role names to be hard to read in the request detail table
+- 6ea25f1: Route users without access to integrations in the settings to the notifications panel
+- 6ea25f1: Fix issue causing duplicate roles to show in entitlement previews
+- 6ea25f1: Fix an issue where the policy simulator would not match policies including 'resource.approved' constraints.
+
 ## 2.5.2
 
 ### Patch Changes
