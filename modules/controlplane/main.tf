@@ -678,7 +678,14 @@ locals {
       name  = "CF_ADMINISTRATORS",
       value = join(",", var.administrator_emails)
     },
-
+    {
+      name  = "CF_BUILTIN_WEBHOOK_PROVISIONER_URL",
+      value = var.builtin_provisioner_url
+    },
+    {
+      name  = "CF_MANAGED_DEPLOYMENT",
+      value = var.managed_deployment
+    },
   ]
 
   // Only add these secrets if their values are provided
