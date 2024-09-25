@@ -398,3 +398,16 @@ variable "control_plane_target_group_arns" {
   description = "Additional target groups to attach the service to."
   default     = []
 }
+
+
+variable "builtin_provisioner_url" {
+  description = "The URL of the builtin provisioner."
+  type        = string
+}
+
+
+variable "managed_deployment" {
+  description = "Whether this is a managed deployment, for new managed deployments, a default policy is added for access to the administrator role to assist with first time setup. You should not set this to true if you manage your own BYOC deployment."
+  type        = bool
+  default     = false
+}

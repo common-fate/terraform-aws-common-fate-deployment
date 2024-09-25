@@ -232,6 +232,8 @@ module "control_plane" {
   factory_monitoring                     = var.factory_monitoring
   administrator_emails                   = var.administrator_emails
   control_plane_target_group_arns        = var.control_plane_target_group_arns
+  builtin_provisioner_url                = module.provisioner.provisioner_url
+  managed_deployment                     = var.managed_deployment
 }
 
 module "report_bucket" {
@@ -320,6 +322,7 @@ module "access_handler" {
   ecs_task_cpu                              = var.access_handler_ecs_task_cpu
   ecs_task_memory                           = var.access_hander_ecs_task_memory
   access_target_group_arns                  = var.access_target_group_arns
+  builtin_provisioner_url                   = module.provisioner.provisioner_url
 }
 
 

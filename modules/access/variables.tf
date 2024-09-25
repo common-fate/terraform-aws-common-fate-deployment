@@ -230,3 +230,8 @@ variable "access_target_group_arns" {
   description = "Additional target groups to attach the service to."
   default     = []
 }
+
+variable "builtin_provisioner_url" {
+  description = "The URL of the builtin provisioner."
+  type        = string
+}

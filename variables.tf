@@ -483,3 +483,9 @@ variable "control_plane_target_group_arns" {
   default     = []
   type        = list(string)
 }
+
+variable "managed_deployment" {
+  description = "Whether this is a managed deployment, for new managed deployments, a default policy is added for access to the administrator role to assist with first time setup. You should not set this to true if you manage your own BYOC deployment."
+  type        = bool
+  default     = false
+}

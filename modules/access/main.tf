@@ -306,6 +306,10 @@ resource "aws_ecs_task_definition" "access_handler_task" {
           name  = "CF_FACTORY_MONITORING",
           value = var.factory_monitoring ? "true" : "false"
         },
+        {
+          name  = "CF_BUILTIN_WEBHOOK_PROVISIONER_URL",
+          value = var.builtin_provisioner_url
+        },
       ],
       secrets = [
         {
