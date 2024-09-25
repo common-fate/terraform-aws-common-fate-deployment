@@ -463,7 +463,7 @@ variable "rds_snapshot_identifier" {
 variable "rds_instance_identifier_suffix" {
   description = "(Optional) adds a suffix to the database identifier"
   type        = string
-  default     = null
+  default     = ""
 
 }
 variable "web_target_group_arns" {
