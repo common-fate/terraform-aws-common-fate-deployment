@@ -684,7 +684,7 @@ locals {
     },
     {
       name  = "CF_MANAGED_DEPLOYMENT",
-      value = var.managed_deployment
+      value = var.managed_deployment ? "true" : "false"
     },
   ]
 
