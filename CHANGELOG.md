@@ -1,5 +1,19 @@
 # @common-fate/terraform-aws-common-fate-deployment
 
+## 2.6.1
+
+### Patch Changes
+
+- 2c6a525: Fixes an issue causing expiry notifications to not be sent
+- 2c6a525: Replace filter dropdown menus on the all requests page with filter chips which can be used to construct more complex queries. Requests can be filtered by requestor, approver, closer, and for multiple principals at the same time.
+- 2c6a525: Only create the default admin access role policy for new managed deployments.
+- 820a2ef: Add managed_deployment variable to apply additional configuration on initial deployment.
+- 2c6a525: Fixed RDS database and user names not showing on the get and list request APIs.
+- 2c6a525: Fix issue causing empty AWS start url when using RDS proxy functionality with connected identities enabled.
+- 2c6a525: Fixes the position of the bulk actions selector to be fixed at the bottom of the page.
+- 2c6a525: Fixes an invalid GCP Organization selector terraform example in the Access Selector playground.
+- 820a2ef: Pass in the builtin provisioner webhook url to the Control Plane and Access Handler services.
+
 ## 2.6.0
 
 ### Minor Changes
