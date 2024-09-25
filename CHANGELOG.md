@@ -1,5 +1,11 @@
 # @common-fate/terraform-aws-common-fate-deployment
 
+## 2.6.2
+
+### Patch Changes
+
+- 11a71a4: Fixes the default value for the 'rds_instance_identifier_suffix' variable, to fix an error: 'The expression result is null' when applying the Terraform stack.
+
 ## 2.6.1
 
 ### Patch Changes
