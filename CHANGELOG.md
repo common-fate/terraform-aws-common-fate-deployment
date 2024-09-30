@@ -1,5 +1,11 @@
 # @common-fate/terraform-aws-common-fate-deployment
 
+## 2.5.3
+
+### Patch Changes
+
+- e012f6a: Fixes an issue where access requests with many entitlements attached would not deprovision.
+
 ## 2.5.2
 
 ### Patch Changes
