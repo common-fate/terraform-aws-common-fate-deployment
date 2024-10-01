@@ -1,5 +1,21 @@
 # @common-fate/terraform-aws-common-fate-deployment
 
+## 2.7.0
+
+### Minor Changes
+
+- 9d76133: Add reason pattern matching to validation in access workflows.
+- 9d76133: A reason is now attached to access request grants describing why they were closed
+
+### Patch Changes
+
+- 9d76133: Added the ability to specify an override for the rds endpoint per rds user to allow read roles to use a read only replica endpoint.
+- 9d76133: Adds additional filters to the requests and my requests page for grant count, manual or auto approvedm, and time range filters for requested at, approved at, closed at.
+- 9d76133: Fixes an issue where access requests with many entitlements attached would not deprovision.
+- 9d76133: Fix default Cedar Policy action for Control Plane for closing access requests.
+- 9d76133: Fixes a performance issue which could cause the Availability Maker background job to fail.
+- 381ce7b: remove assign public ip on control plane
+
 ## 2.6.2
 
 ### Patch Changes
