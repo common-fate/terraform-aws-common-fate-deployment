@@ -873,9 +873,9 @@ resource "aws_ecs_service" "control_plane_service" {
   }
 
   network_configuration {
-    subnets          = var.subnet_ids
-    security_groups  = [aws_security_group.ecs_control_plane_sg_v2.id]
-    assign_public_ip = true
+    subnets         = var.subnet_ids
+    security_groups = [aws_security_group.ecs_control_plane_sg_v2.id]
+
   }
 
   dynamic "load_balancer" {
