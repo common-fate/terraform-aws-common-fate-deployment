@@ -234,6 +234,7 @@ module "control_plane" {
   control_plane_target_group_arns        = var.control_plane_target_group_arns
   builtin_provisioner_url                = module.provisioner.provisioner_url
   managed_deployment                     = var.managed_deployment
+  compare_entitlements_enabled           = var.compare_entitlements_enabled
 }
 
 module "report_bucket" {

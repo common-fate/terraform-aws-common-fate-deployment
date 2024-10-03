@@ -489,3 +489,10 @@ variable "managed_deployment" {
   type        = bool
   default     = false
 }
+
+
+variable "compare_entitlements_enabled" {
+  description = "Whether the compare entitlements background job is enabled"
+  type        = bool
+  default     = true
+}
