@@ -1,5 +1,11 @@
 # @common-fate/terraform-aws-common-fate-deployment
 
+## 2.6.3
+
+### Patch Changes
+
+- 9a043ad: Fixes an issue which could cause terraform operations to hang when querying selectors.
+
 ## 2.6.2
 
 ### Patch Changes
