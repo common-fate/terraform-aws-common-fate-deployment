@@ -686,6 +686,10 @@ locals {
       name  = "CF_MANAGED_DEPLOYMENT",
       value = var.managed_deployment ? "true" : "false"
     },
+    {
+      name  = "CF_COMPARE_ENTITLEMENTS_ENABLED",
+      value = var.compare_entitlements_enabled ? "true" : "false"
+    }
   ]
 
   // Only add these secrets if their values are provided
