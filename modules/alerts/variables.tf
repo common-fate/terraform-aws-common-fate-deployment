@@ -41,10 +41,20 @@ variable "alert_metadata" {
 
 variable "alb_arn_suffix" {
   description = "The arn suffix of the load balancer"
-  type = string
+  type        = string
 }
 
 variable "control_plane_tg_arn_suffix" {
   description = "The arn suffix of the control plane target group"
-  type = string
+  type        = string
+}
+
+variable "db_instance_identifier" {
+  description = "The instance identifier of the database"
+  type        = string
+}
+
+variable "sqs_queue_name" {
+  description = "The sqs queue name"
+  type        = string
 }

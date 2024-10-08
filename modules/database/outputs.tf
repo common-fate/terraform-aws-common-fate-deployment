@@ -22,3 +22,7 @@ output "secret_arn" {
   value       = aws_db_instance.pg_db.master_user_secret.0.secret_arn
 }
 
+output "db_instance_identifier" {
+  description = "The instance identifier of the database"
+  value       = aws_db_instance.pg_db.identifier
+}

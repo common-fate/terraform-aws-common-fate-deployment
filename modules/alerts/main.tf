@@ -170,11 +170,11 @@ resource "aws_cloudwatch_metric_alarm" "elb_unhealthy_hostcount_alarm" {
 
   dimensions = {
     LoadBalancer = var.alb_arn_suffix
-    TargetGroup = var.control_plane_tg_arn_suffix
+    TargetGroup  = var.control_plane_tg_arn_suffix
   }
 
   alarm_actions = [aws_sns_topic.load_balancer_alerts.arn]
-  ok_actions = [aws_sns_topic.load_balancer_alerts.arn]
+  ok_actions    = [aws_sns_topic.load_balancer_alerts.arn]
 }
 
 resource "aws_cloudwatch_metric_alarm" "alb_target_response_time_alarm" {
@@ -183,7 +183,7 @@ resource "aws_cloudwatch_metric_alarm" "alb_target_response_time_alarm" {
   evaluation_periods  = 2
   metric_name         = "TargetResponseTime"
   namespace           = "AWS/ApplicationELB"
-  period              = 60  # 1 minute
+  period              = 60 # 1 minute
   statistic           = "Average"
   threshold           = 60
   alarm_description   = "Alarm when TargetResponseTime exceeds 60 seconds for 2 consecutive periods"
@@ -193,7 +193,7 @@ resource "aws_cloudwatch_metric_alarm" "alb_target_response_time_alarm" {
   }
 
   alarm_actions = [aws_sns_topic.load_balancer_alerts.arn]
-  ok_actions = [aws_sns_topic.load_balancer_alerts.arn]
+  ok_actions    = [aws_sns_topic.load_balancer_alerts.arn]
 }
 
 
@@ -213,7 +213,7 @@ resource "aws_cloudwatch_metric_alarm" "alb_5xx_alarm" {
   }
 
   alarm_actions = [aws_sns_topic.load_balancer_alerts.arn]
-  ok_actions = [aws_sns_topic.load_balancer_alerts.arn]
+  ok_actions    = [aws_sns_topic.load_balancer_alerts.arn]
 }
 
 
@@ -241,11 +241,11 @@ resource "aws_cloudwatch_metric_alarm" "sql_database_cpu_alarm" {
   alarm_description   = "Alarm when CPU utilization exceeds 80% for 2 consecutive periods"
 
   dimensions = {
-    DBInstanceIdentifier = "${var.namespace}-${var.stage}-pg-db"
+    DBInstanceIdentifier = var.db_instance_identifier
   }
 
   alarm_actions = [aws_sns_topic.database_alerts.arn]
-  ok_actions = [aws_sns_topic.database_alerts.arn]
+  ok_actions    = [aws_sns_topic.database_alerts.arn]
 }
 
 resource "aws_cloudwatch_metric_alarm" "freeable_memory_alarm" {
@@ -260,11 +260,11 @@ resource "aws_cloudwatch_metric_alarm" "freeable_memory_alarm" {
   alarm_description   = "Alarm when Freeable Memory is less than 10MB for 2 consecutive periods"
 
   dimensions = {
-    DBInstanceIdentifier = "${var.namespace}-${var.stage}-pg-db"
+    DBInstanceIdentifier = var.db_instance_identifier
   }
 
   alarm_actions = [aws_sns_topic.database_alerts.arn]
-  ok_actions = [aws_sns_topic.database_alerts.arn]
+  ok_actions    = [aws_sns_topic.database_alerts.arn]
 }
 
 resource "aws_cloudwatch_metric_alarm" "read_iops_alarm" {
@@ -279,11 +279,11 @@ resource "aws_cloudwatch_metric_alarm" "read_iops_alarm" {
   alarm_description   = "Alarm when Read IOPS exceeds 100 for 2 consecutive periods"
 
   dimensions = {
-    DBInstanceIdentifier = "${var.namespace}-${var.stage}-pg-db"
+    DBInstanceIdentifier = var.db_instance_identifier
   }
 
   alarm_actions = [aws_sns_topic.database_alerts.arn]
-  ok_actions = [aws_sns_topic.database_alerts.arn]
+  ok_actions    = [aws_sns_topic.database_alerts.arn]
 }
 
 resource "aws_cloudwatch_metric_alarm" "free_storage_space_alarm" {
@@ -298,11 +298,11 @@ resource "aws_cloudwatch_metric_alarm" "free_storage_space_alarm" {
   alarm_description   = "Alarm when Free Storage Space is less than 1GB for 2 consecutive periods"
 
   dimensions = {
-    DBInstanceIdentifier = "${var.namespace}-${var.stage}-pg-db"
+    DBInstanceIdentifier = var.db_instance_identifier
   }
 
   alarm_actions = [aws_sns_topic.database_alerts.arn]
-  ok_actions = [aws_sns_topic.database_alerts.arn]
+  ok_actions    = [aws_sns_topic.database_alerts.arn]
 }
 
 ######################################################
@@ -329,9 +329,9 @@ resource "aws_cloudwatch_metric_alarm" "sqs_queues_monitored_alarm" {
   alarm_description   = "Alarm when 100 messages are older than 5000 seconds for 2 consecutive periods"
 
   dimensions = {
-    QueueName = "${var.namespace}-${var.stage}-event-queue"
+    QueueName = var.sqs_queue_name
   }
 
   alarm_actions = [aws_sns_topic.sqs_alerts.arn]
-  ok_actions = [aws_sns_topic.sqs_alerts.arn]
+  ok_actions    = [aws_sns_topic.sqs_alerts.arn]
 }
