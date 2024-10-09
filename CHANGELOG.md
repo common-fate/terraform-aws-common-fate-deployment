@@ -1,5 +1,15 @@
 # @common-fate/terraform-aws-common-fate-deployment
 
+## 2.7.2
+
+### Patch Changes
+
+- 092c4ab: Adds ListSyncsForIntegration action to the CF::Admin::Action::"Read" action group to fix the integration detail page not showing syncs.
+- 092c4ab: Fix close button not working in Slack for access requests.
+- 2b3dbcb: For BYOC customers: fixes to monitoring variable references.
+- 092c4ab: Fixes an issue where Entra Group selector and Okta Group selectors would not match any resources when connected identities feature was enabled.
+- 092c4ab: Performance improvements when matching user identities when syncing integration resources.
+
 ## 2.7.1
 
 ### Patch Changes
