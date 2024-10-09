@@ -1,5 +1,14 @@
 # @common-fate/terraform-aws-common-fate-deployment
 
+## 2.6.4
+
+### Patch Changes
+
+- 6cd2bcd: Adds ListSyncsForIntegration action to the CF::Admin::Action::"Read" action group to fix the integration detail page not showing syncs.
+- 6cd2bcd: Fixes an issue where access requests with many entitlements attached would not deprovision.
+- 6cd2bcd: Fix default Cedar Policy action for Control Plane for closing access requests.
+- 6cd2bcd: Performance improvements when matching user identities when syncing integration resources.
+
 ## 2.6.3
 
 ### Patch Changes
