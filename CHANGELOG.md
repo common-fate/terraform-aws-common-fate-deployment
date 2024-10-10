@@ -1,5 +1,12 @@
 # @common-fate/terraform-aws-common-fate-deployment
 
+## 2.7.3
+
+### Patch Changes
+
+- f1a0d6b: fix issue causing entra integration role to not be found
+- 37e78ec: For BYOC customers: fix an issue with the 'cloudwatch_alarm_topics' output which caused the database alarms to not be correctly available.
+
 ## 2.7.2
 
 ### Patch Changes
