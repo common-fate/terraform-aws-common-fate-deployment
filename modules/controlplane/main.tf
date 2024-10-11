@@ -995,7 +995,7 @@ resource "aws_lb_listener_rule" "service_rule_access_redirect_policyset" {
   }
 }
 
-resource "aws_lb_listener_rule" "service_rule_access_redirect_query-jira" {
+resource "aws_lb_listener_rule" "service_rule_access_redirect_query_jira" {
   listener_arn = var.alb_listener_arn
   priority     = 58
   action {
