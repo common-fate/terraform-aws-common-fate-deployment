@@ -13,15 +13,15 @@ variable "stage" {
 // This has been deprecated in favour of using tag based assume role policies
 variable "common_fate_aws_reader_role_arn" {
   description = "Deprecated: Use common_fate_aws_account_id instead"
-  type = string
-  default = ""
+  type        = string
+  default     = ""
 }
 
 // This has been deprecated in favour of using tag based assume role policies
 variable "common_fate_aws_provisioner_role_arn" {
   description = "Deprecated: Use common_fate_aws_account_id instead"
-  type = string
-  default = ""
+  type        = string
+  default     = ""
 }
 
 variable "permit_management_account_assignments" {
@@ -51,4 +51,11 @@ variable "assume_role_external_id" {
   description = "The external id to be used for the IAM policy trust relation"
   type        = string
   default     = ""
+}
+
+variable "iam_role_permission_boundary" {
+  description = "If provided, attaches a Permission Boundary to all IAM roles in the module."
+  type        = string
+  nullable    = true
+  default     = null
 }

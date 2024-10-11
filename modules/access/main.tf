@@ -50,8 +50,9 @@ resource "aws_cloudwatch_log_group" "access_handler_log_group" {
 
 
 resource "aws_iam_role" "access_handler_ecs_execution_role" {
-  name        = "${var.namespace}-${var.stage}-access-handler-er"
-  description = "The execution role used by ECS to run the Access Handler task."
+  name                 = "${var.namespace}-${var.stage}-access-handler-er"
+  description          = "The execution role used by ECS to run the Access Handler task."
+  permissions_boundary = var.iam_role_permission_boundary
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
     Statement = [
@@ -116,8 +117,9 @@ resource "aws_iam_role_policy_attachment" "access_handler_ecs_execution_role_pol
 
 # TASK ROLE
 resource "aws_iam_role" "access_handler_ecs_task_role" {
-  name        = "${var.namespace}-${var.stage}-access-handler-ecs-tr"
-  description = "The task role assumed by the Access Handler task."
+  name                 = "${var.namespace}-${var.stage}-access-handler-ecs-tr"
+  description          = "The task role assumed by the Access Handler task."
+  permissions_boundary = var.iam_role_permission_boundary
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
     Statement = [

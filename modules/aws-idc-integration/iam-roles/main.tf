@@ -27,9 +27,10 @@ data "aws_iam_policy_document" "assume_roles_policy" {
   }
 }
 resource "aws_iam_role" "read_role" {
-  name               = "${var.namespace}-${var.stage}-idc-reader-role"
-  description        = "A role used by Common Fate to read AWS IDC resources"
-  assume_role_policy = data.aws_iam_policy_document.assume_roles_policy.json
+  name                 = "${var.namespace}-${var.stage}-idc-reader-role"
+  description          = "A role used by Common Fate to read AWS IDC resources"
+  permissions_boundary = var.iam_role_permission_boundary
+  assume_role_policy   = data.aws_iam_policy_document.assume_roles_policy.json
   tags = {
     "common-fate-aws-integration-read-role" = "true"
   }
@@ -79,9 +80,10 @@ resource "aws_iam_role_policy_attachment" "read_role_policy_attach" {
 }
 
 resource "aws_iam_role" "provision_role" {
-  name               = "${var.namespace}-${var.stage}-idc-provisioner-role"
-  description        = "A role used by Common Fate to provision access in AWS IDC"
-  assume_role_policy = data.aws_iam_policy_document.assume_roles_policy.json
+  name                 = "${var.namespace}-${var.stage}-idc-provisioner-role"
+  description          = "A role used by Common Fate to provision access in AWS IDC"
+  permissions_boundary = var.iam_role_permission_boundary
+  assume_role_policy   = data.aws_iam_policy_document.assume_roles_policy.json
   tags = {
     "common-fate-aws-integration-provision-role" = "true"
   }

@@ -29,7 +29,8 @@ resource "aws_security_group" "ecs_web_sg_v2" {
 }
 
 resource "aws_iam_role" "web_ecs_execution_role" {
-  name = "${var.namespace}-${var.stage}-web-ecs-er"
+  name                 = "${var.namespace}-${var.stage}-web-ecs-er"
+  permissions_boundary = var.iam_role_permission_boundary
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
     Statement = [
