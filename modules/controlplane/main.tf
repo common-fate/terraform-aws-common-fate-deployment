@@ -173,33 +173,6 @@ resource "aws_iam_role_policy_attachment" "control_plane_ecs_task_parameter_stor
   policy_arn = aws_iam_policy.parameter_store_secrets_read_access.arn
 }
 
-resource "aws_iam_policy" "parameter_store_secrets_write_access" {
-  name        = "${var.namespace}-${var.stage}-control-plane-ps-write"
-  description = "Allows writing secrets to SSM Parameter Store"
-
-  policy = jsonencode({
-    Version = "2012-10-17",
-    // include only the secrets that are configured
-    Statement = [
-      {
-        Effect = "Allow"
-        Action = [
-          "ssm:PutParameter",
-        ]
-        Resource = [
-          "arn:${var.aws_partition}:ssm:${var.aws_region}:${var.aws_account_id}:parameter/${var.namespace}/${var.stage}/*",
-        ]
-      }
-    ]
-  })
-}
-
-
-resource "aws_iam_role_policy_attachment" "control_plane_ecs_task_parameter_store_secrets_write_access_attach" {
-  role       = aws_iam_role.control_plane_ecs_execution_role.name
-  policy_arn = aws_iam_policy.parameter_store_secrets_write_access.arn
-}
-
 
 
 # TASK ROLE
@@ -226,6 +199,35 @@ resource "aws_iam_role" "control_plane_ecs_task_role" {
     ]
   })
 }
+
+resource "aws_iam_policy" "parameter_store_secrets_write_access" {
+  name        = "${var.namespace}-${var.stage}-control-plane-ps-write"
+  description = "Allows writing secrets to SSM Parameter Store"
+
+  policy = jsonencode({
+    Version = "2012-10-17",
+    // include only the secrets that are configured
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "ssm:PutParameter",
+          "ssm:AddTagsToResource"
+        ]
+        Resource = [
+          "arn:${var.aws_partition}:ssm:${var.aws_region}:${var.aws_account_id}:parameter/${var.namespace}/${var.stage}/*",
+        ]
+      }
+    ]
+  })
+}
+
+
+resource "aws_iam_role_policy_attachment" "control_plane_ecs_task_parameter_store_secrets_write_access_attach" {
+  role       = aws_iam_role.control_plane_ecs_task_role.name
+  policy_arn = aws_iam_policy.parameter_store_secrets_write_access.arn
+}
+
 
 resource "aws_iam_role_policy_attachment" "control_plane_ecs_task_database_secrets_access_tr_attach" {
   role       = aws_iam_role.control_plane_ecs_task_role.name
@@ -992,6 +994,30 @@ resource "aws_lb_listener_rule" "service_rule_access_redirect_policyset" {
     }
   }
 }
+
+resource "aws_lb_listener_rule" "service_rule_access_redirect_query_jira" {
+  listener_arn = var.alb_listener_arn
+  priority     = 58
+  action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.control_plane_tg.arn
+  }
+
+  condition {
+    host_header {
+      values = [replace(var.app_url, "https://", "")]
+    }
+  }
+  condition {
+    path_pattern {
+      values = [
+        "/commonfate.access.v1alpha1.AttachmentsService/QueryJiraIssues",
+      ]
+    }
+  }
+}
+
+
 
 
 resource "aws_ecs_service" "worker_service" {
