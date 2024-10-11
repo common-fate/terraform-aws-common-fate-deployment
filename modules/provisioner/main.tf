@@ -49,8 +49,9 @@ resource "aws_cloudwatch_log_group" "provisioner_log_group" {
 
 
 resource "aws_iam_role" "provisioner_ecs_execution_role" {
-  name        = "${local.name_prefix}-provisioner-er"
-  description = "The execution role used by ECS to run the Provisioner task."
+  name                 = "${local.name_prefix}-provisioner-er"
+  permissions_boundary = var.iam_role_permission_boundary
+  description          = "The execution role used by ECS to run the Provisioner task."
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
     Statement = [
@@ -82,8 +83,9 @@ resource "aws_iam_role_policy_attachment" "provisioner_ecs_execution_role_policy
 # The task role will be configured to have assuem role permissions on specific roles
 # these roles are configured in the terraform config provider along with the webhooks
 resource "aws_iam_role" "provisioner_ecs_task_role" {
-  name        = "${local.name_prefix}-provisioner-ecs-tr"
-  description = "The task role assumed by the Provisioner task."
+  name                 = "${local.name_prefix}-provisioner-ecs-tr"
+  permissions_boundary = var.iam_role_permission_boundary
+  description          = "The task role assumed by the Provisioner task."
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
     Statement = [

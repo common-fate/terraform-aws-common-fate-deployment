@@ -235,3 +235,10 @@ variable "builtin_provisioner_url" {
   description = "The URL of the builtin provisioner."
   type        = string
 }
+
+variable "iam_role_permission_boundary" {
+  description = "If provided, attaches a Permission Boundary to all IAM roles in the module."
+  type        = string
+  nullable    = true
+  default     = null
+}

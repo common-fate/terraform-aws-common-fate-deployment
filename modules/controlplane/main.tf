@@ -90,7 +90,8 @@ resource "aws_cloudwatch_log_group" "worker_log_group" {
 
 # EXECUTION ROLE
 resource "aws_iam_role" "control_plane_ecs_execution_role" {
-  name = "${var.namespace}-${var.stage}-control-plane-ecs-er"
+  name                 = "${var.namespace}-${var.stage}-control-plane-ecs-er"
+  permissions_boundary = var.iam_role_permission_boundary
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
     Statement = [
@@ -177,7 +178,8 @@ resource "aws_iam_role_policy_attachment" "control_plane_ecs_task_parameter_stor
 
 # TASK ROLE
 resource "aws_iam_role" "control_plane_ecs_task_role" {
-  name = "${var.namespace}-${var.stage}-control-plane-ecs-tr"
+  name                 = "${var.namespace}-${var.stage}-control-plane-ecs-tr"
+  permissions_boundary = var.iam_role_permission_boundary
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
     Statement = [

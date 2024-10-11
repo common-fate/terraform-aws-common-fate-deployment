@@ -496,3 +496,10 @@ variable "compare_entitlements_enabled" {
   type        = bool
   default     = true
 }
+
+variable "iam_role_permission_boundary" {
+  description = "If provided, attaches a Permission Boundary to all IAM roles in the module."
+  type        = string
+  nullable    = true
+  default     = null
+}
