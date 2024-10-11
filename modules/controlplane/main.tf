@@ -940,7 +940,6 @@ resource "aws_lb_listener_rule" "service_rule_access_redirect_query" {
         "/commonfate.access.v1alpha1.AccessService/QueryEntitlements",
         "/commonfate.access.v1alpha1.AccessService/QueryEntitlementsTree",
         "/commonfate.access.v1alpha1.AccessService/QueryApprovers",
-        "/commonfate.access.v1alpha1.AttachmentsService/QueryJiraIssues",
       ]
     }
   }
@@ -995,6 +994,30 @@ resource "aws_lb_listener_rule" "service_rule_access_redirect_policyset" {
     }
   }
 }
+
+resource "aws_lb_listener_rule" "service_rule_access_redirect_query-jira" {
+  listener_arn = var.alb_listener_arn
+  priority     = 58
+  action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.control_plane_tg.arn
+  }
+
+  condition {
+    host_header {
+      values = [replace(var.app_url, "https://", "")]
+    }
+  }
+  condition {
+    path_pattern {
+      values = [
+        "/commonfate.access.v1alpha1.AttachmentsService/QueryJiraIssues",
+      ]
+    }
+  }
+}
+
+
 
 
 resource "aws_ecs_service" "worker_service" {
