@@ -212,6 +212,7 @@ resource "aws_iam_policy" "parameter_store_secrets_write_access" {
         Effect = "Allow"
         Action = [
           "ssm:PutParameter",
+          "ssm:AddTagsToResource"
         ]
         Resource = [
           "arn:${var.aws_partition}:ssm:${var.aws_region}:${var.aws_account_id}:parameter/${var.namespace}/${var.stage}/*",
