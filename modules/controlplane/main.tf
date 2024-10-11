@@ -940,6 +940,7 @@ resource "aws_lb_listener_rule" "service_rule_access_redirect_query" {
         "/commonfate.access.v1alpha1.AccessService/QueryEntitlements",
         "/commonfate.access.v1alpha1.AccessService/QueryEntitlementsTree",
         "/commonfate.access.v1alpha1.AccessService/QueryApprovers",
+        "/commonfate.access.v1alpha1.AttachmentsService/QueryJiraIssues",
       ]
     }
   }
