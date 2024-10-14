@@ -116,7 +116,19 @@ resource "aws_iam_role_policy_attachment" "provision_role_policy_attach" {
   policy_arn = aws_iam_policy.idc_provision.arn
 }
 
-// an optional additional policy allowing management account access
+// An optional additional policy allowing management account access.
+//
+// IAM Identity Center uses a Service Linked Role when provisioning access to all accounts except the management account.
+// When provisioning access to the management account, the Service Linked Role is not used.
+// Because of this, calling CreateAccountAssignment to the management account requires the additional permissions in the module.
+// The additional permissions match the Service Linked Role.
+// If it's disabled, Common Fate is unable to provision because an IAM access denied is received.
+//
+// See: https://docs.aws.amazon.com/singlesignon/latest/userguide/using-service-linked-roles.html#slr-permissions
+//
+// you'll see that some of the actions like iam:CreateRole are scoped to "Resource" : "arn:aws:iam::*:role/aws-reserved/sso.amazonaws.com/*"
+// the /aws-reserved/sso.amazonaws.com/* is a reserved IAM role path which can only be used with IAM Identity Center,
+// so the role doesn't have permission to create arbitrary IAM roles - only ones provisioned by IAM Identity Center.
 resource "aws_iam_policy" "idc_provision_management_account" {
   count       = var.permit_management_account_assignments ? 1 : 0
   name        = "${var.namespace}-${var.stage}-idc-provision-management_account"
