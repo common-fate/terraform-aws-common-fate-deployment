@@ -1,5 +1,11 @@
 # @common-fate/terraform-aws-common-fate-deployment
 
+## 2.8.1
+
+### Patch Changes
+
+- 4c9d34b: For BYOC customers: fixes an issue where the 'iam_role_permission_boundary' variable was not correctly propagated to submodules.
+
 ## 2.8.0
 
 ### Minor Changes
