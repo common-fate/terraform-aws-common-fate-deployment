@@ -1,5 +1,34 @@
 # @common-fate/terraform-aws-common-fate-deployment
 
+## 2.8.0
+
+### Minor Changes
+
+- ba8d362: Adds Jira integration for adding tickets to request reasons as context
+- ba8d362: Added multistep approval conditions to access workflows. You can now optionally configure 1 or more conditions which must be met for a Grant to be approved. Each approval must be completed by a seperate reviewer, for example require approval from both the engineering and security teams. Where no approval steps are defined, the existing behaviour is preserved, a Grant will be marked as approved when any permitted principal approvs the request.
+- ba8d362: Add ability in the request page to request a review from one of the available reviewers by sending them a slack notification
+- fcceec3: For BYOC customers: adds a new 'iam_role_permission_boundary' which can be used to apply a permission boundary to all IAM roles provisioned by the Terraform module.
+- ba8d362: Added the option to configure workflows with a Request -> Activate expiry and Request -> Approved expiry
+- ba8d362: Allow JIRA tickets to be attached to Access Request reason.
+
+### Patch Changes
+
+- ba8d362: Adds ListSyncsForIntegration action to the CF::Admin::Action::"Read" action group to fix the integration detail page not showing syncs.
+- ba8d362: Simplify the search on the New Request page to use an exact match on id,type and name instead of a fuzzy search.
+- ba8d362: Proxy session logs can now only be viewed when a user has a policy allowing Access::Action::"GetSessionLog" or the CF::Admin::Access::"Read" action group
+- ba8d362: Fixes an issue which could cause terraform operations to hang when querying selectors.
+- ba8d362: Fix close button not working in Slack for access requests.
+- ba8d362: Fixes an issue which caused multiple authorization logs for some API actions, one of which may have been denied while the other was allowed.
+- 8f955a8: Fixes permissions for creating integration secrets in the UI
+- ba8d362: Fixes an issue where the session lost error page would not show the login button correctly.
+- e692f4e: For BYOC customers: the unused 'general-purpose' roles submodule has been removed.
+- ba8d362: Fix issue causing entra integration role to not be found when using connected identities.
+- ba8d362: Fixes duplicate roles showing for a target in the debug entitlement access page.
+- ba8d362: AWS Proxy integration now respects the SSO Start URL override if configured on the AWS IDC integration.
+- ba8d362: Fixed an issue causing Entra and Okta resources to not show in the resource pages
+- ba8d362: Fixes an issue where Entra Group selector and Okta Group selectors would not match any resources when connected identities feature was enabled.
+- ba8d362: Performance improvements when matching user identities when syncing integration resources.
+
 ## 2.7.3
 
 ### Patch Changes
