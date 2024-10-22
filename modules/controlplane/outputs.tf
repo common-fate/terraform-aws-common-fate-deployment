@@ -20,3 +20,8 @@ output "control_plane_tg_arn_suffix" {
   description = "The arn suffix of the control plane target group"
   value = aws_lb_target_group.control_plane_tg.arn_suffix
 }
+
+output "task_role_name" {
+  description = "The Name of the IAM role assumed by the task"
+  value       = aws_iam_role.control_plane_ecs_task_role.name
+}

@@ -370,3 +370,10 @@ module "authz-legacy" {
   namespace = var.namespace
   stage     = var.stage
 }
+
+module "shell-sessions" {
+  source    = "./modules/shell-sessions"
+  namespace = var.namespace
+  stage     = var.stage
+  control_plane_ecs_task_role_name = module.control_plane.task_role_name
+}
