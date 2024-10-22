@@ -17,7 +17,7 @@ resource "aws_s3_bucket_cors_configuration" "shell_logs_cors_policy" {
 
 resource "aws_iam_policy" "shell_logs_s3_write_access" {
   name        = "${var.namespace}-${var.stage}-control-plane-shell-logs-s3-write"
-  description = "Allows control plane to put objects into the shell session s3 bucket"
+  description = "Allows control plane to get and put objects into the shell session s3 bucket"
 
   policy = jsonencode({
     Version = "2012-10-17",
@@ -27,6 +27,7 @@ resource "aws_iam_policy" "shell_logs_s3_write_access" {
         Effect = "Allow"
         Action = [
           "s3:PutObject",
+          "s3:GetObject",
         ]
         Resource = [
         "${aws_s3_bucket.proxy_shell_session_logs.arn}/*",
