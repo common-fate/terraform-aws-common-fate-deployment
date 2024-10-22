@@ -29,7 +29,7 @@ resource "aws_iam_policy" "shell_logs_s3_write_access" {
           "s3:PutObject",
         ]
         Resource = [
-          aws_s3_bucket.proxy_shell_session_logs.arn,
+        "${aws_s3_bucket.proxy_shell_session_logs.arn}/*",
         ]
       }
     ]
