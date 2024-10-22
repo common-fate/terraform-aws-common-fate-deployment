@@ -238,6 +238,7 @@ module "control_plane" {
   managed_deployment                     = var.managed_deployment
   compare_entitlements_enabled           = var.compare_entitlements_enabled
   iam_role_permission_boundary           = var.iam_role_permission_boundary
+
 }
 
 module "report_bucket" {
@@ -376,4 +377,5 @@ module "shell-sessions" {
   namespace = var.namespace
   stage     = var.stage
   control_plane_ecs_task_role_name = module.control_plane.task_role_name
+  proxy_shell_session_s3_bucket_arn = module.control_plane.shell_sessions_s3_bucket_arn
 }

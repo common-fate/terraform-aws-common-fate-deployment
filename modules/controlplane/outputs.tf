@@ -25,3 +25,8 @@ output "task_role_name" {
   description = "The Name of the IAM role assumed by the task"
   value       = aws_iam_role.control_plane_ecs_task_role.name
 }
+
+output "shell_sessions_s3_bucket_arn" {
+  description = "The arn of the s3 bucket which stores shell sessions"
+  value       = aws_s3_bucket.proxy_shell_session_logs.arn
+}

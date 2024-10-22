@@ -408,6 +408,23 @@ resource "aws_iam_role_policy_attachment" "assume_roles_policy_attach_tagged" {
   policy_arn = aws_iam_policy.assume_role_tagged.arn
 }
 
+resource "aws_s3_bucket" "proxy_shell_session_logs" {
+  bucket = "${var.namespace}-${var.stage}-proxy_shell_session_logs"
+
+}
+
+resource "aws_s3_bucket_cors_configuration" "shell_logs_cors_policy" {
+  bucket = aws_s3_bucket.proxy_shell_session_logs.id
+
+  cors_rule {
+    allowed_headers = ["*"]
+    allowed_methods = ["PUT", "POST", "GET"]
+    allowed_origins = ["*"]
+    expose_headers  = []
+
+  }
+}
+
 
 locals {
   control_plane_environment = [
@@ -691,8 +708,12 @@ locals {
       value = var.managed_deployment ? "true" : "false"
     },
     {
-      name  = "CF_COMPARE_ENTITLEMENTS_ENABLED",
-      value = var.compare_entitlements_enabled ? "true" : "false"
+      name  = "CF_SHELL_SESSION_SINK_AWS_S3_BUCKET",
+      value = aws_s3_bucket.proxy_shell_session_logs.name
+    },
+    {
+      name  = "CF_SHELL_SESSION_SINK_TYPE",
+      value = "aws"
     }
   ]
 

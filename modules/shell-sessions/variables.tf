@@ -15,3 +15,8 @@ variable "control_plane_ecs_task_role_name" {
   description = "Control plane task role name."
   type        = string
 }
+
+variable "proxy_shell_session_s3_bucket_arn" {
+  description = "proxy shell session logs s3 bucket arn."
+  type        = string
+}

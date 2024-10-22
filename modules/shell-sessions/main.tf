@@ -1,19 +1,4 @@
-resource "aws_s3_bucket" "proxy_shell_session_logs" {
-  bucket = "${var.namespace}-${var.stage}-proxy_shell_session_logs"
 
-}
-
-resource "aws_s3_bucket_cors_configuration" "shell_logs_cors_policy" {
-  bucket = aws_s3_bucket.proxy_shell_session_logs.id
-
-  cors_rule {
-    allowed_headers = ["*"]
-    allowed_methods = ["PUT", "POST", "GET"]
-    allowed_origins = ["*"]
-    expose_headers  = []
-
-  }
-}
 
 resource "aws_iam_policy" "shell_logs_s3_write_access" {
   name        = "${var.namespace}-${var.stage}-control-plane-shell-logs-s3-write"
@@ -30,7 +15,7 @@ resource "aws_iam_policy" "shell_logs_s3_write_access" {
           "s3:GetObject",
         ]
         Resource = [
-        "${aws_s3_bucket.proxy_shell_session_logs.arn}/*",
+        "${var.proxy_shell_session_s3_bucket_arn}/*",
         ]
       }
     ]
