@@ -305,6 +305,34 @@ resource "aws_iam_role_policy_attachment" "control_plane_authz_eval_bucket_attac
   policy_arn = aws_iam_policy.authz_eval_bucket.arn
 }
 
+resource "aws_iam_policy" "shell_logs_s3_write_access" {
+  name        = "${var.namespace}-${var.stage}-control-plane-shell-logs-bucket"
+  description = "Allows control plane to read and write objects into the shell session s3 bucket"
+
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        "Sid" : "ListObjectsInBucket",
+        "Effect" : "Allow",
+        "Action" : ["s3:ListBucket"],
+        "Resource" : [var.shell_session_logs_bucket_arn]
+      },
+      {
+        "Sid" : "AllObjectActions",
+        "Effect" : "Allow",
+        "Action" : ["s3:PutObject", "s3:GetObject"],
+        "Resource" : ["${var.shell_session_logs_bucket_arn}/*"]
+      }
+    ]
+  })
+}
+
+
+resource "aws_iam_role_policy_attachment" "control_plane_shell_session_logs_bucket_attach" {
+  role       = aws_iam_role.control_plane_ecs_task_role.name
+  policy_arn = aws_iam_policy.shell_logs_s3_write_access.arn
+}
 
 
 resource "aws_iam_policy" "eventbus_put_events" {
@@ -709,7 +737,7 @@ locals {
     },
     {
       name  = "CF_SHELL_SESSION_SINK_AWS_S3_BUCKET",
-      value = aws_s3_bucket.proxy_shell_session_logs.name
+      value = var.shell_session_logs_bucket_name
     },
     {
       name  = "CF_SHELL_SESSION_SINK_TYPE",

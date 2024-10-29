@@ -238,6 +238,8 @@ module "control_plane" {
   managed_deployment                     = var.managed_deployment
   compare_entitlements_enabled           = var.compare_entitlements_enabled
   iam_role_permission_boundary           = var.iam_role_permission_boundary
+  shell_session_logs_bucket_arn          = module.shell_session_logs_bucket.arn
+  shell_session_logs_bucket_name         = module.shell_session_logs_bucket.id
 
 }
 
@@ -261,6 +263,22 @@ module "authz_eval_bucket" {
   component      = "evals"
 }
 
+module "shell_session_logs_bucket" {
+  source         = "./modules/s3bucket"
+  bucket_prefix  = "${var.namespace}-${var.stage}-shell-session-logs"
+  aws_account_id = data.aws_caller_identity.current.account_id
+  region         = var.aws_region
+  namespace      = var.namespace
+  stage          = var.stage
+  component      = "shell-session-logs"
+  cors_rules = [{
+    allowed_methods = ["GET", "PUT", "POST"]
+    allowed_origins = [var.app_url]
+    allowed_headers = ["Authorization", "Content-Type"]
+    expose_headers  = ["ETag"]
+    max_age_seconds = 3000
+  }]
+}
 
 module "web" {
   source                       = "./modules/web"
@@ -330,6 +348,8 @@ module "access_handler" {
   access_target_group_arns                  = var.access_target_group_arns
   builtin_provisioner_url                   = module.provisioner.provisioner_url
   iam_role_permission_boundary              = var.iam_role_permission_boundary
+  shell_session_logs_bucket_arn             = module.shell_session_logs_bucket.arn
+  shell_session_logs_bucket_name            = module.shell_session_logs_bucket.id
 }
 
 
@@ -372,10 +392,3 @@ module "authz-legacy" {
   stage     = var.stage
 }
 
-module "shell-sessions" {
-  source    = "./modules/shell-sessions"
-  namespace = var.namespace
-  stage     = var.stage
-  control_plane_ecs_task_role_name = module.control_plane.task_role_name
-  proxy_shell_session_s3_bucket_arn = module.control_plane.shell_sessions_s3_bucket_arn
-}
