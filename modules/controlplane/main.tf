@@ -436,23 +436,6 @@ resource "aws_iam_role_policy_attachment" "assume_roles_policy_attach_tagged" {
   policy_arn = aws_iam_policy.assume_role_tagged.arn
 }
 
-resource "aws_s3_bucket" "proxy_shell_session_logs" {
-  bucket = "${var.namespace}-${var.stage}-proxy_shell_session_logs"
-
-}
-
-resource "aws_s3_bucket_cors_configuration" "shell_logs_cors_policy" {
-  bucket = aws_s3_bucket.proxy_shell_session_logs.id
-
-  cors_rule {
-    allowed_headers = ["*"]
-    allowed_methods = ["PUT", "POST", "GET"]
-    allowed_origins = ["*"]
-    expose_headers  = []
-
-  }
-}
-
 
 locals {
   control_plane_environment = [
