@@ -138,7 +138,7 @@ resource "aws_ecs_task_definition" "web_task" {
       },
       {
         name  = "CF_SESSION_LOGS_S3_URL",
-        value = "https://${var.shell_session_logs_bucket_domain_name}"
+        value = "https://${var.shell_session_logs_bucket_domain_name}/"
       },
 
     ]
