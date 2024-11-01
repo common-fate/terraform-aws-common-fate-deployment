@@ -242,3 +242,12 @@ variable "iam_role_permission_boundary" {
   nullable    = true
   default     = null
 }
+variable "shell_session_logs_bucket_name" {
+  type        = string
+  description = "Name of shell session logs bucket"
+}
+
+variable "shell_session_logs_bucket_arn" {
+  type        = string
+  description = "ARN of shell session logs bucket"
+}

@@ -168,3 +168,8 @@ variable "iam_role_permission_boundary" {
   nullable    = true
   default     = null
 }
+
+variable "shell_session_logs_bucket_domain_name" {
+  type        = string
+  description = "Domain name of shell session logs bucket"
+}

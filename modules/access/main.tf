@@ -195,6 +195,34 @@ resource "aws_iam_role_policy_attachment" "eval_bucket_attach" {
   role       = aws_iam_role.access_handler_ecs_task_role.name
   policy_arn = aws_iam_policy.authz_eval_bucket.arn
 }
+resource "aws_iam_policy" "shell_logs_s3_write_access" {
+  name        = "${var.namespace}-${var.stage}-access-handler-shell-logs-bucket"
+  description = "Allows access handler to read objects from the shell session s3 bucket"
+
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        "Sid" : "ListObjectsInBucket",
+        "Effect" : "Allow",
+        "Action" : ["s3:ListBucket"],
+        "Resource" : [var.shell_session_logs_bucket_arn]
+      },
+      {
+        "Sid" : "AllObjectActions",
+        "Effect" : "Allow",
+        "Action" : ["s3:GetObject"],
+        "Resource" : ["${var.shell_session_logs_bucket_arn}/*"]
+      }
+    ]
+  })
+}
+
+
+resource "aws_iam_role_policy_attachment" "control_plane_shell_session_logs_bucket_attach" {
+  role       = aws_iam_role.access_handler_ecs_task_role.name
+  policy_arn = aws_iam_policy.shell_logs_s3_write_access.arn
+}
 
 resource "aws_ecs_task_definition" "access_handler_task" {
   family                   = "${var.namespace}-${var.stage}-access-handler"
@@ -312,6 +340,14 @@ resource "aws_ecs_task_definition" "access_handler_task" {
           name  = "CF_BUILTIN_WEBHOOK_PROVISIONER_URL",
           value = var.builtin_provisioner_url
         },
+        {
+          name  = "CF_SHELL_SESSION_SINK_AWS_S3_BUCKET",
+          value = var.shell_session_logs_bucket_name
+        },
+        {
+          name  = "CF_SHELL_SESSION_SINK_TYPE",
+          value = "aws"
+        }
       ],
       secrets = [
         {
