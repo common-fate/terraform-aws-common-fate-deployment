@@ -1,5 +1,17 @@
 # @common-fate/terraform-aws-common-fate-deployment
 
+## 2.9.0
+
+### Minor Changes
+
+- a363ec1: Common Fate adminstrators can now specify a default local port to use with each database and user when `granted rds proxy` is used.
+- a363ec1: Add support for Audited EKS Access Proxy
+- 7eb80b9: adds s3 bucket and networking for EKS shell session logs
+
+### Patch Changes
+
+- a363ec1: fix issue causing database endpoint and user endpoint override to be omitted on the resource detail page
+
 ## 2.8.1
 
 ### Patch Changes
