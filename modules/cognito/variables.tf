@@ -99,3 +99,9 @@ variable "invite_user_emails" {
   default     = []
   type        = list(string)
 }
+
+variable "saml_allow_idp_initiated_sign_in" {
+  description = "If true, allows IDP-initiated sign-in in addition to SP-initiated sign-in."
+  default     = false
+  type        = bool
+}

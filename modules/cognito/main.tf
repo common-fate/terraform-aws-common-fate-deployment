@@ -39,8 +39,16 @@ resource "aws_cognito_identity_provider" "saml_idp" {
 
   provider_details = var.saml_metadata_is_file ? {
     MetadataFile = file(var.saml_metadata_source)
+    IDPInit      = var.saml_allow_idp_initiated_sign_in
+    # EncryptedResponses is set to false to mitigate Terraform drifting the configuration by trying to set it to `null`.
+    # In future we may allow this to be configured by users.
+    EncryptedResponses = false
     } : {
     MetadataURL = var.saml_metadata_source
+    IDPInit     = var.saml_allow_idp_initiated_sign_in
+    # EncryptedResponses is set to false to mitigate Terraform drifting the configuration by trying to set it to `null`.
+    # In future we may allow this to be configured by users.
+    EncryptedResponses = false
   }
   lifecycle {
     ignore_changes = [
