@@ -1,5 +1,11 @@
 # @common-fate/terraform-aws-common-fate-deployment
 
+## 2.8.2
+
+### Patch Changes
+
+- d9b06a1: Fix an issue where enabling IDP-initiated SAML SSO login would cause Terraform drift. You can now set the `saml_allow_idp_initiated_sign_in` variable to `true` to avoid configuration drift.
+
 ## 2.8.1
 
 ### Patch Changes
