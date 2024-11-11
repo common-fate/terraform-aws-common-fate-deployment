@@ -504,4 +504,8 @@ variable "iam_role_permission_boundary" {
   default     = null
 }
 
-
+variable "saml_allow_idp_initiated_sign_in" {
+  description = "If true, allows IDP-initiated sign-in in addition to SP-initiated sign-in."
+  default     = false
+  type        = bool
+}

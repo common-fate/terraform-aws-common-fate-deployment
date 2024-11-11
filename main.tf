@@ -148,6 +148,7 @@ module "cognito" {
   saml_metadata_is_file               = var.saml_metadata_is_file
   saml_metadata_source                = var.saml_metadata_source
   saml_provider_name                  = var.saml_provider_name
+  saml_allow_idp_initiated_sign_in    = var.saml_allow_idp_initiated_sign_in
   web_access_token_validity_duration  = var.web_access_token_validity_duration
   web_access_token_validity_units     = var.web_access_token_validity_units
   web_refresh_token_validity_duration = var.web_refresh_token_validity_duration
@@ -156,8 +157,7 @@ module "cognito" {
   cli_access_token_validity_units     = var.cli_access_token_validity_units
   cli_refresh_token_validity_duration = var.cli_refresh_token_validity_duration
   cli_refresh_token_validity_units    = var.cli_refresh_token_validity_units
-
-  invite_user_emails = var.administrator_emails
+  invite_user_emails                  = var.administrator_emails
 }
 
 
@@ -392,4 +392,3 @@ module "authz-legacy" {
   namespace = var.namespace
   stage     = var.stage
 }
-
