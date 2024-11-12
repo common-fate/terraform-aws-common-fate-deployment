@@ -1,5 +1,25 @@
 # @common-fate/terraform-aws-common-fate-deployment
 
+## 2.9.1
+
+### Patch Changes
+
+- 559cd94: When Common Fate Deployment Administrator access is requested, the Console will automatically update with the new permissions.
+- 559cd94: Extend notifications in Slack are now removed after the request is extended or closed.
+- 559cd94: Added search functionality to directory user and groups list pages
+- 559cd94: Adds a form to create integration secrets on demand via the Deployment page in the Settings.
+- 559cd94: Fixes an issue which caused approvers to be notified for auto approved requests.
+- 559cd94: Fix reasons being stripped of links in the console before being submitted.
+- 01f8cbf: Fix an issue where enabling IDP-initiated SAML SSO login would cause Terraform drift. You can now set the `saml_allow_idp_initiated_sign_in` variable to `true` to avoid configuration drift.
+- 559cd94: Improve observability over database credential refreshing
+- 559cd94: Fixes missing names for groups when using connected identities.
+- 559cd94: add target and role details in audit logs and session details
+- 559cd94: Common Fate Selector API now reports a warning message when creating or updating a selector where the resource type or belonging to are not expected values.
+- 559cd94: entra integration will now only sync users that are in an active state and members of the entra org
+- 3e1f4e1: Adds ssm:DeleteParameter permission to the control plane for managing integration secrets
+- 559cd94: Fixed selectors not matching any resources for RDS and EKS.
+- 559cd94: Fixes the Extend button in slack not working.
+
 ## 2.9.0
 
 ### Minor Changes
