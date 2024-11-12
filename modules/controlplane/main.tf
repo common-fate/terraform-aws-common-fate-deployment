@@ -204,17 +204,17 @@ resource "aws_iam_role" "control_plane_ecs_task_role" {
 
 resource "aws_iam_policy" "parameter_store_secrets_write_access" {
   name        = "${var.namespace}-${var.stage}-control-plane-ps-write"
-  description = "Allows writing secrets to SSM Parameter Store"
+  description = "Allows writing and deleting secrets under the /<namespace>/<stage>/ path in SSM Parameter Store"
 
   policy = jsonencode({
     Version = "2012-10-17",
-    // include only the secrets that are configured
     Statement = [
       {
         Effect = "Allow"
         Action = [
           "ssm:PutParameter",
-          "ssm:AddTagsToResource"
+          "ssm:AddTagsToResource",
+          "ssm:DeleteParameter",
         ]
         Resource = [
           "arn:${var.aws_partition}:ssm:${var.aws_region}:${var.aws_account_id}:parameter/${var.namespace}/${var.stage}/*",
