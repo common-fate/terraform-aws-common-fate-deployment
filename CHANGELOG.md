@@ -1,5 +1,11 @@
 # @common-fate/terraform-aws-common-fate-deployment
 
+## 2.9.2
+
+### Patch Changes
+
+- 7902151: Fixes internal proxy session logs returning an error for RDS access.
+
 ## 2.9.1
 
 ### Patch Changes
