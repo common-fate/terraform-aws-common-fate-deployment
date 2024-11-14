@@ -1,5 +1,11 @@
 # @common-fate/terraform-aws-common-fate-deployment
 
+## 2.8.3
+
+### Patch Changes
+
+- 71d77d1: fix issue causing auto approved request alerts to be send to the alerts channel
+
 ## 2.8.2
 
 ### Patch Changes
