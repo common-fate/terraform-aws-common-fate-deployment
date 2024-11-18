@@ -74,6 +74,7 @@ module "control_plane_db" {
   apply_immediately              = var.rds_apply_immediately
   snapshot_identifier            = var.rds_snapshot_identifier
   rds_instance_identifier_suffix = var.rds_instance_identifier_suffix
+  rds_instance_type = var.rds_instance_type
 }
 
 

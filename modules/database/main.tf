@@ -22,7 +22,7 @@ resource "aws_db_instance" "pg_db" {
   allocated_storage            = 20
   engine                       = "postgres"
   engine_version               = "15"
-  instance_class               = "db.t3.micro"
+  instance_class               = var.rds_instance_type
   db_name                      = "postgres"
   username                     = "postgres"
   manage_master_user_password  = true

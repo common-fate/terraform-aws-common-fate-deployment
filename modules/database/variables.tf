@@ -74,3 +74,9 @@ variable "rds_instance_identifier_suffix" {
   type        = string
   default     = null
 }
+
+variable "rds_instance_type" {
+  description = "(Optional) specify the instance type of the RDS instance. defaults to db.t3.micro,"
+  type        = string
+  default     = "db.t3.micro"
+}
