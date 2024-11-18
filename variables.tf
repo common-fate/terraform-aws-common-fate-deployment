@@ -509,3 +509,9 @@ variable "saml_allow_idp_initiated_sign_in" {
   default     = false
   type        = bool
 }
+
+variable "rds_instance_type" {
+  description = "(Optional) specify the instance type of the RDS instance. defaults to db.t3.micro,"
+  type        = string
+  default     = "db.t3.micro"
+}
