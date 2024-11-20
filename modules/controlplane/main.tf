@@ -552,22 +552,6 @@ locals {
       value = "*/5 * * * *"
     },
     {
-      name  = "CF_PROPAGATE_ENABLED",
-      value = "true"
-    },
-    {
-      name  = "CF_PROPAGATE_CRON_SCHEDULE",
-      value = "*/1 * * * *"
-    },
-    {
-      name  = "CF_MAKE_AVAILABLE_ENABLED",
-      value = "true"
-    },
-    {
-      name  = "CF_MAKE_AVAILABLE_CRON_SCHEDULE",
-      value = "*/5 * * * *"
-    },
-    {
       name  = "CF_SYNC_AWSIDC_ENABLED",
       value = "true"
     },
