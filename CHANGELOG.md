@@ -1,5 +1,22 @@
 # @common-fate/terraform-aws-common-fate-deployment
 
+## 2.9.3
+
+### Patch Changes
+
+- 570f39c: Fixed and issue which caused the Common Fate terraform provider to always report that the rds instance id would change for proxy databases.
+- 570f39c: fix issue causing auto approved request alerts to be send to the alerts channel
+- 570f39c: Fix an issue where `use_web_console_for_approve_action` would not work in certain circumstances.
+- 570f39c: The user and groups directory now loads all results automatically.
+- 570f39c: Removes the Insights page from the Console.
+- 570f39c: Fixed the time filter for the integration sync jobs table returning results from outside the window.
+- 945cf8c: add variable to set custom rds database instance class type
+- 570f39c: Add additional tracing to the database connections
+- 570f39c: Remove compare entitlements background workflow ahead of switch to using Connected Identities.
+- 570f39c: For RDS and EKS proxy grants, the Permission Set which is created will have the target and role included in the Name to improve readability.
+- 570f39c: Fix issue where x was displayed as a multiplication.
+- 570f39c: Improve API availability during high load.
+
 ## 2.9.2
 
 ### Patch Changes
