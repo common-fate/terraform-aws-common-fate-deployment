@@ -1,5 +1,11 @@
 # @common-fate/terraform-aws-common-fate-deployment
 
+## 2.9.4
+
+### Patch Changes
+
+- 1517ab0: Fixes an issue where Cedar policies for Access::Action::"Request" which could cause no entitlements to be available in certain circumstances.
+
 ## 2.9.3
 
 ### Patch Changes
