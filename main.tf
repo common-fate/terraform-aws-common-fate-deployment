@@ -74,7 +74,7 @@ module "control_plane_db" {
   apply_immediately              = var.rds_apply_immediately
   snapshot_identifier            = var.rds_snapshot_identifier
   rds_instance_identifier_suffix = var.rds_instance_identifier_suffix
-  rds_instance_type = var.rds_instance_type
+  rds_instance_type              = var.rds_instance_type
 }
 
 
@@ -346,7 +346,7 @@ module "access_handler" {
   factory_base_url                          = var.factory_base_url
   factory_oidc_issuer                       = var.factory_oidc_issuer
   ecs_task_cpu                              = var.access_handler_ecs_task_cpu
-  ecs_task_memory                           = var.access_hander_ecs_task_memory
+  ecs_task_memory                           = var.access_handler_ecs_task_memory
   access_target_group_arns                  = var.access_target_group_arns
   builtin_provisioner_url                   = module.provisioner.provisioner_url
   iam_role_permission_boundary              = var.iam_role_permission_boundary

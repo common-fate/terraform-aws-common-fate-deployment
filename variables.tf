@@ -430,7 +430,7 @@ variable "worker_ecs_task_cpu" {
   default     = "512"
 }
 
-variable "access_hander_ecs_task_memory" {
+variable "access_handler_ecs_task_memory" {
   description = "The amount of memory to allocate for the ECS task. Specified in MiB."
   type        = string
   default     = "1024"
