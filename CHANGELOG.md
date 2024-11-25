@@ -1,5 +1,11 @@
 # @common-fate/terraform-aws-common-fate-deployment
 
+## 2.9.5
+
+### Patch Changes
+
+- 291d2d5: fixed a typo in `access_handler_ecs_task_memory`
+
 ## 2.9.4
 
 ### Patch Changes
