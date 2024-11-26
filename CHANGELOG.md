@@ -1,5 +1,26 @@
 # @common-fate/terraform-aws-common-fate-deployment
 
+## 2.10.0
+
+### Minor Changes
+
+- 9f0cafd: Added Audit Logs page to view and filter audit logs across all Access Requests.
+- 9f0cafd: Added Session Logs page to view and filter session logs across all Access Requests and Sessions.
+- 9f0cafd: Access workflows can now require a Jira ticket to be attached to an access request
+- 9f0cafd: Add snowflake integration.
+
+### Patch Changes
+
+- 9f0cafd: Add Jira ticket field to Slack based access requests when it is required
+- 9f0cafd: Fixes an issue where workflows with long max durations could cause the Slack request modal not to render the duration input
+- 9f0cafd: Selector playground now gracefully handles tokenize errors.
+- 9f0cafd: Show attachments in Slack messages
+- 9f0cafd: Access Request Attachments are now shown on the request detail page.
+- 9f0cafd: Approve button should not be shown when active access requests are selected.
+- 9f0cafd: fix jira integration requirement to call secrets manager on every jira call
+- 9f0cafd: Fixes an issue which could cause a delay in access being applied for the deployment admin role
+- 9f0cafd: Adjusted spacing in debug entitlement access view.
+
 ## 2.9.5
 
 ### Patch Changes
