@@ -1,5 +1,11 @@
 # @common-fate/terraform-aws-common-fate-deployment
 
+## 2.10.1
+
+### Patch Changes
+
+- c554b71: Fixes an issue with Jira token refresh when multiple integrations are installed.
+
 ## 2.10.0
 
 ### Minor Changes
